@@ -12,8 +12,8 @@ menuFont = pygame.font.Font("Assets/Fonts/minecraft.ttf", 60)
 # Surfaces.
 menuTempBackground = pygame.Surface((1200, 800))
 menuTempBackground.fill("Dark Gray")
-menuText_P = menuFont.render("PLAY", False, "White")  # When the button is being hovered over.
-menuText_NP = menuFont.render("PLAY", False, "Black")  # When the button is not being hovered over.
+menuText_P = menuFont.render("PLAY", False, "Yellow")  # When the button is being hovered over.
+menuText_NP = menuFont.render("PLAY", False, "White")  # When the button is not being hovered over.
 
 imageDictionary = {
     "ground": pygame.transform.scale(pygame.image.load("Assets/Images/Ground.png"), (1200, 800)).convert_alpha()  # Converts the image to something Pygame can work with easier.
@@ -47,7 +47,7 @@ auDictionary = {  # Dictionary storing all the frames of each individual Among U
 purpleAU_xPos = -70
 purpleAU_yPos = 700
 
-redAU_xPos = -300
+redAU_xPos = -310
 redAU_yPos = 700
 
 blueAU_xPos = -190
@@ -75,8 +75,7 @@ while True:
     pygame.draw.rect(screen, "Dark Gray", menuText_rect)
     screen.blit(menuText_NP, menuText_rect)
     mousePos = pygame.mouse.get_pos()  # Gets the current position of the mouse pointer inside the screen.
-    if menuText_rect.collidepoint(
-            mousePos):  # Returns either True or False depending on whether the mouse pointer is colliding with the menu text.
+    if menuText_rect.collidepoint(mousePos):  # Returns either True or False depending on whether the mouse pointer is colliding with the menu text.
         pygame.draw.rect(screen, "Dark Gray", menuText_rect)
         screen.blit(menuText_P, menuText_rect)
 
