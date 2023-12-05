@@ -15,8 +15,8 @@ gameActive = False
 
 
 # Surfaces.
-menuTempBackground = pygame.Surface((1200, 800))
-menuTempBackground.fill("Dark Gray")
+menuBackground = pygame.Surface((1200, 800), pygame.SRCALPHA)
+menuBackground.fill("Dark Gray")
 menuText_P = menuFont.render("PLAY", False, "Yellow")  # When the button is being hovered over.
 menuText_NP = menuFont.render("PLAY", False, "White")  # When the button is not being hovered over.
 
@@ -83,14 +83,17 @@ while True:
 		if event.type == pygame.QUIT:  # Checks if the current event is the same as the quit button of a window.
 			pygame.quit()
 			sys.exit()
-		if event.type == pygame.MOUSEBUTTONDOWN and menuText_rect.collidepoint(mousePos):
+		if event.type == pygame.MOUSEBUTTONDOWN and menuText_rect.collidepoint(mousePos):  # Checks if the user has pressed play in the menu.
 			menuActive = False
+			gameActive = True
+			for i in range(255):
+				pygame.draw.rect(menuBackground, ("Dark Gray", i)
 
  
 	# Menu screen.
 	if menuActive:
 		
-		screen.blit(menuTempBackground, (0, 0))  # Menu text blitting.
+		screen.blit(menuBackground, (0, 0))  # Menu text blitting.
 		pygame.draw.rect(screen, "Dark Gray", menuText_rect)
 		screen.blit(menuText_NP, menuText_rect)
 		mousePos = pygame.mouse.get_pos()  # Gets the current position of the mouse pointer inside the screen.
@@ -113,6 +116,11 @@ while True:
 			blueAU_rect.left = -70
 		screen.blit(auDictionary["blue"][auDictionary["blue"]["currentFrame"]], blueAU_rect)
 
+
+	# Game screen.
+	if gameActive:
+		pass
+	
 
 	# Framerate synchronisation.
 	if frameCounter < 10:  # Changes AU frame every 10 frames.
