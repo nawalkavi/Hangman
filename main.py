@@ -10,8 +10,9 @@ pygame.display.set_caption("Land of Sus")
 clock = pygame.time.Clock()
 menuFont = pygame.font.Font("Assets/Fonts/minecraft.ttf", 60)
 frameCounter = 0  # Counter for each individual AU frame that will loop through them.
-menuActive = True
+menuActive = False
 gameActive = False
+splashActive = True
 
 
 # Surfaces.
@@ -24,7 +25,8 @@ menuText_NP = menuFont.render("PLAY", False, "White")  # When the button is not 
 # Dictionaries.
 imageDictionary = {  # Dictionary for non-AU images.
 	"ground": pygame.transform.scale(pygame.image.load("Assets/Images/Stone Ground.jpg"), (1200, 800)).convert_alpha(),  # Converts the image to something Pygame can work with easier.
-	"settingsCog": pygame.transform.scale(pygame.image.load("Assets/Images/Settings Cog.png"), (30, 30)).convert_alpha()
+	"settingsCog": pygame.transform.scale(pygame.image.load("Assets/Images/Settings Cog.png"), (30, 30)).convert_alpha(),
+	"splashScreen": pygame.transform.scale(pygame.image.load("Assets/Images/Splash Screen.png"), (800, 600)).convert_alpha()
 }
 
 auDictionary = {  # Dictionary storing all the frames of each individual Among Us colour.
@@ -57,6 +59,8 @@ menuText_xPos = 600
 menuText_yPos = 200
 settingsCog_xPos = 1150
 settingsCog_yPos = 100
+splash_xPos = 400
+splash_yPos = 300
 
 # AU Positions.
 purpleAU_xPos = -70
@@ -74,7 +78,17 @@ blueAU_rect = auDictionary["blue"][1].get_rect(midbottom = (blueAU_xPos, blueAU_
 
 # Other rectangles.
 menuText_rect = menuText_NP.get_rect(center = (menuText_xPos, menuText_yPos))  # Having the menu text as a rectangle to make interactions with it and drawing it easier.
-settingsCog_rect = imageDictionary["settingsCog"].get_rect(midbottom = (settingsCog_xPos, settingsCog_yPos))
+settingsCog_rect = imageDictionary["settingsCog"].get_rect(center = (settingsCog_xPos, settingsCog_yPos))
+splash_rect = imageDictionary["splashScreen"].get_rect(center = (splash_xPos, splash_yPos))
+
+
+# Menu fade.
+transparency = 255
+menuBackground.set_alpha()
+
+
+# Splash screen counter.
+splashCounter = 0
 
 
 # Game loop.
@@ -86,9 +100,14 @@ while True:
 		if event.type == pygame.MOUSEBUTTONDOWN and menuText_rect.collidepoint(mousePos):  # Checks if the user has pressed play in the menu.
 			menuActive = False
 			gameActive = True
-			for i in range(255):
-				pygame.draw.rect(menuBackground, ("Dark Gray", i)
-
+			
+	
+	if splashActive:
+		while splashCounter < 10000:
+			splashCounter += 1
+			screen.blit(imageDictionary["splashScreen"], splash_rect)
+			print(splashCounter)
+	
  
 	# Menu screen.
 	if menuActive:
@@ -136,5 +155,5 @@ while True:
 					"currentFrame"] = 1  # If the current index is not less than 4 (the last frame), then it is sent back to 1 (the first frame).
 
 
-	pygame.display.update()
+	pygame.display.flip()  # Updates the display.
 	clock.tick(60)  # Sets the framerate; here, 60fps has been set as the target.
