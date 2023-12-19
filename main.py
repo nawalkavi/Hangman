@@ -10,32 +10,25 @@ pygame.display.set_caption("Land of Sus")
 clock = pygame.time.Clock()
 menuFont = pygame.font.Font("Assets/Fonts/minecraft.ttf", 60)
 frameCounter = 0  # Counter for each individual AU frame that will loop through them.
-menuActive = False
+menuActive = True
 gameActive = False
-splashActive = True
 
 
 # Surfaces.
-menuBackground = pygame.Surface((1200, 800), pygame.SRCALPHA)
+menuBackground = pygame.Surface((1200, 800))
 menuBackground.fill("Dark Gray")
 menuText_P = menuFont.render("PLAY", False, "Yellow")  # When the button is being hovered over.
 menuText_NP = menuFont.render("PLAY", False, "White")  # When the button is not being hovered over.
 
 
 # Dictionaries.
-imageDictionary = {  # Dictionary for non-AU images.
-	"ground": pygame.transform.scale(pygame.image.load("Assets/Images/Stone Ground.jpg"), (1200, 800)).convert_alpha(),  # Converts the image to something Pygame can work with easier.
-	"settingsCog": pygame.transform.scale(pygame.image.load("Assets/Images/Settings Cog.png"), (30, 30)).convert_alpha(),
-	"splashScreen": pygame.transform.scale(pygame.image.load("Assets/Images/Splash Screen.png"), (800, 600)).convert_alpha()
-}
-
 auDictionary = {  # Dictionary storing all the frames of each individual Among Us colour.
 	"purple": {
 		1: pygame.transform.scale(pygame.image.load("Assets/Sprites/Purple/Frame 1.png"), (60, 70)).convert_alpha(),
 		2: pygame.transform.scale(pygame.image.load("Assets/Sprites/Purple/Frame 2.png"), (60, 70)).convert_alpha(),
 		3: pygame.transform.scale(pygame.image.load("Assets/Sprites/Purple/Frame 3.png"), (60, 70)).convert_alpha(),
 		4: pygame.transform.scale(pygame.image.load("Assets/Sprites/Purple/Frame 4.png"), (60, 70)).convert_alpha(),
-		"currentFrame": 1
+		"currentFrame": 1  # Starts at the first frame before being cycled through each frame inside the game loop.
 	},
 	"red": {
 		1: pygame.transform.scale(pygame.image.load("Assets/Sprites/Red/Frame 1.png"), (60, 70)).convert_alpha(),
@@ -50,6 +43,13 @@ auDictionary = {  # Dictionary storing all the frames of each individual Among U
 		3: pygame.transform.scale(pygame.image.load("Assets/Sprites/Blue/Frame 3.png"), (60, 70)).convert_alpha(),
 		4: pygame.transform.scale(pygame.image.load("Assets/Sprites/Blue/Frame 4.png"), (60, 70)).convert_alpha(),
 		"currentFrame": 1
+	},
+	"orange": {
+		1: pygame.transform.scale(pygame.image.load("Assets/Sprites/Orange/Frame 1.png"), (60, 70)).convert_alpha(),
+		2: pygame.transform.scale(pygame.image.load("Assets/Sprites/Orange/Frame 2.png"), (60, 70)).convert_alpha(),
+		3: pygame.transform.scale(pygame.image.load("Assets/Sprites/Orange/Frame 3.png"), (60, 70)).convert_alpha(),
+		4: pygame.transform.scale(pygame.image.load("Assets/Sprites/Orange/Frame 4.png"), (60, 70)).convert_alpha(),
+		"currentFrame": 1
 	}
 }
 
@@ -59,8 +59,6 @@ menuText_xPos = 600
 menuText_yPos = 200
 settingsCog_xPos = 1150
 settingsCog_yPos = 100
-splash_xPos = 400
-splash_yPos = 300
 
 # AU Positions.
 purpleAU_xPos = -70
@@ -78,17 +76,6 @@ blueAU_rect = auDictionary["blue"][1].get_rect(midbottom = (blueAU_xPos, blueAU_
 
 # Other rectangles.
 menuText_rect = menuText_NP.get_rect(center = (menuText_xPos, menuText_yPos))  # Having the menu text as a rectangle to make interactions with it and drawing it easier.
-settingsCog_rect = imageDictionary["settingsCog"].get_rect(center = (settingsCog_xPos, settingsCog_yPos))
-splash_rect = imageDictionary["splashScreen"].get_rect(center = (splash_xPos, splash_yPos))
-
-
-# Menu fade.
-transparency = 255
-menuBackground.set_alpha()
-
-
-# Splash screen counter.
-splashCounter = 0
 
 
 # Game loop.
@@ -100,13 +87,6 @@ while True:
 		if event.type == pygame.MOUSEBUTTONDOWN and menuText_rect.collidepoint(mousePos):  # Checks if the user has pressed play in the menu.
 			menuActive = False
 			gameActive = True
-			
-	
-	if splashActive:
-		while splashCounter < 10000:
-			splashCounter += 1
-			screen.blit(imageDictionary["splashScreen"], splash_rect)
-			print(splashCounter)
 	
  
 	# Menu screen.
