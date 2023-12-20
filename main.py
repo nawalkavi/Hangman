@@ -67,12 +67,15 @@ redAU_xPos = -310
 redAU_yPos = 700
 blueAU_xPos = -190
 blueAU_yPos = 705
+orangeAU_xPos = 600
+orangeAU_yPos = 400
 
 
 # AU rectangles.
 purpleAU_rect = auDictionary["purple"][1].get_rect(midbottom = (purpleAU_xPos, purpleAU_yPos))
 redAU_rect = auDictionary["red"][1].get_rect(midbottom = (redAU_xPos, redAU_yPos))
 blueAU_rect = auDictionary["blue"][1].get_rect(midbottom = (blueAU_xPos, blueAU_yPos))
+orangeAU_rect = auDictionary["orange"][1].get_rect(midbottom = (orangeAU_xPos, orangeAU_yPos))
 
 # Other rectangles.
 menuText_rect = menuText_NP.get_rect(center = (menuText_xPos, menuText_yPos))  # Having the menu text as a rectangle to make interactions with it and drawing it easier.
@@ -80,6 +83,7 @@ menuText_rect = menuText_NP.get_rect(center = (menuText_xPos, menuText_yPos))  #
 
 # Game loop.
 while True:
+	
 	for event in pygame.event.get():  # Retrieves all events running.
 		if event.type == pygame.QUIT:  # Checks if the current event is the same as the quit button of a window.
 			pygame.quit()
@@ -87,6 +91,10 @@ while True:
 		if event.type == pygame.MOUSEBUTTONDOWN and menuText_rect.collidepoint(mousePos):  # Checks if the user has pressed play in the menu.
 			menuActive = False
 			gameActive = True
+		if gameActive and event.type == pygame.KEYDOWN:
+			if event.key == K_w:
+				pass
+				
 	
  
 	# Menu screen.
@@ -118,7 +126,11 @@ while True:
 
 	# Game screen.
 	if gameActive:
-		pass
+		
+		screen.fill(("Dark Gray"))
+		screen.blit(auDictionary["orange"][auDictionary["orange"]["currentFrame"]], orangeAU_rect)
+		
+		
 	
 
 	# Framerate synchronisation.
@@ -126,13 +138,14 @@ while True:
 		frameCounter += 1
 	else:
 		frameCounter = 0
-		for imageName in auDictionary:  # Loops through each colour in the dictionary.
-			image = auDictionary[imageName]
-			if image["currentFrame"] < len(image) - 1:  # Length of each colour dictionary is 5, which is why it is len(image) - 1.
-				image["currentFrame"] += 1
-			else:
-				image[
-					"currentFrame"] = 1  # If the current index is not less than 4 (the last frame), then it is sent back to 1 (the first frame).
+		if menuActive:
+			for imageName in auDictionary:  # Loops through each colour in the dictionary.
+				image = auDictionary[imageName]
+				if image["currentFrame"] < len(image) - 1:  # Length of each colour dictionary is 5, which is why it is len(image) - 1.
+					image["currentFrame"] += 1
+				else:
+					image[
+						"currentFrame"] = 1  # If the current index is not less than 4 (the last frame), then it is sent back to 1 (the first frame).
 
 
 	pygame.display.flip()  # Updates the display.
