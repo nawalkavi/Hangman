@@ -1,6 +1,7 @@
-# Importing the necessary libraries.
+# Importing the necessary libraries and classes.
 import pygame
 import random
+from MainMenu import MenuText  # Imports the MenuText class.
 
 
 # Initialising and setting up.
@@ -12,39 +13,10 @@ menuActive = True  # Starts the menu screen; the default screen to open with.
 gameActive = False  # Starts the game screen.
 
 
-# Menu.
-class Menu:
-
-    def __init__(self, text, colour, xPos, yPos, size):  # Constructor for the class; takes all the necessary parameters.
-        self.__text = text
-        self.__colour = colour
-        self.__xPos = xPos
-        self.__yPos = yPos
-        self.__size = size
-        self.__menuFont = pygame.font.Font("Assets//Fonts//Mighty Soul.ttf", self.__size)  # Loads the font for the menu.
-        self.__renderedText = self.__menuFont.render(self.__text, True, self.__colour)  # Renders the text and stores it in self.__renderedText.
-        self.__mousePos = pygame.mouse.get_pos()  # Returns the current position of the mouse cursor.
-        self.__menuTextRect = self.__renderedText.get_rect(center=(self.__xPos, self.__yPos))  # Creates the text into a rectangle, which makes blitting and collision detection easier.
-        self.__scaledText = None
-
-    def detectMouse(self):
-        if self.__menuTextRect.collidepoint(self.__mousePos):
-            return True
-
-    def returnRender(self):
-        return self.__renderedText
-
-    def returnRect(self):
-        return self.__menuTextRect
-
-    def enlargeText(self):
-        if self.detectMouse():
-            self.__scaledText = pygame.transform.scale(self.__renderedText, self.__renderedText.get_height() * 2)
-
-    def blitText(self):
-        screen.blit(self.returnRender(), self.__menuTextRect)  # Blits to the screen.
-
-hangmanText = Menu("Hangman", "White", 600, 200, 60)  # Creates an object for the Menu class.
+# Menu text objects.
+hangmanText = MenuText("Hangman", "White", 600, 200, 100, screen)  # Creates an object for the Menu class.
+playText = MenuText("Play", "White", 600, 350, 70, screen)
+helpText = MenuText("Help", "White", 600, 450, 70, screen)
 
 
 # Reading the .txt file.
@@ -87,10 +59,23 @@ while True:  # Runs the main game loop.
     # Menu screen.
     if menuActive:
         screen.fill("Black")  # Fills the screen with the colour black.
-        hangmanText.detectMouse()
-        hangmanText.enlargeText()
+
+        # Menu text objects.
+        hangmanText.renderText()  # Hangman text.
+        hangmanText.createRect()
         hangmanText.blitText()
 
+        playText.renderText()  # Play text.
+        playText.createRect()
+        playText.detectMouse()
+        playText.hoverEffect()
+        playText.blitText()
+
+        helpText.renderText()  # Help text.
+        helpText.createRect()
+        helpText.detectMouse()
+        helpText.hoverEffect()
+        helpText.blitText()
 
     pygame.display.update()  # Updates the display.
     clock.tick(60)  # Sets the framerate; 60FPS has been set as the target FPS.
