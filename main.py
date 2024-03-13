@@ -1,7 +1,7 @@
 # Importing the necessary libraries and classes.
 import pygame
-import random
-from MainMenu import MenuText  # Imports the MenuText class.
+from Button import TextButton  # Imports the TextButton class.
+from GameScreen import GameScreen
 
 
 # Initialising and setting up.
@@ -10,13 +10,25 @@ screen = pygame.display.set_mode((1200, 800))  # Sets the dimensions of the game
 pygame.display.set_caption("Hangman")  # Sets a name to the game window.
 clock = pygame.time.Clock()  # Creates a clock to later set the FPS.
 menuActive = True  # Starts the menu screen; the default screen to open with.
+helpActive = False  # Starts the help screen.
 gameActive = False  # Starts the game screen.
 
 
-# Menu text objects.
-hangmanText = MenuText("Hangman", "White", 600, 200, 100, screen)  # Creates an object for the Menu class.
-playText = MenuText("Play", "White", 600, 350, 70, screen)
-helpText = MenuText("Help", "White", 600, 450, 70, screen)
+# Image dictionary.
+hangmanImages = {
+    "1": pygame.transform.scale(pygame.image.load("Assets//Images//Hangman//Hangman 1.png"), (150, 150)).convert_alpha(),
+    "2": pygame.transform.scale(pygame.image.load("Assets//Images//Hangman//Hangman 2.png"), (150, 150)).convert_alpha(),
+    "3": pygame.transform.scale(pygame.image.load("Assets//Images//Hangman//Hangman 3.png"), (150, 150)).convert_alpha()
+}
+
+
+# Text button objects.
+hangmanText = TextButton("Hangman", "White", 600, 200, 100, screen)  # Creates an object for the TextButton class.
+playText = TextButton("Play", "White", 600, 350, 70, screen)
+helpText = TextButton("Help", "White", 600, 450, 70, screen)
+
+yesText = TextButton("Yes", "Black", 900, 500, 70, screen)
+noText = TextButton("No", "Black", 900, 600, 70, screen)
 
 
 # Reading the .txt file.
@@ -58,6 +70,10 @@ while True:  # Runs the main game loop.
 
     # Menu screen.
     if menuActive:
+
+        gameActive = False  # Stops the other two screens from running and displaying at the same time.
+        helpActive = False
+
         screen.fill("Black")  # Fills the screen with the colour black.
 
         # Menu text objects.
@@ -76,6 +92,32 @@ while True:  # Runs the main game loop.
         helpText.detectMouse()
         helpText.hoverEffect()
         helpText.blitText()
+
+        # Changing screens.
+        if playText.detectMouse() and event.type == pygame.MOUSEBUTTONDOWN:  # Checks if the play button is pressed by the user.
+            gameActive = True
+            menuActive = False
+            helpActive = True
+
+    # Game screen.
+    if gameActive:
+
+        menuActive = False
+        helpActive = False
+
+        screen.fill("White")
+
+        yesText.renderText()
+        yesText.createRect()
+        yesText.detectMouse()
+        yesText.hoverEffect()
+        yesText.blitText()
+
+        noText.renderText()
+        noText.createRect()
+        noText.detectMouse()
+        noText.hoverEffect()
+        noText.blitText()
 
     pygame.display.update()  # Updates the display.
     clock.tick(60)  # Sets the framerate; 60FPS has been set as the target FPS.

@@ -3,7 +3,7 @@ import pygame
 
 
 # Menu.
-class MenuText:
+class TextButton:
 
     def __init__(self, text, colour, xPos, yPos, size, screen):  # Constructor for the class; takes all the necessary parameters.
         self.__text = text
@@ -34,8 +34,10 @@ class MenuText:
     def hoverEffect(self):  #  Changes text colour based on mouse position.
         if self.detectMouse():
             self.__colour = "Yellow"  # Changes the text colour to yellow if the mouse cursor is hovering over it.
+            return True
         if not self.detectMouse():
             self.__colour = "White"  # Defaults back to white if not.
+            return False
 
     def blitText(self):
         self.__screen.blit(self.returnRender(), self.__menuTextRect)  # Blits to the screen.
