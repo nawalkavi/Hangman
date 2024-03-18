@@ -1,7 +1,7 @@
 # Importing the necessary libraries and classes.
 import pygame
-from Button import TextButton  # Imports the TextButton class.
-from GameScreen import GameScreen
+from Text import TextButton  # Imports the TextButton class.
+from GameScreen import Question, Hangman
 
 
 # Initialising and setting up.
@@ -14,6 +14,13 @@ helpActive = False  # Starts the help screen.
 gameActive = False  # Starts the game screen.
 
 
+# Reading the .txt file.
+with open("Assets//Word Dictionary//words_alpha.txt", "r") as f:  # Opens the .txt file and automatically closes it afterward.
+    words = f.read()  # File is read.
+wordList = words.split("\n")  # The data is split at every next line break and converted into a list with each individual word as a list item.
+wordList = [word.upper() for word in wordList]  # Converts all the data in the list into all capital letters.
+
+
 # Image dictionary.
 hangmanImages = {
     "1": pygame.transform.scale(pygame.image.load("Assets//Images//Hangman//Hangman 1.png"), (150, 150)).convert_alpha(),
@@ -22,20 +29,24 @@ hangmanImages = {
 }
 
 
+# Dictionary that will store all the Hangman images in each stage.
+hangmanDictionary = {
+    1: pygame.transform.scale(pygame.image.load("Assets//Images//Hangman//Hangman 1.png"), (100, 80)).convert_alpha(),
+    2: pygame.transform.scale(pygame.image.load("Assets//Images//Hangman//Hangman 2.png"), (100, 80)).convert_alpha()
+}
+
+
 # Text button objects.
-hangmanText = TextButton("Hangman", "White", 600, 200, 100, screen)  # Creates an object for the TextButton class.
-playText = TextButton("Play", "White", 600, 350, 70, screen)
-helpText = TextButton("Help", "White", 600, 450, 70, screen)
+hangmanText = TextButton("Hangman", "White", "Yellow", 600, 200, 100, screen)  # Creates an object for the TextButton class.
+playText = TextButton("Play", "White", "Yellow", 600, 350, 70, screen)
+helpText = TextButton("Help", "White", "Yellow", 600, 450, 70, screen)
 
-yesText = TextButton("Yes", "Black", 900, 500, 70, screen)
-noText = TextButton("No", "Black", 900, 600, 70, screen)
+yesText = TextButton("Yes", "Black", "Yellow", 900, 500, 70, screen)
+noText = TextButton("No", "Black", "Yellow", 900, 600, 70, screen)
 
 
-# Reading the .txt file.
-with open("Assets//Word Dictionary//words_alpha.txt", "r") as f:  # Opens the .txt file and automatically closes it afterward.
-    data = f.read()  # File is read.
-dataList = data.split("\n")  # The data is split at every next line break and converted into a list with each individual word as a list item.
-dataList = [word.upper() for word in dataList]  # Converts all the data in the list into all capital letters.
+# Question.
+question = Question(wordList, screen)
 
 
 # User input for word length.
@@ -107,6 +118,8 @@ while True:  # Runs the main game loop.
 
         screen.fill("White")
 
+        # question.setLength(# Staging screen input)
+
         yesText.renderText()
         yesText.createRect()
         yesText.detectMouse()
@@ -118,6 +131,8 @@ while True:  # Runs the main game loop.
         noText.detectMouse()
         noText.hoverEffect()
         noText.blitText()
+
+
 
     pygame.display.update()  # Updates the display.
     clock.tick(60)  # Sets the framerate; 60FPS has been set as the target FPS.
