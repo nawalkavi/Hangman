@@ -43,3 +43,9 @@ class TextButton:
 
     def blitText(self):
         self.__screen.blit(self.returnRender(), self.__menuTextRect)  # Blits to the screen.
+
+    def setText(self, newText):
+        self.__text = newText
+
+    def returnText(self):
+        return self.__text

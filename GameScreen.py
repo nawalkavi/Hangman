@@ -3,7 +3,7 @@ import random
 from Text import TextButton
 
 
-# Game.
+# Game  .
 class Question:
 
     def __init__(self, wordList, screen):
