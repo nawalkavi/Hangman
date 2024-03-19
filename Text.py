@@ -49,3 +49,9 @@ class TextButton:
 
     def returnText(self):
         return self.__text
+
+    def setColour(self, newColour):
+        self.__currentColour = newColour
+
+    def returnColour(self):
+        return self.__currentColour

@@ -1,9 +1,8 @@
 # Importing the necessary libraries.
 import random
-from Text import TextButton
 
 
-# Game  .
+# Question.
 class Question:
 
     def __init__(self, wordList, screen):
@@ -24,23 +23,20 @@ class Question:
             self.__count -= 1
         self.__grid = " ".join(self.__completedWord)
 
-    def createGridRect(self):
-        pass
+    def setWordLength(self, newWordLength):
+        self.__wordLength = newWordLength
 
-    def setLength(self, wordLength):
-        if self.__wordLength is None:
-            self.__wordLength = wordLength
-            return False
-        else:
-            return True
-
-    def resetLength(self):
+    def resetWordLength(self):
         self.__wordLength = None
+
+    def returnWordLength(self):
+        return self.__wordLength
 
     def matchWords(self):
         for i in range(0, len(self.__wordList)):  # Traverses through the list storing every word.
             if len(self.__wordList[i]) == self.__wordLength:  # Checks if a word is the same length as that of the user's input.
                 self.__matchedWords.append(self.__wordList[i])  # Appends it to the matchedWords list if it is the same length.
+
 
     # Prototype 2.
     # def scaleAttempts(self):  # Sets the number of attempts depending on how many letters the word has.
@@ -71,12 +67,14 @@ class Question:
                 return True  # Returns True if the current letter has already been guessed once.
 
 
+# Hangman.
 class Hangman:
 
-    def __init__(self, hangmanDictionary, screen):
-        self.__screen = screen
+    def __init__(self, hangmanDictionary, questionObject, screen):
         self.__hangmanDictionary = hangmanDictionary
-        self.__attemptsLeft = 0
+        self.__questionObject = questionObject
+        self.__screen = screen
+        self.__attemptsLeft = None
 
     def returnCurrentHangmanCount(self):
         self.__currentHangmanCount = 10 - self.__attemptsLeft
