@@ -23,6 +23,9 @@ class Question:
             self.__count -= 1
         self.__grid = " ".join(self.__completedWord)
 
+    def returnGrid(self):
+        return self.__grid
+
     def setWordLength(self, newWordLength):
         self.__wordLength = newWordLength
 
@@ -37,22 +40,24 @@ class Question:
             if len(self.__wordList[i]) == self.__wordLength:  # Checks if a word is the same length as that of the user's input.
                 self.__matchedWords.append(self.__wordList[i])  # Appends it to the matchedWords list if it is the same length.
 
+    def returnMatchedWords(self):
+        return self.__matchedWords
 
-    # Prototype 2.
-    # def scaleAttempts(self):  # Sets the number of attempts depending on how many letters the word has.
-    #     self.__doneOnce = False  # Ensures this method is only run once.
-    #     if not self.__doneOnce:
-    #         if 1 <= self.__wordLength <= 3:
-    #             self.__attemptsLeft = 5
-    #         elif 4 <= self.__wordLength <= 7:
-    #             self.__attemptsLeft = 10
-    #         elif 8 <= self.__wordLength <= 11:
-    #             self.__attemptsLeft = 15
-    #         elif self.__wordLength >= 12:
-    #             self.__attemptsLeft = 20
-    #     self.__doneOnce = True
+    def scaleAttempts(self):  # Sets the number of attempts depending on how many letters the word has.
+        self.__doneOnce = False  # Ensures this method is only run once.
+        if not self.__doneOnce:
+            if 1 <= self.__wordLength <= 3:
+                self.__attemptsLeft = 5
+            elif 4 <= self.__wordLength <= 7:
+                self.__attemptsLeft = 10
+            elif 8 <= self.__wordLength <= 11:
+                self.__attemptsLeft = 15
+            elif self.__wordLength >= 12:
+                self.__attemptsLeft = 20
+        self.__doneOnce = True
 
-
+    def returnAttemptsLeft(self):
+        return self.__attemptsLeft
 
     def generateGuess(self):
         self.__currentWord = None
@@ -70,13 +75,12 @@ class Question:
 # Hangman.
 class Hangman:
 
-    def __init__(self, hangmanDictionary, questionObject, screen):
+    def __init__(self, hangmanDictionary, screen):
         self.__hangmanDictionary = hangmanDictionary
-        self.__questionObject = questionObject
         self.__screen = screen
-        self.__attemptsLeft = None
 
-    def returnCurrentHangmanCount(self):
+    def returnCurrentHangmanCount(self, attemptsLeft):
+        self.__attemptsLeft = attemptsLeft
         self.__currentHangmanCount = 10 - self.__attemptsLeft
         return self.__currentHangmanCount
 

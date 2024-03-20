@@ -1,6 +1,5 @@
 # Importing the necessary libraries and classes.
 import pygame
-import time
 from Text import TextButton  # Imports the TextButton class.
 from GameScreen import Question, Hangman
 
@@ -14,6 +13,7 @@ menuActive = True  # Starts the menu screen; the default screen to open with.
 helpActive = False  # Starts the help screen.
 gameActive = False  # Starts the game screen.
 stagingActive = False  # Starts the staging screen.
+gridDoneOnce = False  # Prevents the grid from being appended to and blitted more than once.
 
 
 # Reading the .txt file.
@@ -55,13 +55,17 @@ lengthQuestion2 = TextButton("are in", "Black", "Yellow", 600, 200, 80, screen)
 lengthQuestion3 = TextButton("your word?", "Black", "Yellow", 600, 300, 80, screen)
 lengthInputText = TextButton("", "Yellow", "Black", 600, 550, 80, screen)
 question = Question(wordList, screen)
-confirmText = TextButton("Confirm", "Black", "Yellow", 1050, 700, 60, screen)
+confirmStagingText = TextButton("Confirm", "Black", "Yellow", 1050, 700, 60, screen)
 backStagingText = TextButton("Back", "Black", "Yellow", 110, 700, 60, screen)
 
 # Game screen text objects.
-yesText = TextButton("Yes", "Black", "Yellow", 900, 500, 70, screen)
-noText = TextButton("No", "Black", "Yellow", 900, 600, 70, screen)
-hangman = Hangman(hangmanImages, question, screen)
+yesText = TextButton("Yes", "Black", "Yellow", 800, 600, 70, screen)
+noText = TextButton("No", "Black", "Yellow", 1000, 600, 70, screen)
+guessText1 = TextButton("Is", "Black", "Yellow", 875, 300, 70, screen)
+guessText2 = TextButton("in your word?", "Black", "Yellow", 900, 400, 70, screen)
+# guessLetter = TextButton("", "Yellow", "Black", )
+gridText = TextButton("", "Black", "Yellow", 900, 100, 80, screen)
+hangman = Hangman(hangmanImages, screen)
 
 
 while True:  # Runs the main game loop.
@@ -75,7 +79,10 @@ while True:  # Runs the main game loop.
             if stagingActive:  # Ensures user can only input inside the staging screen.
 
                 # Detects which key was pressed and assigns it to self.__wordLength accordingly.
-                if event.key == pygame.K_1:
+                if event.key == pygame.K_0:
+                    question.resetWordLength()
+                    lengthInputText.setText("")
+                elif event.key == pygame.K_1:
                     question.setWordLength(1)
                     lengthInputText.setText("1")
                 elif event.key == pygame.K_2:
@@ -191,13 +198,13 @@ while True:  # Runs the main game loop.
         lengthInputText.createRect()
         lengthInputText.blitText()
 
-        confirmText.renderText()
-        confirmText.createRect()
-        confirmText.detectMouse()
-        confirmText.hoverEffect()
+        confirmStagingText.renderText()
+        confirmStagingText.createRect()
+        confirmStagingText.detectMouse()
+        confirmStagingText.hoverEffect()
         if question.returnWordLength() is None:
-            confirmText.setColour("Gray")
-        confirmText.blitText()
+            confirmStagingText.setColour("Gray")
+        confirmStagingText.blitText()
 
         backStagingText.renderText()
         backStagingText.createRect()
@@ -207,8 +214,8 @@ while True:  # Runs the main game loop.
 
         if backStagingText.detectMouse() and event.type == pygame.MOUSEBUTTONDOWN:
             menuActive = True
-        if confirmText.detectMouse() and event.type == pygame.MOUSEBUTTONDOWN:
-            if confirmText.returnColour() == "Gray":
+        if confirmStagingText.detectMouse() and event.type == pygame.MOUSEBUTTONDOWN:
+            if confirmStagingText.returnColour() == "Gray":
                 stagingActive = True
             else:
                 gameActive = True
@@ -220,16 +227,32 @@ while True:  # Runs the main game loop.
         helpActive = False
         stagingActive = False
 
-        screen.fill("White")
+        screen.fill("White ")
 
-        # question.generateGrid()
-        # question.matchWords()
-        # question.generateGuess()
-        # question.checkIfGuessed()
+        question.scaleAttempts()
+        if not gridDoneOnce:
+            question.generateGrid()
+            gridDoneOnce = True
+        question.matchWords()
+        question.generateGuess()
+        question.checkIfGuessed()
 
-        hangman.returnCurrentHangmanCount()
-        hangman.createHangmanRect()
-        hangman.displayHangman()
+        hangman.returnCurrentHangmanCount(question.returnAttemptsLeft())
+        # hangman.createHangmanRect()
+        # hangman.displayHangman()
+
+        guessText1.renderText()
+        guessText1.createRect()
+        guessText1.blitText()
+
+        guessText2.renderText()
+        guessText2.createRect()
+        guessText2.blitText()
+
+        gridText.setText(question.returnGrid())
+        gridText.renderText()
+        gridText.createRect()
+        gridText.blitText()
 
         yesText.renderText()
         yesText.createRect()
