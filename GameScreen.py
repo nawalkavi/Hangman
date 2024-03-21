@@ -14,6 +14,8 @@ class Question:
         self.__matchedWords = []  # Will store all the words with the same length as that of the user.
         self.__completedWord = []  # Will store the correct guesses to progressively form the answer.
         self.__guessedLetters = []  # Will store every letter that has been used as a guess.
+        self.__totalAttempts = 10
+        self.__attemptsLeft = 10
         self.__grid = ""
 
     def generateGrid(self):
@@ -44,21 +46,21 @@ class Question:
     def returnMatchedWords(self):
         return self.__matchedWords
 
-    def scaleAttempts(self):  # Sets the number of attempts depending on how many letters the word has.
-        self.__doneOnce = False  # Ensures this method is only run once.
-        if not self.__doneOnce:
-            if 1 <= self.__wordLength <= 3:
-                self.__attemptsLeft = 5
-            elif 4 <= self.__wordLength <= 7:
-                self.__attemptsLeft = 10
-            elif 8 <= self.__wordLength <= 11:
-                self.__attemptsLeft = 15
-            elif self.__wordLength >= 12:
-                self.__attemptsLeft = 20
-        self.__doneOnce = True
+    # def scaleAttempts(self):  # Sets the number of attempts depending on how many letters the word has.
+    #     if 1 <= self.__wordLength <= 3:
+    #         self.__attemptsLeft = 5
+    #     elif 4 <= self.__wordLength <= 7:
+    #         self.__attemptsLeft = 10
+    #     elif 8 <= self.__wordLength <= 11:
+    #         self.__attemptsLeft = 15
+    #     elif self.__wordLength >= 12:
+    #         self.__attemptsLeft = 20
 
     def removeAttempt(self):
         self.__attemptsLeft -= 1
+
+    def returnTotalAttempts(self):
+        return self.__totalAttempts
 
     def returnAttemptsLeft(self):
         return self.__attemptsLeft
@@ -80,18 +82,22 @@ class Question:
 # Hangman.
 class Hangman:
 
-    def __init__(self, hangmanDictionary, screen):
+    def __init__(self, hangmanDictionary, xPos, yPos, screen):
         self.__hangmanDictionary = hangmanDictionary
+        self.__xPos = xPos
+        self.__yPos = yPos
         self.__screen = screen
 
-    def returnCurrentHangmanCount(self, attemptsLeft):
+    def returnCurrentHangmanCount(self, totalAttempts, attemptsLeft):
+        self.__totalAttempts = totalAttempts
         self.__attemptsLeft = attemptsLeft
-        self.__currentHangmanCount = 10 - self.__attemptsLeft
+        self.__currentHangmanCount = self.__totalAttempts - self.__attemptsLeft
         return self.__currentHangmanCount
 
     def createHangmanRect(self):
+        self.__currentHangmanCount = str(self.__currentHangmanCount)
         self.__currentHangmanImage = self.__hangmanDictionary[self.__currentHangmanCount]
-        self.__hangmanRect = self.__currentHangmanImage.get_rect(center=(100, 100))
+        self.__hangmanRect = self.__currentHangmanImage.get_rect(center=(self.__xPos, self.__yPos))
 
     def displayHangman(self):
         self.__screen.blit(self.__currentHangmanImage, self.__hangmanRect)

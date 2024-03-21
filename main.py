@@ -33,9 +33,16 @@ alphabetString = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 # Image dictionary.
 hangmanImages = {
-    "1": pygame.transform.scale(pygame.image.load("Assets//Images//Hangman//Hangman 1.png"), (150, 150)).convert_alpha(),
-    "2": pygame.transform.scale(pygame.image.load("Assets//Images//Hangman//Hangman 2.png"), (150, 150)).convert_alpha(),
-    "3": pygame.transform.scale(pygame.image.load("Assets//Images//Hangman//Hangman 3.png"), (150, 150)).convert_alpha()
+    "1": pygame.transform.scale(pygame.image.load("Assets//Images//Hangman//Hangman 1.png"), (600, 600)).convert_alpha(),
+    "2": pygame.transform.scale(pygame.image.load("Assets//Images//Hangman//Hangman 2.png"), (600, 600)).convert_alpha(),
+    "3": pygame.transform.scale(pygame.image.load("Assets//Images//Hangman//Hangman 3.png"), (600, 600)).convert_alpha(),
+    "4": pygame.transform.scale(pygame.image.load("Assets//Images//Hangman//Hangman 4.png"), (600, 600)).convert_alpha(),
+    "5": pygame.transform.scale(pygame.image.load("Assets//Images//Hangman//Hangman 5.png"), (600, 600)).convert_alpha(),
+    "6": pygame.transform.scale(pygame.image.load("Assets//Images//Hangman//Hangman 6.png"), (600, 600)).convert_alpha(),
+    "7": pygame.transform.scale(pygame.image.load("Assets//Images//Hangman//Hangman 7.png"), (600, 600)).convert_alpha(),
+    "8": pygame.transform.scale(pygame.image.load("Assets//Images//Hangman//Hangman 8.png"), (600, 600)).convert_alpha(),
+    "9": pygame.transform.scale(pygame.image.load("Assets//Images//Hangman//Hangman 9.png"), (600, 600)).convert_alpha(),
+    "10": pygame.transform.scale(pygame.image.load("Assets//Images//Hangman//Hangman 10.png"), (600, 600)).convert_alpha()
 }
 
 
@@ -74,7 +81,7 @@ guessText2 = TextButton("in your word?", "Black", "Yellow", 900, 400, 70, screen
 guessLetter = TextButton("", "Yellow", "Black", 950, 300, 70, screen)
 gridText = TextButton("", "Black", "Yellow", 900, 100, 80, screen)
 outOfAttemptsText = TextButton("Out of attempts!", "Black", "Yellow", 900, 400, 70, screen)
-hangman = Hangman(hangmanImages, screen)
+hangman = Hangman(hangmanImages, 300, 370, screen)
 
 
 while True:  # Runs the main game loop.
@@ -239,9 +246,9 @@ while True:  # Runs the main game loop.
 
         screen.fill("White ")
 
-        if not attemptsScaled:
-            question.scaleAttempts()
-            attemptsScaled = True
+        # if not attemptsScaled:
+        #     question.scaleAttempts()
+        #     attemptsScaled = True
         if not gridDoneOnce:
             question.generateGrid()
             gridDoneOnce = True
@@ -250,9 +257,6 @@ while True:  # Runs the main game loop.
         if not guessShown and not userDecisionMade:
             question.generateGuess()
             question.removeAttempt()
-            print(f"Attempts left: {question.returnAttemptsLeft()}")
-            print(f"Original guess: {question.returnCurrentGuess()}")
-            print(question.returnGuessedLetters())
         guessShown = True
 
         if question.returnAttemptsLeft() == 0:
@@ -277,7 +281,6 @@ while True:  # Runs the main game loop.
             if yesText.detectMouse() and event.type == pygame.MOUSEBUTTONDOWN or noText.detectMouse() and event.type == pygame.MOUSEBUTTONDOWN:
                 userDecisionMade = True
                 guessShown = False
-                time.sleep(0.1)
 
             guessText1.renderText()
             guessText1.createRect()
@@ -296,6 +299,10 @@ while True:  # Runs the main game loop.
         gridText.renderText()
         gridText.createRect()
         gridText.blitText()
+
+        hangman.returnCurrentHangmanCount(question.returnTotalAttempts(), question.returnAttemptsLeft())
+        hangman.createHangmanRect()
+        hangman.displayHangman()
 
     pygame.display.update()  # Updates the display.
     clock.tick(60)  # Sets the framerate; 60FPS has been set as the target FPS.
