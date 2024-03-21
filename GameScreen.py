@@ -61,15 +61,23 @@ class Question:
 
     def generateGuess(self):
         self.__currentWord = None
-        self.__currentLetter = None
+        self.__currentGuess = None
         if self.__attemptsLeft != 0:  # Prevents a guess from being generated if there are no more attempts left.
             self.__currentWord = random.choice(self.__matchedWords)  # Makes a random word choice from the list of matched words.
-            self.__currentLetter = self.__currentWord[random.randint(0, len(self.__currentWord) - 1)]  # Chooses a random letter from the chosen word.
+            self.__currentGuess = self.__currentWord[random.randint(0, len(self.__currentWord) - 1)]  # Chooses a random letter from the chosen word.
+            self.__guessedLetters.append(self.__currentGuess)
 
     def checkIfGuessed(self):
-        for i in self.__guessedLetters:
-            if self.__guessedLetters[i] == self.__currentLetter:
+        for i in range(0, len(self.__guessedLetters)):
+            if self.__guessedLetters[i] == self.__currentGuess:
+                del self.__guessedLetters[-1]
                 return True  # Returns True if the current letter has already been guessed once.
+
+    def returnGuessedLetters(self):
+        return self.__guessedLetters
+
+    def returnCurrentGuess(self):
+        return self.__currentGuess
 
 
 # Hangman.

@@ -1,5 +1,6 @@
 # Importing the necessary libraries and classes.
 import pygame
+import sys
 from Text import TextButton  # Imports the TextButton class.
 from GameScreen import Question, Hangman
 
@@ -39,9 +40,9 @@ hangmanDictionary = {
 
 
 # Menu screen text objects.
-hangmanText = TextButton("Hangman", "Black", "Yellow", 600, 200, 100, screen)  # Creates an object for the TextButton class.
-playText = TextButton("Play", "Black", "Yellow", 600, 350, 70, screen)
-helpText = TextButton("Help", "Black", "Yellow", 600, 450, 70, screen)
+hangmanMenuText = TextButton("Hangman", "Black", "Yellow", 600, 200, 100, screen)  # Creates an object for the TextButton class.
+playMenuText = TextButton("Play", "Black", "Yellow", 600, 350, 70, screen)
+helpMenuText = TextButton("Help", "Black", "Yellow", 600, 450, 70, screen)
 
 # Help screen text objects.
 infoText1 = TextButton("Choose a word", "Black", "Yellow", 600, 100, 80, screen)
@@ -58,21 +59,29 @@ question = Question(wordList, screen)
 confirmStagingText = TextButton("Confirm", "Black", "Yellow", 1050, 700, 60, screen)
 backStagingText = TextButton("Back", "Black", "Yellow", 110, 700, 60, screen)
 
-# Game screen text objects.
+# Game screen text objects.hat
 yesText = TextButton("Yes", "Black", "Yellow", 800, 600, 70, screen)
 noText = TextButton("No", "Black", "Yellow", 1000, 600, 70, screen)
 guessText1 = TextButton("Is", "Black", "Yellow", 875, 300, 70, screen)
 guessText2 = TextButton("in your word?", "Black", "Yellow", 900, 400, 70, screen)
-# guessLetter = TextButton("", "Yellow", "Black", )
+guessLetter = TextButton("", "Yellow", "Black", 950, 300, 70, screen)
 gridText = TextButton("", "Black", "Yellow", 900, 100, 80, screen)
 hangman = Hangman(hangmanImages, screen)
 
 
+# Arrays.
+menuArray = [hangmanMenuText, playMenuText, helpMenuText]
+helpArray = [infoText1, infoText2, infoText3, backHelpText]
+
+
 while True:  # Runs the main game loop.
+
+    guessDone = False
 
     for event in pygame.event.get():  # Retrieves all events running.
         if event.type == pygame.QUIT:  # Checks if the current event is the same as the quit button of the game window.
             pygame.quit()  # If so, closes the window and stops running.
+            sys.exit()
 
         elif event.type == pygame.KEYDOWN:  # Detects a keyboard input.
 
@@ -120,26 +129,26 @@ while True:  # Runs the main game loop.
         screen.fill("White")  # Fills the screen with the colour black.
 
         # Menu text objects.
-        hangmanText.renderText()  # Hangman text.
-        hangmanText.createRect()
-        hangmanText.blitText()
+        hangmanMenuText.renderText()  # Hangman text.
+        hangmanMenuText.createRect()
+        hangmanMenuText.blitText()
 
-        playText.renderText()  # Play text.
-        playText.createRect()
-        playText.detectMouse()
-        playText.hoverEffect()
-        playText.blitText()
+        playMenuText.renderText()  # Play text.
+        playMenuText.createRect()
+        playMenuText.detectMouse()
+        playMenuText.hoverEffect()
+        playMenuText.blitText()
 
-        helpText.renderText()  # Help text.
-        helpText.createRect()
-        helpText.detectMouse()
-        helpText.hoverEffect()
-        helpText.blitText()
+        helpMenuText.renderText()  # Help text.
+        helpMenuText.createRect()
+        helpMenuText.detectMouse()
+        helpMenuText.hoverEffect()
+        helpMenuText.blitText()
 
         # Changing screens.
-        if playText.detectMouse() and event.type == pygame.MOUSEBUTTONDOWN:  # Checks if the play button is pressed by the user.
+        if playMenuText.detectMouse() and event.type == pygame.MOUSEBUTTONDOWN:  # Checks if the play button is pressed by the user.
             stagingActive = True
-        elif helpText.detectMouse() and event.type == pygame.MOUSEBUTTONDOWN:  # Checks if the help button is pressed by the user.
+        elif helpMenuText.detectMouse() and event.type == pygame.MOUSEBUTTONDOWN:  # Checks if the help button is pressed by the user.
             helpActive = True
 
     # Help screen.
@@ -235,11 +244,6 @@ while True:  # Runs the main game loop.
             gridDoneOnce = True
         question.matchWords()
         question.generateGuess()
-        question.checkIfGuessed()
-
-        hangman.returnCurrentHangmanCount(question.returnAttemptsLeft())
-        # hangman.createHangmanRect()
-        # hangman.displayHangman()
 
         guessText1.renderText()
         guessText1.createRect()
@@ -248,6 +252,11 @@ while True:  # Runs the main game loop.
         guessText2.renderText()
         guessText2.createRect()
         guessText2.blitText()
+
+        guessLetter.setText(question.returnCurrentGuess())
+        guessLetter.renderText()
+        guessLetter.createRect()
+        guessLetter.blitText()
 
         gridText.setText(question.returnGrid())
         gridText.renderText()
