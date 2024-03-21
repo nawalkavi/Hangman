@@ -1,6 +1,7 @@
 # Importing the necessary libraries and classes.
 import pygame
 import sys
+import time
 from Text import TextButton  # Imports the TextButton class.
 from GameScreen import Question, Hangman
 
@@ -15,13 +16,19 @@ helpActive = False  # Starts the help screen.
 gameActive = False  # Starts the game screen.
 stagingActive = False  # Starts the staging screen.
 gridDoneOnce = False  # Prevents the grid from being appended to and blitted more than once.
-
+attemptsScaled = False
+guessShown = False
+userDecisionMade = False
 
 # Reading the .txt file.
 with open("Assets//Word Dictionary//words_alpha.txt", "r") as f:  # Opens the .txt file and automatically closes it afterward.
     words = f.read()  # File is read.
 wordList = words.split("\n")  # The data is split at every next line break and converted into a list with each individual word as a list item.
 wordList = [word.upper() for word in wordList]  # Converts all the data in the list into all capital letters.
+
+
+# String storing all the possible guesses.
+alphabetString = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 
 # Image dictionary.
@@ -55,7 +62,7 @@ lengthQuestion1 = TextButton("How many letters", "Black", "Yellow", 600, 100, 80
 lengthQuestion2 = TextButton("are in", "Black", "Yellow", 600, 200, 80, screen)
 lengthQuestion3 = TextButton("your word?", "Black", "Yellow", 600, 300, 80, screen)
 lengthInputText = TextButton("", "Yellow", "Black", 600, 550, 80, screen)
-question = Question(wordList, screen)
+question = Question(wordList, alphabetString, screen)
 confirmStagingText = TextButton("Confirm", "Black", "Yellow", 1050, 700, 60, screen)
 backStagingText = TextButton("Back", "Black", "Yellow", 110, 700, 60, screen)
 
@@ -66,17 +73,11 @@ guessText1 = TextButton("Is", "Black", "Yellow", 875, 300, 70, screen)
 guessText2 = TextButton("in your word?", "Black", "Yellow", 900, 400, 70, screen)
 guessLetter = TextButton("", "Yellow", "Black", 950, 300, 70, screen)
 gridText = TextButton("", "Black", "Yellow", 900, 100, 80, screen)
+outOfAttemptsText = TextButton("Out of attempts!", "Black", "Yellow", 900, 400, 70, screen)
 hangman = Hangman(hangmanImages, screen)
 
 
-# Arrays.
-menuArray = [hangmanMenuText, playMenuText, helpMenuText]
-helpArray = [infoText1, infoText2, infoText3, backHelpText]
-
-
 while True:  # Runs the main game loop.
-
-    guessDone = False
 
     for event in pygame.event.get():  # Retrieves all events running.
         if event.type == pygame.QUIT:  # Checks if the current event is the same as the quit button of the game window.
@@ -238,42 +239,63 @@ while True:  # Runs the main game loop.
 
         screen.fill("White ")
 
-        question.scaleAttempts()
+        if not attemptsScaled:
+            question.scaleAttempts()
+            attemptsScaled = True
         if not gridDoneOnce:
             question.generateGrid()
             gridDoneOnce = True
         question.matchWords()
-        question.generateGuess()
+        userDecisionMade = False
+        if not guessShown and not userDecisionMade:
+            question.generateGuess()
+            question.removeAttempt()
+            print(f"Attempts left: {question.returnAttemptsLeft()}")
+            print(f"Original guess: {question.returnCurrentGuess()}")
+            print(question.returnGuessedLetters())
+        guessShown = True
 
-        guessText1.renderText()
-        guessText1.createRect()
-        guessText1.blitText()
+        if question.returnAttemptsLeft() == 0:
+            outOfAttemptsText.renderText()
+            outOfAttemptsText.createRect()
+            outOfAttemptsText.blitText()
 
-        guessText2.renderText()
-        guessText2.createRect()
-        guessText2.blitText()
+        if question.returnAttemptsLeft() != 0:
 
-        guessLetter.setText(question.returnCurrentGuess())
-        guessLetter.renderText()
-        guessLetter.createRect()
-        guessLetter.blitText()
+            yesText.renderText()
+            yesText.createRect()
+            yesText.detectMouse()
+            yesText.hoverEffect()
+            yesText.blitText()
+
+            noText.renderText()
+            noText.createRect()
+            noText.detectMouse()
+            noText.hoverEffect()
+            noText.blitText()
+
+            if yesText.detectMouse() and event.type == pygame.MOUSEBUTTONDOWN or noText.detectMouse() and event.type == pygame.MOUSEBUTTONDOWN:
+                userDecisionMade = True
+                guessShown = False
+                time.sleep(0.1)
+
+            guessText1.renderText()
+            guessText1.createRect()
+            guessText1.blitText()
+
+            guessText2.renderText()
+            guessText2.createRect()
+            guessText2.blitText()
+
+            guessLetter.setText(question.returnCurrentGuess())
+            guessLetter.renderText()
+            guessLetter.createRect()
+            guessLetter.blitText()
 
         gridText.setText(question.returnGrid())
         gridText.renderText()
         gridText.createRect()
         gridText.blitText()
-
-        yesText.renderText()
-        yesText.createRect()
-        yesText.detectMouse()
-        yesText.hoverEffect()
-        yesText.blitText()
-
-        noText.renderText()
-        noText.createRect()
-        noText.detectMouse()
-        noText.hoverEffect()
-        noText.blitText()
 
     pygame.display.update()  # Updates the display.
     clock.tick(60)  # Sets the framerate; 60FPS has been set as the target FPS.

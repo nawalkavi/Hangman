@@ -5,10 +5,11 @@ import random
 # Question.
 class Question:
 
-    def __init__(self, wordList, screen):
+    def __init__(self, wordList, alphabetString, screen):
         self.__wordList = wordList
-        self.__wordLength = None
+        self.__alphabetString = alphabetString
         self.__screen = screen
+        self.__wordLength = None
         self.__attemptsLeft = 0
         self.__matchedWords = []  # Will store all the words with the same length as that of the user.
         self.__completedWord = []  # Will store the correct guesses to progressively form the answer.
@@ -56,28 +57,24 @@ class Question:
                 self.__attemptsLeft = 20
         self.__doneOnce = True
 
+    def removeAttempt(self):
+        self.__attemptsLeft -= 1
+
     def returnAttemptsLeft(self):
         return self.__attemptsLeft
 
     def generateGuess(self):
-        self.__currentWord = None
         self.__currentGuess = None
         if self.__attemptsLeft != 0:  # Prevents a guess from being generated if there are no more attempts left.
-            self.__currentWord = random.choice(self.__matchedWords)  # Makes a random word choice from the list of matched words.
-            self.__currentGuess = self.__currentWord[random.randint(0, len(self.__currentWord) - 1)]  # Chooses a random letter from the chosen word.
+            self.__currentGuess = random.choice(self.__alphabetString)
+            self.__alphabetString = self.__alphabetString.replace(self.__currentGuess, "")
             self.__guessedLetters.append(self.__currentGuess)
-
-    def checkIfGuessed(self):
-        for i in range(0, len(self.__guessedLetters)):
-            if self.__guessedLetters[i] == self.__currentGuess:
-                del self.__guessedLetters[-1]
-                return True  # Returns True if the current letter has already been guessed once.
-
-    def returnGuessedLetters(self):
-        return self.__guessedLetters
 
     def returnCurrentGuess(self):
         return self.__currentGuess
+
+    def returnGuessedLetters(self):
+        return self.__guessedLetters
 
 
 # Hangman.
