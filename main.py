@@ -149,8 +149,6 @@ while True:  # Runs the main game loop.
         confirmStagingText.renderText()
         confirmStagingText.createRect()
         confirmStagingText.hoverEffect()
-        if question.returnWordLength() is None:
-            confirmStagingText.setColour("Gray")
         confirmStagingText.blitText()
 
         backStagingText.renderText()
@@ -255,35 +253,34 @@ while True:  # Runs the main game loop.
 
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
-
-                print(helpActive)
-
-            if menuActive:
-                if playMenuText.detectMouse():  # Checks if the play button is pressed by the user.
-                    stagingActive = True
-                    menuActive = False
-                elif helpMenuText.detectMouse():  # Checks if the help button is pressed by the user.
-                    helpActive = True
-                    menuActive = False
-            elif helpActive:
-                if backHelpText.detectMouse():
-                    helpActive = False
-                    menuActive = True
-            elif stagingActive:
-                if backStagingText.detectMouse():
-                    menuActive = True
-                    stagingActive = False
-                if confirmStagingText.detectMouse():
-                    if confirmStagingText.returnColour() == "Gray":
+                if menuActive:
+                    if playMenuText.detectMouse():  # Checks if the play button is pressed by the user.
                         stagingActive = True
-                    else:
-                        gameActive = True
-            elif gameActive:
-                print("random")
-                if guessShown:
-                    if yesText.detectMouse() or noText.detectMouse():
-                        userDecisionMade = True
-                        guessShown = False
+                        menuActive = False
+                    elif helpMenuText.detectMouse():  # Checks if the help button is pressed by the user.
+                        helpActive = True
+                        menuActive = False
+                elif helpActive:
+                    if backHelpText.detectMouse():
+                        helpActive = False
+                        menuActive = True
+                elif stagingActive:
+                    print("staging active")
+                    if backStagingText.detectMouse():
+                        menuActive = True
+                        stagingActive = False
+                    if confirmStagingText.detectMouse():
+                        if confirmStagingText.returnColour() == "Gray":
+                            stagingActive = True
+                        else:
+                            stagingActive = False
+                            gameActive = True
+                elif gameActive:
+                    print("game active")
+                    if guessShown:
+                        if yesText.detectMouse() or noText.detectMouse():
+                            userDecisionMade = True
+                            guessShown = False
 
     pygame.display.update()  # Updates the display.
     clock.tick(60)  # Sets the framerate; 60FPS has been set as the target FPS.
