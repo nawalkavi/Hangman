@@ -1,7 +1,6 @@
 # Importing the necessary libraries and classes.
 import pygame
 import sys
-import time
 from Text import TextButton  # Imports the TextButton class.
 from GameScreen import Question, Hangman
 
@@ -73,7 +72,7 @@ question = Question(wordList, alphabetString, screen)
 confirmStagingText = TextButton("Confirm", "Black", "Yellow", 1050, 700, 60, screen)
 backStagingText = TextButton("Back", "Black", "Yellow", 110, 700, 60, screen)
 
-# Game screen text objects.hat
+# Game screen text objects.
 yesText = TextButton("Yes", "Black", "Yellow", 800, 600, 70, screen)
 noText = TextButton("No", "Black", "Yellow", 1000, 600, 70, screen)
 guessText1 = TextButton("Is", "Black", "Yellow", 875, 300, 70, screen)
@@ -85,6 +84,133 @@ hangman = Hangman(hangmanImages, 300, 370, screen)
 
 
 while True:  # Runs the main game loop.
+
+    # Menu screen.
+    if menuActive:
+        screen.fill("White")  # Fills the screen with the colour black.
+
+        # Menu text objects.
+        hangmanMenuText.renderText()  # Hangman text.
+        hangmanMenuText.createRect()
+        hangmanMenuText.blitText()
+
+        playMenuText.renderText()  # Play text.
+        playMenuText.createRect()
+        playMenuText.hoverEffect()
+        playMenuText.blitText()
+
+        helpMenuText.renderText()  # Help text.
+        helpMenuText.createRect()
+        helpMenuText.hoverEffect()
+        helpMenuText.blitText()
+
+    # Help screen.
+    if helpActive:
+        screen.fill("White")
+
+        infoText1.renderText()  # First line of information text.
+        infoText1.createRect()
+        infoText1.blitText()
+
+        infoText2.renderText()  # Second line of information text.
+        infoText2.createRect()
+        infoText2.blitText()
+
+        infoText3.renderText()  # Third line of information text.
+        infoText3.createRect()
+        infoText3.blitText()
+
+        backHelpText.renderText()  # Back button.
+        backHelpText.createRect()
+        backHelpText.hoverEffect()
+        backHelpText.blitText()
+
+    # Staging screen.
+    if stagingActive:
+
+        screen.fill("White")
+
+        lengthQuestion1.renderText()
+        lengthQuestion1.createRect()
+        lengthQuestion1.blitText()
+
+        lengthQuestion2.renderText()
+        lengthQuestion2.createRect()
+        lengthQuestion2.blitText()
+
+        lengthQuestion3.renderText()
+        lengthQuestion3.createRect()
+        lengthQuestion3.blitText()
+
+        lengthInputText.renderText()
+        lengthInputText.createRect()
+        lengthInputText.blitText()
+
+        confirmStagingText.renderText()
+        confirmStagingText.createRect()
+        confirmStagingText.hoverEffect()
+        if question.returnWordLength() is None:
+            confirmStagingText.setColour("Gray")
+        confirmStagingText.blitText()
+
+        backStagingText.renderText()
+        backStagingText.createRect()
+        backStagingText.detectMouse()
+        backStagingText.hoverEffect()
+        backStagingText.blitText()
+
+    # Game screen.
+    if gameActive:
+
+        screen.fill("White ")
+
+        if not gridDoneOnce:
+            question.generateGrid()
+            gridDoneOnce = True
+        question.matchWords()
+        userDecisionMade = False
+        if not guessShown and not userDecisionMade:
+            question.generateGuess()
+            question.removeAttempt()
+        guessShown = True
+
+        if question.returnAttemptsLeft() == 0:
+            outOfAttemptsText.renderText()
+            outOfAttemptsText.createRect()
+            outOfAttemptsText.blitText()
+
+        if question.returnAttemptsLeft() != 0:
+            yesText.renderText()
+            yesText.createRect()
+            yesText.hoverEffect()
+            yesText.blitText()
+
+            noText.renderText()
+            noText.createRect()
+            noText.hoverEffect()
+            noText.blitText()
+
+            guessText1.renderText()
+            guessText1.createRect()
+            guessText1.blitText()
+
+            guessText2.renderText()
+            guessText2.createRect()
+            guessText2.blitText()
+
+            guessLetter.setText(question.returnCurrentGuess())
+            guessLetter.renderText()
+            guessLetter.createRect()
+            guessLetter.blitText()
+
+        gridText.setText(question.returnGrid())
+        gridText.renderText()
+        gridText.createRect()
+        gridText.blitText()
+
+        hangman.returnCurrentHangmanCount(question.returnTotalAttempts(), question.returnAttemptsLeft())
+        hangman.createHangmanRect()
+        hangman.displayHangman()
 
     for event in pygame.event.get():  # Retrieves all events running.
         if event.type == pygame.QUIT:  # Checks if the current event is the same as the quit button of the game window.
@@ -127,182 +253,37 @@ while True:  # Runs the main game loop.
                     question.setWordLength(9)
                     lengthInputText.setText("9")
 
-    # Menu screen.
-    if menuActive:
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            if event.button == 1:
 
-        gameActive = False  # Stops the other two screens from running and displaying at the same time.
-        helpActive = False
-        stagingActive = False
+                print(helpActive)
 
-        screen.fill("White")  # Fills the screen with the colour black.
-
-        # Menu text objects.
-        hangmanMenuText.renderText()  # Hangman text.
-        hangmanMenuText.createRect()
-        hangmanMenuText.blitText()
-
-        playMenuText.renderText()  # Play text.
-        playMenuText.createRect()
-        playMenuText.detectMouse()
-        playMenuText.hoverEffect()
-        playMenuText.blitText()
-
-        helpMenuText.renderText()  # Help text.
-        helpMenuText.createRect()
-        helpMenuText.detectMouse()
-        helpMenuText.hoverEffect()
-        helpMenuText.blitText()
-
-        # Changing screens.
-        if playMenuText.detectMouse() and event.type == pygame.MOUSEBUTTONDOWN:  # Checks if the play button is pressed by the user.
-            stagingActive = True
-        elif helpMenuText.detectMouse() and event.type == pygame.MOUSEBUTTONDOWN:  # Checks if the help button is pressed by the user.
-            helpActive = True
-
-    # Help screen.
-    if helpActive:
-
-        menuActive = False
-        gameActive = False
-        stagingActive = False
-
-        screen.fill("White")
-
-        infoText1.renderText()  # First line of information text.
-        infoText1.createRect()
-        infoText1.blitText()
-
-        infoText2.renderText()  # Second line of information text.
-        infoText2.createRect()
-        infoText2.blitText()
-
-        infoText3.renderText()  # Third line of information text.
-        infoText3.createRect()
-        infoText3.blitText()
-
-        backHelpText.renderText()  # Back button.
-        backHelpText.createRect()
-        backHelpText.detectMouse()
-        backHelpText.hoverEffect()
-        backHelpText.blitText()
-
-        # Changing screens.
-        if backHelpText.detectMouse() and event.type == pygame.MOUSEBUTTONDOWN:  # Checks if the back button is pressed by the user.
-            menuActive = True
-
-    # Staging screen.
-    if stagingActive:
-
-        menuActive = False
-        gameActive = False
-        helpActive = False
-
-        screen.fill("White")
-
-        lengthQuestion1.renderText()
-        lengthQuestion1.createRect()
-        lengthQuestion1.blitText()
-
-        lengthQuestion2.renderText()
-        lengthQuestion2.createRect()
-        lengthQuestion2.blitText()
-
-        lengthQuestion3.renderText()
-        lengthQuestion3.createRect()
-        lengthQuestion3.blitText()
-
-        lengthInputText.renderText()
-        lengthInputText.createRect()
-        lengthInputText.blitText()
-
-        confirmStagingText.renderText()
-        confirmStagingText.createRect()
-        confirmStagingText.detectMouse()
-        confirmStagingText.hoverEffect()
-        if question.returnWordLength() is None:
-            confirmStagingText.setColour("Gray")
-        confirmStagingText.blitText()
-
-        backStagingText.renderText()
-        backStagingText.createRect()
-        backStagingText.detectMouse()
-        backStagingText.hoverEffect()
-        backStagingText.blitText()
-
-        if backStagingText.detectMouse() and event.type == pygame.MOUSEBUTTONDOWN:
-            menuActive = True
-        if confirmStagingText.detectMouse() and event.type == pygame.MOUSEBUTTONDOWN:
-            if confirmStagingText.returnColour() == "Gray":
-                stagingActive = True
-            else:
-                gameActive = True
-
-    # Game screen.
-    if gameActive:
-
-        menuActive = False
-        helpActive = False
-        stagingActive = False
-
-        screen.fill("White ")
-
-        # if not attemptsScaled:
-        #     question.scaleAttempts()
-        #     attemptsScaled = True
-        if not gridDoneOnce:
-            question.generateGrid()
-            gridDoneOnce = True
-        question.matchWords()
-        userDecisionMade = False
-        if not guessShown and not userDecisionMade:
-            question.generateGuess()
-            question.removeAttempt()
-        guessShown = True
-
-        if question.returnAttemptsLeft() == 0:
-            outOfAttemptsText.renderText()
-            outOfAttemptsText.createRect()
-            outOfAttemptsText.blitText()
-
-        if question.returnAttemptsLeft() != 0:
-
-            yesText.renderText()
-            yesText.createRect()
-            yesText.detectMouse()
-            yesText.hoverEffect()
-            yesText.blitText()
-
-            noText.renderText()
-            noText.createRect()
-            noText.detectMouse()
-            noText.hoverEffect()
-            noText.blitText()
-
-            if yesText.detectMouse() and event.type == pygame.MOUSEBUTTONDOWN or noText.detectMouse() and event.type == pygame.MOUSEBUTTONDOWN:
-                userDecisionMade = True
-                guessShown = False
-
-            guessText1.renderText()
-            guessText1.createRect()
-            guessText1.blitText()
-
-            guessText2.renderText()
-            guessText2.createRect()
-            guessText2.blitText()
-
-            guessLetter.setText(question.returnCurrentGuess())
-            guessLetter.renderText()
-            guessLetter.createRect()
-            guessLetter.blitText()
-
-        gridText.setText(question.returnGrid())
-        gridText.renderText()
-        gridText.createRect()
-        gridText.blitText()
-
-        hangman.returnCurrentHangmanCount(question.returnTotalAttempts(), question.returnAttemptsLeft())
-        hangman.createHangmanRect()
-        hangman.displayHangman()
+            if menuActive:
+                if playMenuText.detectMouse():  # Checks if the play button is pressed by the user.
+                    stagingActive = True
+                    menuActive = False
+                elif helpMenuText.detectMouse():  # Checks if the help button is pressed by the user.
+                    helpActive = True
+                    menuActive = False
+            elif helpActive:
+                if backHelpText.detectMouse():
+                    helpActive = False
+                    menuActive = True
+            elif stagingActive:
+                if backStagingText.detectMouse():
+                    menuActive = True
+                    stagingActive = False
+                if confirmStagingText.detectMouse():
+                    if confirmStagingText.returnColour() == "Gray":
+                        stagingActive = True
+                    else:
+                        gameActive = True
+            elif gameActive:
+                print("random")
+                if guessShown:
+                    if yesText.detectMouse() or noText.detectMouse():
+                        userDecisionMade = True
+                        guessShown = False
 
     pygame.display.update()  # Updates the display.
     clock.tick(60)  # Sets the framerate; 60FPS has been set as the target FPS.

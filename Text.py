@@ -1,25 +1,40 @@
 # Importing the necessary libraries.
 import pygame
-
+colourArray = ["Black", "Blue", "Cyan", "Gold", "Gray", "Green", "Orange", "Purple", "Red", "Violet", "Yellow", "White"]
 
 # Menu.
 class TextButton:
 
     def __init__(self, text, pColour, sColour, xPos, yPos, size, screen):  # Constructor for the class; takes all the necessary parameters.
         self.__text = text
+        if type(self.__text) != str:
+            self.__text = ""
+        self.__colourArray = colourArray
         self.__pColour = pColour
+        if self.__pColour not in self.__colourArray:
+            self.__pColour = "Black"
         self.__sColour = sColour
+        if self.__sColour not in self.__colourArray:
+            self.__sColour = "Yellow"
         self.__currentColour = pColour
         self.__xPos = xPos
+        if not 0 <= self.__xPos <= 1200:
+            self.__xPos = 600
         self.__yPos = yPos
+        if not 0 <= self.__yPos <= 800:
+            self.__xPos = 200
         self.__size = size
+        if self.__size > 300:
+            self.__size = 60
         self.__screen = screen
-        self.__menuFont = pygame.font.Font("Assets//Fonts//Mighty Soul.ttf", self.__size)  # Loads the font for the menu.
+        self.__menuFont = pygame.font.Font("Assets//Fonts//Mighty Souly.ttf", self.__size)  # Loads the font for the menu.
 
     def detectMouse(self):
         self.__mousePos = pygame.mouse.get_pos()  # Returns the current position of the mouse cursor.
         if self.__menuTextRect.collidepoint(self.__mousePos):
             return True
+        else:
+            return False
 
     def renderText(self):
         self.__renderedText = self.__menuFont.render(self.__text, True, self.__currentColour)  # Renders the text.

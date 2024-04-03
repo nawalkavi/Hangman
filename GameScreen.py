@@ -5,9 +5,13 @@ import random
 # Question.
 class Question:
 
-    def __init__(self, wordList, alphabetString, screen):
+    def __init__(self, wordList, alphabet, screen):
         self.__wordList = wordList
-        self.__alphabetString = alphabetString
+        if type(self.__wordList) != list:
+            self.__wordList = []
+        self.__alphabet = alphabet
+        if type(self.__alphabet) != str:
+            self.__alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
         self.__screen = screen
         self.__wordLength = None
         self.__attemptsLeft = 0
@@ -16,7 +20,7 @@ class Question:
         self.__guessedLetters = []  # Will store every letter that has been used as a guess.
         self.__totalAttempts = 10
         self.__attemptsLeft = 10
-        self.__grid = ""
+        self.__blanks = ""
 
     def generateGrid(self):
         self.__count = 0
@@ -24,10 +28,10 @@ class Question:
         while self.__count != 0:
             self.__completedWord.append("_")
             self.__count -= 1
-        self.__grid = " ".join(self.__completedWord)
+        self.__blanks = " ".join(self.__completedWord)
 
     def returnGrid(self):
-        return self.__grid
+        return self.__blanks
 
     def setWordLength(self, newWordLength):
         self.__wordLength = newWordLength
@@ -68,8 +72,8 @@ class Question:
     def generateGuess(self):
         self.__currentGuess = None
         if self.__attemptsLeft != 0:  # Prevents a guess from being generated if there are no more attempts left.
-            self.__currentGuess = random.choice(self.__alphabetString)
-            self.__alphabetString = self.__alphabetString.replace(self.__currentGuess, "")
+            self.__currentGuess = random.choice(self.__alphabet)
+            self.__alphabet = self.__alphabet.replace(self.__currentGuess, "")
             self.__guessedLetters.append(self.__currentGuess)
 
     def returnCurrentGuess(self):
@@ -84,8 +88,14 @@ class Hangman:
 
     def __init__(self, hangmanDictionary, xPos, yPos, screen):
         self.__hangmanDictionary = hangmanDictionary
+        if type(self.__hangmanDictionary) != dict:
+            self.__hangmanDictionary = {}
         self.__xPos = xPos
+        if not 0 <= self.__xPos <= 1200:
+            self.__xPos = 300
         self.__yPos = yPos
+        if not 0 <= self.__yPos <= 800:
+            self.__xPos = 350
         self.__screen = screen
 
     def returnCurrentHangmanCount(self, totalAttempts, attemptsLeft):
