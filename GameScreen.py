@@ -18,20 +18,27 @@ class Question:
         self.__matchedWords = []  # Will store all the words with the same length as that of the user.
         self.__completedWord = []  # Will store the correct guesses to progressively form the answer.
         self.__guessedLetters = []  # Will store every letter that has been used as a guess.
-        self.__totalAttempts = 10
-        self.__attemptsLeft = 10
+        self.__attemptsMade = 0
         self.__blanks = ""
 
-    def generateGrid(self):
+    def generateBlanks(self):
         self.__count = 0
         self.__count += self.__wordLength
         while self.__count != 0:
             self.__completedWord.append("_")
             self.__count -= 1
-        self.__blanks = " ".join(self.__completedWord)
+        self.__blanks = "".join(self.__completedWord)
 
-    def returnGrid(self):
+    def returnBlanks(self):
         return self.__blanks
+
+    def setAnswerPosition(self, letterPosition):
+        tempArray = []
+        for letter in self.__blanks:
+            tempArray.append(letter)
+        self.__letterPosition = letterPosition - 1
+        tempArray[self.__letterPosition] = self.__currentGuess
+        self.__blanks = "".join(tempArray)
 
     def setWordLength(self, newWordLength):
         self.__wordLength = newWordLength
@@ -42,6 +49,9 @@ class Question:
     def returnWordLength(self):
         return self.__wordLength
 
+    def returnLetterPosition(self):
+        return self.__letterPosition
+
     def matchWords(self):
         for i in range(0, len(self.__wordList)):  # Traverses through the list storing every word.
             if len(self.__wordList[i]) == self.__wordLength:  # Checks if a word is the same length as that of the user's input.
@@ -50,28 +60,22 @@ class Question:
     def returnMatchedWords(self):
         return self.__matchedWords
 
-    # def scaleAttempts(self):  # Sets the number of attempts depending on how many letters the word has.
-    #     if 1 <= self.__wordLength <= 3:
-    #         self.__attemptsLeft = 5
-    #     elif 4 <= self.__wordLength <= 7:
-    #         self.__attemptsLeft = 10
-    #     elif 8 <= self.__wordLength <= 11:
-    #         self.__attemptsLeft = 15
-    #     elif self.__wordLength >= 12:
-    #         self.__attemptsLeft = 20
+    def attemptMade(self):
+        if self.__attemptsMade < 10:
+            self.__attemptsMade += 1
 
-    def removeAttempt(self):
-        self.__attemptsLeft -= 1
+    def returnAttemptsMade(self):
+        return self.__attemptsMade
 
-    def returnTotalAttempts(self):
-        return self.__totalAttempts
-
-    def returnAttemptsLeft(self):
-        return self.__attemptsLeft
+    def checkIfComplete(self):
+        for letter in self.__blanks:
+            if letter == "_":
+                return False
+        return True
 
     def generateGuess(self):
         self.__currentGuess = None
-        if self.__attemptsLeft != 0:  # Prevents a guess from being generated if there are no more attempts left.
+        if self.__attemptsMade != 10:  # Prevents a guess from being generated if there are no more attempts left.
             self.__currentGuess = random.choice(self.__alphabet)
             self.__alphabet = self.__alphabet.replace(self.__currentGuess, "")
             self.__guessedLetters.append(self.__currentGuess)
@@ -98,15 +102,9 @@ class Hangman:
             self.__xPos = 350
         self.__screen = screen
 
-    def returnCurrentHangmanCount(self, totalAttempts, attemptsLeft):
-        self.__totalAttempts = totalAttempts
-        self.__attemptsLeft = attemptsLeft
-        self.__currentHangmanCount = self.__totalAttempts - self.__attemptsLeft
-        return self.__currentHangmanCount
-
-    def createHangmanRect(self):
-        self.__currentHangmanCount = str(self.__currentHangmanCount)
-        self.__currentHangmanImage = self.__hangmanDictionary[self.__currentHangmanCount]
+    def createHangmanRect(self, attemptsMade):
+        self.__attemptsMade = str(attemptsMade)
+        self.__currentHangmanImage = self.__hangmanDictionary[self.__attemptsMade]
         self.__hangmanRect = self.__currentHangmanImage.get_rect(center=(self.__xPos, self.__yPos))
 
     def displayHangman(self):
