@@ -20,6 +20,7 @@ class Question:
         self.__guessedLetters = []  # Will store every letter that has been used as a guess.
         self.__attemptsMade = 0
         self.__blanks = ""
+        self.__greyedOut = False
 
     def generateBlanks(self):
         self.__count = 0
@@ -86,6 +87,11 @@ class Question:
     def returnGuessedLetters(self):
         return self.__guessedLetters
 
+    def greyState(self, newState):
+        self.__greyedOut = newState
+
+    def returnGreyState(self):
+        return self.__greyedOut
 
 # Hangman.
 class Hangman:
@@ -102,7 +108,7 @@ class Hangman:
             self.__xPos = 350
         self.__screen = screen
 
-    def createHangmanRect(self, attemptsMade):
+    def renderHangman(self, attemptsMade):
         self.__attemptsMade = str(attemptsMade)
         self.__currentHangmanImage = self.__hangmanDictionary[self.__attemptsMade]
         self.__hangmanRect = self.__currentHangmanImage.get_rect(center=(self.__xPos, self.__yPos))
