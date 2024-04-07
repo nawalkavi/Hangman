@@ -91,8 +91,8 @@ backStagingText = TextButton("Back", "White", "Yellow", 110, 720, 60, True, True
 
 yesText = TextButton("Yes", "White", "Yellow", 810, 600, 70, True, True, screen)  # AI game screen.
 noText = TextButton("No", "White", "Yellow", 990, 600, 70, True, True, screen)
-positionText = TextButton("What position?", "White", "Yellow", 900, 550,70, False, False, screen)
-positionInputText = TextButton("", "Yellow", "White", 900, 630, 60, False, False, screen)
+computerPositionText = TextButton("What position?", "White", "Yellow", 900, 550, 70, False, False, screen)
+computerPositionInputText = TextButton("", "Yellow", "White", 900, 630, 70, False, False, screen)
 confirmGameText = TextButton("Confirm", "White", "Yellow", 900, 720, 60, True, False, screen)
 backGameText = TextButton("Back", "White", "Yellow", 110, 720, 60, True, True, screen)
 computerGuessText1 = TextButton("Is", "White", "Yellow", 875, 300, 70, False, True, screen)
@@ -103,7 +103,9 @@ winText = TextButton("Your word is", "White", "Yellow", 900, 300, 70, False, Fal
 outOfAttemptsText = TextButton("Out of attempts!", "White", "Yellow", 900, 400, 70, False, False, screen)
 
 userGuessText = TextButton("Make a guess!", "White", "Yellow", 900, 300, 70, False, True, screen)  # User game screen.
-userGuessInputText = TextButton("", "Yellow", "White", 900, 430, 70, False, True, screen)
+userLetterGuessInputText = TextButton("", "Yellow", "White", 900, 430, 70, False, True, screen)
+userPositionText = TextButton("What position?", "White", "Yellow", 900, 550, 70, False, False, screen)
+userPositionInputText = TextButton("", "Yellow", "White", 900, 630, 70, False, False, screen)
 
 # Other objects.
 question = Question(wordList, alphabetString)
@@ -114,8 +116,8 @@ menuObjectArray = [hangmanMenuText, playMenuText, helpMenuText, quitMenuText]  #
 helpObjectArray = [infoText1, infoText2, infoText3, backHelpText]  # Stores all the TextButton objects for the help screen.
 gamemodeChooseObjectArray = [chooseGamemodeText, userGuessesText, computerGuessesText, backGamemodeText]  # Stores all the TextButton objects for the gamemode choosing screen.
 stagingObjectArray = [lengthQuestion1, lengthQuestion2, lengthQuestion3, lengthInputText, confirmStagingText, backStagingText]  # Stores all the TextButton objects for the staging screen.
-computerGameObjectArray = [yesText, noText, backGameText, blanksText, outOfAttemptsText, positionText, positionInputText, confirmGameText, computerGuessText1, computerGuessText2, computerGuessText3, winText, outOfAttemptsText]  # Stores all the TextButton objects for the game screen.
-userGameObjectArray = [userGuessText, userGuessInputText, blanksText, backGameText, confirmGameText, positionText, positionInputText]
+computerGameObjectArray = [yesText, noText, backGameText, blanksText, outOfAttemptsText, computerPositionText, computerPositionInputText, confirmGameText, computerGuessText1, computerGuessText2, computerGuessText3, winText, outOfAttemptsText]  # Stores all the TextButton objects for the game screen.
+userGameObjectArray = [userGuessText, userLetterGuessInputText, blanksText, userPositionText, userPositionInputText, backGameText, confirmGameText]
 
 # Function used to call all the methods inside the primary game loop common to every TextButton object.
 def renderScreenTextObjects(objectArray):  # Takes an array of all TextButton objects on each screen.
@@ -178,7 +180,7 @@ while True:  # Runs the main game loop.
             elif question.returnAttemptsMade() != 10:  # Checks if the AI still has attempts left.
                 computerGuessText3.setText(question.returnCurrentGuess())  # Displays a new guess.
                 displayingAnswerOptions = True  # Allows the detection of mouse collisions with answer TextButton objects.
-                if question.returnGreyState() or positionInputText.returnText() == "":  # Checks if the user has made a position input or if the input is out of range.
+                if question.returnGreyState() or computerPositionInputText.returnText() == "":  # Checks if the user has made a position input or if the input is out of range.
                     confirmGameText.setColour(buttonGrey)  # Changes the colour of confirmGameText to grey.
             hangman.renderHangman(question.returnAttemptsMade())  # Renders the appropriate hangman image and creates a hitbox for it.
             hangman.displayHangman()  # Displays the hangman image.
@@ -254,142 +256,152 @@ while True:  # Runs the main game loop.
             elif computerGameActive:  # Keyboard input for the game screen.
 
                 if event.key == pygame.K_0:  # If the input key is a 0.
-                    positionInputText.setText("15")
+                    computerPositionInputText.setText("15")
                     question.setGreyState(True)
                 elif event.key == pygame.K_1:  # If the input key is 1.
-                    positionInputText.setText("1")
+                    computerPositionInputText.setText("1")
                     question.setGreyState(False)
                 elif event.key == pygame.K_2:  # If the input key is 2.
-                    positionInputText.setText("2")
+                    computerPositionInputText.setText("2")
                     question.setGreyState(False)
                 elif event.key == pygame.K_3:  # If the input key is 3.
-                    positionInputText.setText("3")
+                    computerPositionInputText.setText("3")
                     question.setGreyState(False)
                 elif event.key == pygame.K_4:  # If the input key is 4.
-                    positionInputText.setText("4")
+                    computerPositionInputText.setText("4")
                     question.setGreyState(False)
                 elif event.key == pygame.K_5:  # If the input key is 5.
-                    positionInputText.setText("5")
+                    computerPositionInputText.setText("5")
                     question.setGreyState(False)
                 elif event.key == pygame.K_6:  # If the input key is 6
-                    positionInputText.setText("6")
+                    computerPositionInputText.setText("6")
                     question.setGreyState(False)
                 elif event.key == pygame.K_7:  # If the input key is 7.
-                    positionInputText.setText("7")
+                    computerPositionInputText.setText("7")
                     question.setGreyState(False)
                 elif event.key == pygame.K_8:  # If the input key is 8.
-                    positionInputText.setText("8")
+                    computerPositionInputText.setText("8")
                     question.setGreyState(False)
                 elif event.key == pygame.K_9:  # If the input key is 9.
-                    positionInputText.setText("9")
+                    computerPositionInputText.setText("9")
                     question.setGreyState(False)
-                if int(positionInputText.returnText()) > len(blanksText.returnText()):  # Checks if the position input is greater than the total length of the word.
-                    positionInputText.setText("")  # If so, doesn't show the input on screen.
+                if int(computerPositionInputText.returnText()) > len(blanksText.returnText()):  # Checks if the position input is greater than the total length of the word.
+                    computerPositionInputText.setText("")  # If so, doesn't show the input on screen.
                     question.setGreyState(True)  # Sets the confirm button to be greyed out.
 
             elif userGameActive:
 
                 if event.key == pygame.K_a:
                     question.userLetterGuess("A")
-                    userGuessInputText.setText("A")
+                    userLetterGuessInputText.setText("A")
                 elif event.key == pygame.K_b:
                     question.userLetterGuess("B")
-                    userGuessInputText.setText("B")
+                    userLetterGuessInputText.setText("B")
                 elif event.key == pygame.K_c:
                     question.userLetterGuess("C")
-                    userGuessInputText.setText("C")
+                    userLetterGuessInputText.setText("C")
                 elif event.key == pygame.K_d:
                     question.userLetterGuess("D")
-                    userGuessInputText.setText("D")
+                    userLetterGuessInputText.setText("D")
                 elif event.key == pygame.K_e:
                     question.userLetterGuess("E")
-                    userGuessInputText.setText("E")
+                    userLetterGuessInputText.setText("E")
                 elif event.key == pygame.K_f:
                     question.userLetterGuess("F")
-                    userGuessInputText.setText("F")
+                    userLetterGuessInputText.setText("F")
                 elif event.key == pygame.K_g:
                     question.userLetterGuess("G")
-                    userGuessInputText.setText("G")
+                    userLetterGuessInputText.setText("G")
                 elif event.key == pygame.K_h:
                     question.userLetterGuess("H")
-                    userGuessInputText.setText("H")
+                    userLetterGuessInputText.setText("H")
                 elif event.key == pygame.K_i:
                     question.userLetterGuess("I")
-                    userGuessInputText.setText("I")
+                    userLetterGuessInputText.setText("I")
                 elif event.key == pygame.K_j:
                     question.userLetterGuess("J")
-                    userGuessInputText.setText("J")
+                    userLetterGuessInputText.setText("J")
                 elif event.key == pygame.K_k:
                     question.userLetterGuess("K")
-                    userGuessInputText.setText("K")
+                    userLetterGuessInputText.setText("K")
                 elif event.key == pygame.K_l:
                     question.userLetterGuess("L")
-                    userGuessInputText.setText("L")
+                    userLetterGuessInputText.setText("L")
                 elif event.key == pygame.K_m:
                     question.userLetterGuess("M")
-                    userGuessInputText.setText("M")
+                    userLetterGuessInputText.setText("M")
                 elif event.key == pygame.K_n:
                     question.userLetterGuess("N")
-                    userGuessInputText.setText("N")
+                    userLetterGuessInputText.setText("N")
                 elif event.key == pygame.K_o:
                     question.userLetterGuess("O")
-                    userGuessInputText.setText("O")
+                    userLetterGuessInputText.setText("O")
                 elif event.key == pygame.K_p:
                     question.userLetterGuess("P")
-                    userGuessInputText.setText("P")
+                    userLetterGuessInputText.setText("P")
                 elif event.key == pygame.K_q:
                     question.userLetterGuess("Q")
-                    userGuessInputText.setText("Q")
+                    userLetterGuessInputText.setText("Q")
                 elif event.key == pygame.K_r:
                     question.userLetterGuess("R")
-                    userGuessInputText.setText("R")
+                    userLetterGuessInputText.setText("R")
                 elif event.key == pygame.K_s:
                     question.userLetterGuess("S")
-                    userGuessInputText.setText("S")
+                    userLetterGuessInputText.setText("S")
                 elif event.key == pygame.K_t:
                     question.userLetterGuess("T")
-                    userGuessInputText.setText("T")
+                    userLetterGuessInputText.setText("T")
                 elif event.key == pygame.K_u:
                     question.userLetterGuess("U")
-                    userGuessInputText.setText("U")
+                    userLetterGuessInputText.setText("U")
                 elif event.key == pygame.K_v:
                     question.userLetterGuess("V")
-                    userGuessInputText.setText("V")
+                    userLetterGuessInputText.setText("V")
                 elif event.key == pygame.K_w:
                     question.userLetterGuess("W")
-                    userGuessInputText.setText("W")
+                    userLetterGuessInputText.setText("W")
                 elif event.key == pygame.K_x:
                     question.userLetterGuess("X")
-                    userGuessInputText.setText("X")
+                    userLetterGuessInputText.setText("X")
                 elif event.key == pygame.K_y:
                     question.userLetterGuess("Y")
-                    userGuessInputText.setText("Y")
+                    userLetterGuessInputText.setText("Y")
                 elif event.key == pygame.K_z:
                     question.userLetterGuess("Z")
-                    userGuessInputText.setText("Z")
+                    userLetterGuessInputText.setText("Z")
 
             elif userGameActive and not userGuessPositionSpecified:
 
                 if event.key == pygame.K_0:
-                    positionInputText.setText("15")
+                    userPositionInputText.setText("15")
+                    question.userPositionGuess(None)
                 elif event.key == pygame.K_1:
-                    positionInputText.setText("1")
+                    userPositionInputText.setText("1")
+                    question.userPositionGuess(1)
                 elif event.key == pygame.K_2:
-                    positionInputText.setText("2")
+                    userPositionInputText.setText("2")
+                    question.userPositionGuess(2)
                 elif event.key == pygame.K_3:
-                    positionInputText.setText("3")
+                    userPositionInputText.setText("3")
+                    question.userPositionGuess(3)
                 elif event.key == pygame.K_4:
-                    positionInputText.setText("4")
+                    userPositionInputText.setText("4")
+                    question.userPositionGuess(4)
                 elif event.key == pygame.K_5:
-                    positionInputText.setText("5")
+                    userPositionInputText.setText("5")
+                    question.userPositionGuess(5)
                 elif event.key == pygame.K_6:
-                    positionInputText.setText("6")
+                    userPositionInputText.setText("6")
+                    question.userPositionGuess(6)
                 elif event.key == pygame.K_7:
-                    positionInputText.setText("7")
+                    userPositionInputText.setText("7")
+                    question.userPositionGuess(7)
                 elif event.key == pygame.K_8:
-                    positionInputText.setText("8")
+                    userPositionInputText.setText("8")
+                    question.userPositionGuess(8)
                 elif event.key == pygame.K_9:
-                    positionInputText.setText("9")
+                    userPositionInputText.setText("9")
+                    question.userPositionGuess(9)
 
         elif event.type == pygame.MOUSEBUTTONDOWN:  # Checks if there is a mouse input.
             if event.button == 1:  # Checks if the mouse input was the left mouse button.
@@ -442,19 +454,19 @@ while True:  # Runs the main game loop.
                             if yesText.detectMouse():  # Checks if the yes button is pressed by the user.
                                 yesText.setEnabled(False)  # Disables the yes button.
                                 noText.setEnabled(False)  # Disables the no button.
-                                positionText.setEnabled(True)  # Enables the position question text.
-                                positionInputText.setEnabled(True)  # Enables the user to make an input about the position of the AI's guess.
+                                computerPositionText.setEnabled(True)  # Enables the position question text.
+                                computerPositionInputText.setEnabled(True)  # Enables the user to make an input about the position of the AI's guess.
                                 confirmGameText.setEnabled(True)  # Enables the confirm button.
                                 guessShown = True  # Keeps the AI's guess on the screen.
                             elif confirmGameText.detectMouse():  # Checks if the confirm button is pressed by the user.
                                 if confirmGameText.returnColour() == buttonGrey:  # Checks if the confirm button is greyed out.
                                     userDecisionMade = False  # If so, user is not allowed to confirm their position input.
                                 else:  # If the confirm button is not greyed out.
-                                    question.setAnswerPosition(int(positionInputText.returnText()))  # User input sent to Question so that blanks can be updated.
+                                    question.setAnswerPosition(int(computerPositionInputText.returnText()))  # User input sent to Question so that blanks can be updated.
                                     blanksText.setText(question.returnBlanks())  # Blanks are updated.
                                     confirmGameText.setEnabled(False)  # Disables the confirm button.
-                                    positionText.setEnabled(False)  # Disables the position question text.
-                                    positionInputText.setEnabled(False)  # Disables the position input text.
+                                    computerPositionText.setEnabled(False)  # Disables the position question text.
+                                    computerPositionInputText.setEnabled(False)  # Disables the position input text.
                                     yesText.setEnabled(True)  # Enables the yes button.
                                     noText.setEnabled(True)  # Enables the no button.
                                     guessShown = False  # Removes the AI's guess so that a new one can be generated.
@@ -478,10 +490,12 @@ while True:  # Runs the main game loop.
                         if not userGuessMade:
                             userGuessMade = True
                             userGuessText.setEnabled(False)
-                            userGuessInputText.setEnabled(False)
-                            positionText.setEnabled(True)
-                            positionText.setPos(900, 300)
-                            positionInputText.setEnabled(True)
+                            userLetterGuessInputText.setEnabled(False)
+                            userPositionText.setEnabled(True)
+                            userPositionInputText.setEnabled(True)
+                        if userGuessMade and not userGuessPositionSpecified:
+                            print(f"hello{userPositionInputText.returnText()}")
+
 
     pygame.display.update()  # Updates the display.
     clock.tick(60)  # Sets the framerate; 60FPS has been set as the target FPS.
