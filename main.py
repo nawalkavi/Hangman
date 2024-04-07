@@ -204,6 +204,7 @@ while True:  # Runs the main game loop.
         screen.fill(graveyardGreen)  # Fills the background with the specified shade of green.
         renderScreenTextObjects(userGameObjectArray)
         confirmGameText.setEnabled(True)
+        userGuessPositionSpecified = False
         if not blanksGridDoneOnce:  # Checks if the blanks grid have been generated.
             question.chooseWord()
             question.generateBlanks()  # If not, the grid is generated.
@@ -370,36 +371,38 @@ while True:  # Runs the main game loop.
                     elif event.key == pygame.K_z:
                         question.userLetterGuess("Z")
                         userLetterGuessInputText.setText("Z")
-                elif event.key == pygame.K_0:
-                    userPositionInputText.setText("15")
-                    question.userPositionGuess(None)
-                elif event.key == pygame.K_1:
-                    userPositionInputText.setText("1")
-                    question.userPositionGuess(1)
-                elif event.key == pygame.K_2:
-                    userPositionInputText.setText("2")
-                    question.userPositionGuess(2)
-                elif event.key == pygame.K_3:
-                    userPositionInputText.setText("3")
-                    question.userPositionGuess(3)
-                elif event.key == pygame.K_4:
-                    userPositionInputText.setText("4")
-                    question.userPositionGuess(4)
-                elif event.key == pygame.K_5:
-                    userPositionInputText.setText("5")
-                    question.userPositionGuess(5)
-                elif event.key == pygame.K_6:
-                    userPositionInputText.setText("6")
-                    question.userPositionGuess(6)
-                elif event.key == pygame.K_7:
-                    userPositionInputText.setText("7")
-                    question.userPositionGuess(7)
-                elif event.key == pygame.K_8:
-                    userPositionInputText.setText("8")
-                    question.userPositionGuess(8)
-                elif event.key == pygame.K_9:
-                    userPositionInputText.setText("9")
-                    question.userPositionGuess(9)
+
+                elif not userGuessPositionSpecified:
+                    if event.key == pygame.K_0:
+                        userPositionInputText.setText("15")
+                        question.userPositionGuess(None)
+                    elif event.key == pygame.K_1:
+                        userPositionInputText.setText("1")
+                        question.userPositionGuess(1)
+                    elif event.key == pygame.K_2:
+                        userPositionInputText.setText("2")
+                        question.userPositionGuess(2)
+                    elif event.key == pygame.K_3:
+                        userPositionInputText.setText("3")
+                        question.userPositionGuess(3)
+                    elif event.key == pygame.K_4:
+                        userPositionInputText.setText("4")
+                        question.userPositionGuess(4)
+                    elif event.key == pygame.K_5:
+                        userPositionInputText.setText("5")
+                        question.userPositionGuess(5)
+                    elif event.key == pygame.K_6:
+                        userPositionInputText.setText("6")
+                        question.userPositionGuess(6)
+                    elif event.key == pygame.K_7:
+                        userPositionInputText.setText("7")
+                        question.userPositionGuess(7)
+                    elif event.key == pygame.K_8:
+                        userPositionInputText.setText("8")
+                        question.userPositionGuess(8)
+                    elif event.key == pygame.K_9:
+                        userPositionInputText.setText("9")
+                        question.userPositionGuess(9)
 
         elif event.type == pygame.MOUSEBUTTONDOWN:  # Checks if there is a mouse input.
             if event.button == 1:  # Checks if the mouse input was the left mouse button.
@@ -485,14 +488,15 @@ while True:  # Runs the main game loop.
                         gamemodeChooseActive = True
                         userGameActive = False
                     if confirmGameText.detectMouse():
-                        if not userGuessMade:
+                        if not userGuessMade and not userGuessPositionSpecified:
                             userGuessMade = True
                             userPositionText.setEnabled(True)
                             userPositionInputText.setEnabled(True)
-                        # if userGuessMade and not userGuessPositionSpecified:
-                        #     userGuessPositionSpecified = True
-                        #     userPositionText.setEnabled(False)
-                        #     userPositionInputText.setEnabled(False)
+                        elif userGuessMade and not userGuessPositionSpecified:
+                            userGuessMade = False
+                            userGuessPositionSpecified = True
+                            userPositionText.setEnabled(False)
+                            userPositionInputText.setEnabled(False)
 
     pygame.display.update()  # Updates the display.
     clock.tick(60)  # Sets the framerate; 60FPS has been set as the target FPS.
