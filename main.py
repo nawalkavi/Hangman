@@ -20,6 +20,7 @@ blanksGridDoneOnce = False  # Prevents the blanks grid from being appended to an
 guessShown = False  # Whether the AI's guess is currently being displayed on screen.
 userDecisionMade = False  # Whether the user has clicked on either the yesText or noText objects.
 userGuessMade = False
+userGuessPositionSpecified = False
 displayingAnswerOptions = False  # Controls displaying the yesText and noText objects on the game screen.
 pressedYes = False  # Whether the user has answered yes to the AI's guess.
 gameComplete = False  # Game was won by the AI.
@@ -367,6 +368,29 @@ while True:  # Runs the main game loop.
                     question.userLetterGuess("Z")
                     userGuessInputText.setText("Z")
 
+            elif userGameActive and not userGuessPositionSpecified:
+
+                if event.key == pygame.K_0:
+                    positionInputText.setText("15")
+                elif event.key == pygame.K_1:
+                    positionInputText.setText("1")
+                elif event.key == pygame.K_2:
+                    positionInputText.setText("2")
+                elif event.key == pygame.K_3:
+                    positionInputText.setText("3")
+                elif event.key == pygame.K_4:
+                    positionInputText.setText("4")
+                elif event.key == pygame.K_5:
+                    positionInputText.setText("5")
+                elif event.key == pygame.K_6:
+                    positionInputText.setText("6")
+                elif event.key == pygame.K_7:
+                    positionInputText.setText("7")
+                elif event.key == pygame.K_8:
+                    positionInputText.setText("8")
+                elif event.key == pygame.K_9:
+                    positionInputText.setText("9")
+
         elif event.type == pygame.MOUSEBUTTONDOWN:  # Checks if there is a mouse input.
             if event.button == 1:  # Checks if the mouse input was the left mouse button.
 
@@ -458,7 +482,6 @@ while True:  # Runs the main game loop.
                             positionText.setEnabled(True)
                             positionText.setPos(900, 300)
                             positionInputText.setEnabled(True)
-
 
     pygame.display.update()  # Updates the display.
     clock.tick(60)  # Sets the framerate; 60FPS has been set as the target FPS.

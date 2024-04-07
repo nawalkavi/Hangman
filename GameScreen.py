@@ -51,6 +51,12 @@ class Question:
     def returnUserLetterGuess(self):
         return self.__userLetterGuess
 
+    def userPositionGuess(self, positionGuessed):
+        self.__userPositionGuess = positionGuessed
+
+    def returnUserPositionGuess(self):
+        return self.__userPositionGuess
+
     def setAnswerPosition(self, letterPosition):
         self.__letterPosition = letterPosition - 1  # Value is subtracted by 1 to account for the index value difference.
         tempArray = []  # Temporary array to hold the updated blanks.
