@@ -19,6 +19,7 @@ userGameActive = False  # Controls displaying the game screen when the user is g
 blanksGridDoneOnce = False  # Prevents the blanks grid from being appended to and blitted more than once.
 guessShown = False  # Whether the AI's guess is currently being displayed on screen.
 userDecisionMade = False  # Whether the user has clicked on either the yesText or noText objects.
+userGuessMade = False
 displayingAnswerOptions = False  # Controls displaying the yesText and noText objects on the game screen.
 pressedYes = False  # Whether the user has answered yes to the AI's guess.
 gameComplete = False  # Game was won by the AI.
@@ -89,19 +90,19 @@ backStagingText = TextButton("Back", "White", "Yellow", 110, 720, 60, True, True
 
 yesText = TextButton("Yes", "White", "Yellow", 810, 600, 70, True, True, screen)  # AI game screen.
 noText = TextButton("No", "White", "Yellow", 990, 600, 70, True, True, screen)
-positionText = TextButton("What position?", "White", "Yellow", 900, 550,60, False, False, screen)
+positionText = TextButton("What position?", "White", "Yellow", 900, 550,70, False, False, screen)
 positionInputText = TextButton("", "Yellow", "White", 900, 630, 60, False, False, screen)
 confirmGameText = TextButton("Confirm", "White", "Yellow", 900, 720, 60, True, False, screen)
 backGameText = TextButton("Back", "White", "Yellow", 110, 720, 60, True, True, screen)
 computerGuessText1 = TextButton("Is", "White", "Yellow", 875, 300, 70, False, True, screen)
 computerGuessText2 = TextButton("in your word?", "White", "Yellow", 900, 400, 70, False, True, screen)
 computerGuessText3 = TextButton("", "Yellow", "White", 950, 300, 70, False, True, screen)
-blanksText = TextButton("", "White", "Yellow", 910, 140, 80, False, True, screen)
+blanksText = TextButton("", "White", "Yellow", 900, 140, 80, False, True, screen)
 winText = TextButton("Your word is", "White", "Yellow", 900, 300, 70, False, False, screen)
 outOfAttemptsText = TextButton("Out of attempts!", "White", "Yellow", 900, 400, 70, False, False, screen)
 
 userGuessText = TextButton("Make a guess!", "White", "Yellow", 900, 300, 70, False, True, screen)  # User game screen.
-userGuessInputText = TextButton("", "Yellow", "White", 875, 380, 70, False, True, screen)
+userGuessInputText = TextButton("", "Yellow", "White", 900, 430, 70, False, True, screen)
 
 # Other objects.
 question = Question(wordList, alphabetString)
@@ -113,7 +114,7 @@ helpObjectArray = [infoText1, infoText2, infoText3, backHelpText]  # Stores all 
 gamemodeChooseObjectArray = [chooseGamemodeText, userGuessesText, computerGuessesText, backGamemodeText]  # Stores all the TextButton objects for the gamemode choosing screen.
 stagingObjectArray = [lengthQuestion1, lengthQuestion2, lengthQuestion3, lengthInputText, confirmStagingText, backStagingText]  # Stores all the TextButton objects for the staging screen.
 computerGameObjectArray = [yesText, noText, backGameText, blanksText, outOfAttemptsText, positionText, positionInputText, confirmGameText, computerGuessText1, computerGuessText2, computerGuessText3, winText, outOfAttemptsText]  # Stores all the TextButton objects for the game screen.
-userGameObjectArray = [userGuessText, userGuessInputText, blanksText, backGameText, confirmGameText]
+userGameObjectArray = [userGuessText, userGuessInputText, blanksText, backGameText, confirmGameText, positionText, positionInputText]
 
 # Function used to call all the methods inside the primary game loop common to every TextButton object.
 def renderScreenTextObjects(objectArray):  # Takes an array of all TextButton objects on each screen.
@@ -199,11 +200,13 @@ while True:  # Runs the main game loop.
     elif userGameActive:
         screen.fill(graveyardGreen)  # Fills the background with the specified shade of green.
         renderScreenTextObjects(userGameObjectArray)
+        confirmGameText.setEnabled(True)
         if not blanksGridDoneOnce:  # Checks if the blanks grid have been generated.
             question.chooseWord()
             question.generateBlanks()  # If not, the grid is generated.
             blanksText.setText(question.returnBlanks())  # The grid is set as the text to be displayed for blanksText.
             blanksGridDoneOnce = True  # Prevents the grid from being continuously generated.
+
 
     # Event loop.
     for event in pygame.event.get():  # Retrieves all events running.
@@ -439,14 +442,23 @@ while True:  # Runs the main game loop.
                     if question.checkIfComplete():  # If the AI has guessed the word fully.
                         gameComplete = True  # Initiates the win screen.
                     if backGameText.detectMouse():  # Checks if the back button on the game screen is pressed by the user.
-                        if computerGuesses:
-                            stagingActive = True  # Changes screen to the staging screen.
-                            computerGameActive = False
-                            blanksGridDoneOnce = False  # Allows the blanks to be updated.
-                        elif userGuesses:
-                            gamemodeChooseActive = True
-                            computerGameActive = False
-                            blanksGridDoneOnce = False
+                        stagingActive = True  # Changes screen to the staging screen.
+                        computerGameActive = False
+                        blanksGridDoneOnce = False  # Allows the blanks to be updated.
+
+                elif userGameActive:
+                    if backGameText.detectMouse():
+                        gamemodeChooseActive = True
+                        userGameActive = False
+                    if confirmGameText.detectMouse():
+                        if not userGuessMade:
+                            userGuessMade = True
+                            userGuessText.setEnabled(False)
+                            userGuessInputText.setEnabled(False)
+                            positionText.setEnabled(True)
+                            positionText.setPos(900, 300)
+                            positionInputText.setEnabled(True)
+
 
     pygame.display.update()  # Updates the display.
     clock.tick(60)  # Sets the framerate; 60FPS has been set as the target FPS.
