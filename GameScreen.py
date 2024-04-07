@@ -18,17 +18,35 @@ class Question:
         self.__blanks = ""
         self.__greyedOut = False  # Controls whether confirmGameText is greyed out or not.
 
+    def chooseWord(self):
+        self.__currentWord = random.choice(self.__wordList)
+        while len(self.__currentWord) >= 10:
+            self.__currentWord = random.choice(self.__wordList)
+
+    def returnChosenWord(self):
+        return self.__currentWord
+
     def generateBlanks(self):
         count = 0  # Temporary variable to hold a value.
-        count += self.__wordLength  # Holds the value of the user's word length.
         tempArray = []  # Temporary array to hold the blanks.
-        while count != 0:  # While count does not match the user's word length.
-            tempArray.append("_")  # An underscore is appended to tempArray for every time the loop is run to create the blanks array.
-            count -= 1  # 1 is subtracted from count to eventually have it match the user's word length.
-        self.__blanks = "".join(tempArray)  # Converts tempArray into a string, which creates the blanks string.
+        if self.__wordLength is not None:
+            count += self.__wordLength  # Holds the value of the user's word length.
+            while count != 0:  # While count does not match the user's word length.
+                tempArray.append("_")  # An underscore is appended to tempArray for every time the loop is run to create the blanks array.
+                count -= 1  # 1 is subtracted from count to eventually have it match the user's word length.
+            self.__blanks = "".join(tempArray)  # Converts tempArray into a string, which creates the blanks string.
+        else:
+            count += len(self.__currentWord)
+            while count != 0:
+                tempArray.append("_")
+                count -= 1
+            self.__blanks = "".join(tempArray)
 
     def returnBlanks(self):
         return self.__blanks  # Returns the blanks.
+
+    def userLetterGuess(self, letterGuessed):
+        self.__userLetterGuess = letterGuessed
 
     def setAnswerPosition(self, letterPosition):
         self.__letterPosition = letterPosition - 1  # Value is subtracted by 1 to account for the index value difference.

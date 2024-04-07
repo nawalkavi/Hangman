@@ -14,7 +14,8 @@ menuActive = True  # Controls displaying the menu screen; the default screen to 
 helpActive = False  # Controls displaying the help screen.
 gamemodeChooseActive = False  # Controls displaying the gamemode choosing screen.
 stagingActive = False  # Controls displaying the staging screen.
-gameActive = False  # Controls displaying the game screen.
+computerGameActive = False  # Controls displaying the game screen when the AI is guessing.
+userGameActive = False  # Controls displaying the game screen when the user is guessing.
 blanksGridDoneOnce = False  # Prevents the blanks grid from being appended to and blitted more than once.
 guessShown = False  # Whether the AI's guess is currently being displayed on screen.
 userDecisionMade = False  # Whether the user has clicked on either the yesText or noText objects.
@@ -51,7 +52,11 @@ hangmanImages = {  # Hangman image dictionary, using convert_alpha() slightly op
 # Graveyard menu background.
 graveyardImage = pygame.transform.scale(pygame.image.load("Assets//Images//Graveyard.png"), (1230, 800)).convert_alpha()
 graveyardImageRect = graveyardImage.get_rect(center = (615, 400))
-
+# Gamemode choosing screen images.
+userImage = pygame.transform.scale(pygame.image.load("Assets//Images//User Image.png"), (200, 200)).convert_alpha()
+userImageRect = userImage.get_rect(center = (300, 310))
+computerImage = pygame.transform.scale(pygame.image.load("Assets//Images//Computer Image.png"), (200, 200)).convert_alpha()
+computerImageRect = computerImage.get_rect(center = (900, 330))
 
 # Misc.
 graveyardGreen = "#1b2421"  # Colour hex codes.
@@ -59,7 +64,7 @@ buttonGrey = "#757575"
 alphabetString = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"  # String storing all the possible letters for guesses
 
 
-# Creating objects.
+# TextButton objects.
 hangmanMenuText = TextButton("Hangman", "White", "Yellow", 600, 100, 100, False, True, screen)  # Menu screen.
 playMenuText = TextButton("Play", "White", "Yellow", 600, 330, 70, True, True, screen)
 helpMenuText = TextButton("Help", "White", "Yellow", 600, 420, 70, True, True, screen)
@@ -71,8 +76,8 @@ infoText3 = TextButton("attempt to guess it!", "White", "Yellow", 600, 300, 80, 
 backHelpText = TextButton("Back", "White", "Yellow", 600, 720, 60, True, True, screen)
 
 chooseGamemodeText = TextButton("Who should guess?", "White", "Yellow", 600, 100, 80, False, True, screen)  # Gamemode choosing screen.
-userGuessesText = TextButton("I want to guess!", "White", "Yellow", 300, 300, 60, True, True, screen)
-computerGuessesText = TextButton("AI should guess!", "White", "Yellow", 900, 300, 60, True, True, screen)
+userGuessesText = TextButton("I want to guess!", "White", "Yellow", 300, 450, 60, True, True, screen)
+computerGuessesText = TextButton("AI should guess!", "White", "Yellow", 900, 450, 60, True, True, screen)
 backGamemodeText = TextButton("Back", "White", "Yellow", 600, 720, 60, True, True, screen)
 
 lengthQuestion1 = TextButton("How many letters", "White", "Yellow", 600, 100, 80, False, True, screen)  # Staging screen.
@@ -81,30 +86,34 @@ lengthQuestion3 = TextButton("your word?", "White", "Yellow", 600, 300, 80, Fals
 lengthInputText = TextButton("", "Yellow", "White", 600, 550, 80, False, True, screen)
 confirmStagingText = TextButton("Confirm", "White", "Yellow", 1050, 720, 60, True, True, screen)
 backStagingText = TextButton("Back", "White", "Yellow", 110, 720, 60, True, True, screen)
-question = Question(wordList, alphabetString)
 
-yesText = TextButton("Yes", "White", "Yellow", 810, 600, 70, True, True, screen)  # Game screen.
+yesText = TextButton("Yes", "White", "Yellow", 810, 600, 70, True, True, screen)  # AI game screen.
 noText = TextButton("No", "White", "Yellow", 990, 600, 70, True, True, screen)
 positionText = TextButton("What position?", "White", "Yellow", 900, 550,60, False, False, screen)
 positionInputText = TextButton("", "Yellow", "White", 900, 630, 60, False, False, screen)
 confirmGameText = TextButton("Confirm", "White", "Yellow", 900, 720, 60, True, False, screen)
 backGameText = TextButton("Back", "White", "Yellow", 110, 720, 60, True, True, screen)
-guessText1 = TextButton("Is", "White", "Yellow", 875, 300, 70, False, True, screen)
-guessText2 = TextButton("in your word?", "White", "Yellow", 900, 400, 70, False, True, screen)
-guessLetter = TextButton("", "Yellow", "White", 950, 300, 70, False, True, screen)
+computerGuessText1 = TextButton("Is", "White", "Yellow", 875, 300, 70, False, True, screen)
+computerGuessText2 = TextButton("in your word?", "White", "Yellow", 900, 400, 70, False, True, screen)
+computerGuessText3 = TextButton("", "Yellow", "White", 950, 300, 70, False, True, screen)
 blanksText = TextButton("", "White", "Yellow", 910, 140, 80, False, True, screen)
 winText = TextButton("Your word is", "White", "Yellow", 900, 300, 70, False, False, screen)
 outOfAttemptsText = TextButton("Out of attempts!", "White", "Yellow", 900, 400, 70, False, False, screen)
-hangman = Hangman(hangmanImages, 300, 370, screen)
 
+userGuessText = TextButton("Make a guess!", "White", "Yellow", 900, 300, 70, False, True, screen)  # User game screen.
+userGuessInputText = TextButton("", "Yellow", "White", 875, 380, 70, False, True, screen)
+
+# Other objects.
+question = Question(wordList, alphabetString)
+hangman = Hangman(hangmanImages, 300, 370, screen)
 
 # TextButton object arrays.
 menuObjectArray = [hangmanMenuText, playMenuText, helpMenuText, quitMenuText]  # Stores all the TextButton objects for the menu screen.
 helpObjectArray = [infoText1, infoText2, infoText3, backHelpText]  # Stores all the TextButton objects for the help screen.
 gamemodeChooseObjectArray = [chooseGamemodeText, userGuessesText, computerGuessesText, backGamemodeText]  # Stores all the TextButton objects for the gamemode choosing screen.
 stagingObjectArray = [lengthQuestion1, lengthQuestion2, lengthQuestion3, lengthInputText, confirmStagingText, backStagingText]  # Stores all the TextButton objects for the staging screen.
-gameObjectArray = [yesText, noText, backGameText, blanksText, outOfAttemptsText, positionText, positionInputText, confirmGameText, guessText1, guessText2, guessLetter, winText, outOfAttemptsText]  # Stores all the TextButton objects for the game screen.
-
+computerGameObjectArray = [yesText, noText, backGameText, blanksText, outOfAttemptsText, positionText, positionInputText, confirmGameText, computerGuessText1, computerGuessText2, computerGuessText3, winText, outOfAttemptsText]  # Stores all the TextButton objects for the game screen.
+userGameObjectArray = [userGuessText, userGuessInputText, blanksText, backGameText, confirmGameText]
 
 # Function used to call all the methods inside the primary game loop common to every TextButton object.
 def renderScreenTextObjects(objectArray):  # Takes an array of all TextButton objects on each screen.
@@ -121,36 +130,31 @@ while True:  # Runs the main game loop.
 
     # Menu screen.
     if menuActive:  # Runs only if the menu screen is being displayed.
-
         screen.blit(graveyardImage, graveyardImageRect)  # Sets the menu background.
         renderScreenTextObjects(menuObjectArray)  # Calls all the common methods for menu screen TextButton objects.
 
     # Help screen.
     elif helpActive:  # Runs only if the help screen is being displayed.
-
         screen.fill(graveyardGreen)  # Fills the background with the specified shade of green.
         renderScreenTextObjects(helpObjectArray)  # Calls all the common methods for help screen TextButton objects.
 
     elif gamemodeChooseActive:  # Runs only if the gamemode choosing screen is being displayed.
-
         screen.fill(graveyardGreen)
         renderScreenTextObjects(gamemodeChooseObjectArray)
+        screen.blit(userImage, userImageRect)
+        screen.blit(computerImage, computerImageRect)
 
     # Staging screen.
     elif stagingActive:  # Runs only if the staging screen is being displayed.
-
         screen.fill(graveyardGreen)  # Fills the background with the specified shade of green.
         renderScreenTextObjects(stagingObjectArray)  # Calls all the common methods for staging screen TextButton objects.
-
         if question.returnWordLength() is None:  # Checks if the user has entered an input for the length of their chosen word.
             confirmStagingText.setColour(buttonGrey)  # Changes the colour of confirmStagingText to grey if there is no input or if the input is 0.
 
     # Game screen.
-    elif gameActive:  # Runs only if the game screen is being displayed.
-
+    elif computerGameActive:  # Runs only if the game screen is being displayed.
         screen.fill(graveyardGreen)  # Fills the background with the specified shade of green.
-        renderScreenTextObjects(gameObjectArray)  # Calls all the common methods for game screen TextButton objects.
-
+        renderScreenTextObjects(computerGameObjectArray)  # Calls all the common methods for game screen TextButton objects.
         if not blanksGridDoneOnce:  # Checks if the blanks grid have been generated.
             question.generateBlanks()  # If not, the grid is generated.
             blanksText.setText(question.returnBlanks())  # The grid is set as the text to be displayed for blanksText.
@@ -166,11 +170,11 @@ while True:  # Runs the main game loop.
                 outOfAttemptsText.setEnabled(True)  # Enables outOfAttempts to be displayed.
                 yesText.setEnabled(False)  # Disables yesText from being displayed.
                 noText.setEnabled(False)  # Disables noText from being displayed.
-                guessText1.setEnabled(False)  # Disables guessText1 from being displayed.
-                guessText2.setEnabled(False)  # Disables guessText2 from being displayed.
-                guessLetter.setEnabled(False)  # Disables guessLetter from being displayed.
+                computerGuessText1.setEnabled(False)  # Disables guessText1 from being displayed.
+                computerGuessText2.setEnabled(False)  # Disables guessText2 from being displayed.
+                computerGuessText3.setEnabled(False)  # Disables guessLetter from being displayed.
             elif question.returnAttemptsMade() != 10:  # Checks if the AI still has attempts left.
-                guessLetter.setText(question.returnCurrentGuess())  # Displays a new guess.
+                computerGuessText3.setText(question.returnCurrentGuess())  # Displays a new guess.
                 displayingAnswerOptions = True  # Allows the detection of mouse collisions with answer TextButton objects.
                 if question.returnGreyState() or positionInputText.returnText() == "":  # Checks if the user has made a position input or if the input is out of range.
                     confirmGameText.setColour(buttonGrey)  # Changes the colour of confirmGameText to grey.
@@ -181,9 +185,9 @@ while True:  # Runs the main game loop.
             winText.setEnabled(True)  # Enables winText to be displayed.
             yesText.setEnabled(False)  # Disables yesText from being displayed.
             noText.setEnabled(False)  # Disables noText from being displayed.
-            guessText1.setEnabled(False)  # Disables guessText1 from being displayed.
-            guessText2.setEnabled(False)  # Disables guessText2 from being displayed.
-            guessLetter.setEnabled(False)  # Disables guessLetter from being displayed.
+            computerGuessText1.setEnabled(False)  # Disables guessText1 from being displayed.
+            computerGuessText2.setEnabled(False)  # Disables guessText2 from being displayed.
+            computerGuessText3.setEnabled(False)  # Disables guessLetter from being displayed.
             hangman.renderHangman(11)  # Renders the final "win" image of the hangman and creates a hitbox for it.
             hangman.displayHangman()  # Displays the final "win" hangman.
             if not endgameTextDisplayed:  # Checks if the endgame text has been displayed.
@@ -191,6 +195,15 @@ while True:  # Runs the main game loop.
                 blanksText.setText(f"{blanksText.returnText()}!")  # Adds an exclamation point to the end of the word.
                 blanksText.setColour("Yellow")  # Changes the colour of blanksText to yellow.
                 endgameTextDisplayed =  True  # Prevents the exclamation point from continuously being added to the end of blanksText.
+
+    elif userGameActive:
+        screen.fill(graveyardGreen)  # Fills the background with the specified shade of green.
+        renderScreenTextObjects(userGameObjectArray)
+        if not blanksGridDoneOnce:  # Checks if the blanks grid have been generated.
+            question.chooseWord()
+            question.generateBlanks()  # If not, the grid is generated.
+            blanksText.setText(question.returnBlanks())  # The grid is set as the text to be displayed for blanksText.
+            blanksGridDoneOnce = True  # Prevents the grid from being continuously generated.
 
     # Event loop.
     for event in pygame.event.get():  # Retrieves all events running.
@@ -234,7 +247,7 @@ while True:  # Runs the main game loop.
                     question.setWordLength(9)
                     lengthInputText.setText("9")
 
-            elif gameActive:  # Keyboard input for the game screen.
+            elif computerGameActive:  # Keyboard input for the game screen.
 
                 if event.key == pygame.K_0:  # If the input key is a 0.
                     positionInputText.setText("15")
@@ -270,6 +283,87 @@ while True:  # Runs the main game loop.
                     positionInputText.setText("")  # If so, doesn't show the input on screen.
                     question.setGreyState(True)  # Sets the confirm button to be greyed out.
 
+            elif userGameActive:
+
+                if event.key == pygame.K_a:
+                    question.userLetterGuess("A")
+                    userGuessInputText.setText("A")
+                elif event.key == pygame.K_b:
+                    question.userLetterGuess("B")
+                    userGuessInputText.setText("B")
+                elif event.key == pygame.K_c:
+                    question.userLetterGuess("C")
+                    userGuessInputText.setText("C")
+                elif event.key == pygame.K_d:
+                    question.userLetterGuess("D")
+                    userGuessInputText.setText("D")
+                elif event.key == pygame.K_e:
+                    question.userLetterGuess("E")
+                    userGuessInputText.setText("E")
+                elif event.key == pygame.K_f:
+                    question.userLetterGuess("F")
+                    userGuessInputText.setText("F")
+                elif event.key == pygame.K_g:
+                    question.userLetterGuess("G")
+                    userGuessInputText.setText("G")
+                elif event.key == pygame.K_h:
+                    question.userLetterGuess("H")
+                    userGuessInputText.setText("H")
+                elif event.key == pygame.K_i:
+                    question.userLetterGuess("I")
+                    userGuessInputText.setText("I")
+                elif event.key == pygame.K_j:
+                    question.userLetterGuess("J")
+                    userGuessInputText.setText("J")
+                elif event.key == pygame.K_k:
+                    question.userLetterGuess("K")
+                    userGuessInputText.setText("K")
+                elif event.key == pygame.K_l:
+                    question.userLetterGuess("L")
+                    userGuessInputText.setText("L")
+                elif event.key == pygame.K_m:
+                    question.userLetterGuess("M")
+                    userGuessInputText.setText("M")
+                elif event.key == pygame.K_n:
+                    question.userLetterGuess("N")
+                    userGuessInputText.setText("N")
+                elif event.key == pygame.K_o:
+                    question.userLetterGuess("O")
+                    userGuessInputText.setText("O")
+                elif event.key == pygame.K_p:
+                    question.userLetterGuess("P")
+                    userGuessInputText.setText("P")
+                elif event.key == pygame.K_q:
+                    question.userLetterGuess("Q")
+                    userGuessInputText.setText("Q")
+                elif event.key == pygame.K_r:
+                    question.userLetterGuess("R")
+                    userGuessInputText.setText("R")
+                elif event.key == pygame.K_s:
+                    question.userLetterGuess("S")
+                    userGuessInputText.setText("S")
+                elif event.key == pygame.K_t:
+                    question.userLetterGuess("T")
+                    userGuessInputText.setText("T")
+                elif event.key == pygame.K_u:
+                    question.userLetterGuess("U")
+                    userGuessInputText.setText("U")
+                elif event.key == pygame.K_v:
+                    question.userLetterGuess("V")
+                    userGuessInputText.setText("V")
+                elif event.key == pygame.K_w:
+                    question.userLetterGuess("W")
+                    userGuessInputText.setText("W")
+                elif event.key == pygame.K_x:
+                    question.userLetterGuess("X")
+                    userGuessInputText.setText("X")
+                elif event.key == pygame.K_y:
+                    question.userLetterGuess("Y")
+                    userGuessInputText.setText("Y")
+                elif event.key == pygame.K_z:
+                    question.userLetterGuess("Z")
+                    userGuessInputText.setText("Z")
+
         elif event.type == pygame.MOUSEBUTTONDOWN:  # Checks if there is a mouse input.
             if event.button == 1:  # Checks if the mouse input was the left mouse button.
 
@@ -296,7 +390,7 @@ while True:  # Runs the main game loop.
                     elif userGuessesText.detectMouse():
                         userGuesses = True
                         computerGuesses = False
-                        gameActive = True
+                        userGameActive = True
                         gamemodeChooseActive = False
                     elif computerGuessesText.detectMouse():
                         computerGuesses = True
@@ -312,10 +406,10 @@ while True:  # Runs the main game loop.
                         if confirmStagingText.returnColour() == buttonGrey:  # Checks if the confirm button is greyed out.
                             stagingActive = True  # If so, keeps the user on the staging screen.
                         else:
-                            gameActive = True  # If not, changes screen to the game screen.
+                            computerGameActive = True  # If not, changes screen to the game screen.
                             stagingActive = False
 
-                elif gameActive:  # Mouse input for the game screen.
+                elif computerGameActive:  # Mouse input for the game screen when the AI is guessing.
                     if guessShown:  # Checks if the AI's guess is currently being shown.
                         if displayingAnswerOptions:  # Checks if the answer options for the user are being displayed.
                             if yesText.detectMouse():  # Checks if the yes button is pressed by the user.
@@ -347,11 +441,11 @@ while True:  # Runs the main game loop.
                     if backGameText.detectMouse():  # Checks if the back button on the game screen is pressed by the user.
                         if computerGuesses:
                             stagingActive = True  # Changes screen to the staging screen.
-                            gameActive = False
+                            computerGameActive = False
                             blanksGridDoneOnce = False  # Allows the blanks to be updated.
                         elif userGuesses:
                             gamemodeChooseActive = True
-                            gameActive = False
+                            computerGameActive = False
                             blanksGridDoneOnce = False
 
     pygame.display.update()  # Updates the display.
