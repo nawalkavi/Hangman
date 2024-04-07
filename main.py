@@ -12,6 +12,7 @@ pygame.display.set_caption("Hangman")  # Sets a name to the game window.
 clock = pygame.time.Clock()  # Creates a clock to later set the FPS.
 menuActive = True  # Controls displaying the menu screen; the default screen to open with.
 helpActive = False  # Controls displaying the help screen.
+gamemodeChooseActive = False  # Controls displaying the gamemode choosing screen.
 stagingActive = False  # Controls displaying the staging screen.
 gameActive = False  # Controls displaying the game screen.
 blanksGridDoneOnce = False  # Prevents the blanks grid from being appended to and blitted more than once.
@@ -21,6 +22,8 @@ displayingAnswerOptions = False  # Controls displaying the yesText and noText ob
 pressedYes = False  # Whether the user has answered yes to the AI's guess.
 gameComplete = False  # Game was won by the AI.
 endgameTextDisplayed = False  # Whether the endgame text is displayed.
+userGuesses = False
+computerGuesses = False
 
 
 # Reading the .txt file.
@@ -56,15 +59,21 @@ buttonGrey = "#757575"
 alphabetString = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"  # String storing all the possible letters for guesses
 
 
-# TextButton Objects
+# Creating objects.
 hangmanMenuText = TextButton("Hangman", "White", "Yellow", 600, 100, 100, False, True, screen)  # Menu screen.
-playMenuText = TextButton("Play", "White", "Yellow", 600, 350, 70, True, True, screen)
-helpMenuText = TextButton("Help", "White", "Yellow", 600, 450, 70, True, True, screen)
+playMenuText = TextButton("Play", "White", "Yellow", 600, 330, 70, True, True, screen)
+helpMenuText = TextButton("Help", "White", "Yellow", 600, 420, 70, True, True, screen)
+quitMenuText = TextButton("QUiT", "White", "Yellow", 596, 510, 70, True, True, screen)
 
 infoText1 = TextButton("Choose a word", "White", "Yellow", 600, 100, 80, False, True, screen)  # Help screen.
 infoText2 = TextButton("and the AI will", "White", "Yellow", 600, 200, 80, False, True, screen)
 infoText3 = TextButton("attempt to guess it!", "White", "Yellow", 600, 300, 80, False, True, screen)
 backHelpText = TextButton("Back", "White", "Yellow", 600, 720, 60, True, True, screen)
+
+chooseGamemodeText = TextButton("Who should guess?", "White", "Yellow", 600, 100, 80, False, True, screen)  # Gamemode choosing screen.
+userGuessesText = TextButton("I want to guess!", "White", "Yellow", 300, 300, 60, True, True, screen)
+computerGuessesText = TextButton("AI should guess!", "White", "Yellow", 900, 300, 60, True, True, screen)
+backGamemodeText = TextButton("Back", "White", "Yellow", 600, 720, 60, True, True, screen)
 
 lengthQuestion1 = TextButton("How many letters", "White", "Yellow", 600, 100, 80, False, True, screen)  # Staging screen.
 lengthQuestion2 = TextButton("are in", "White", "Yellow", 600, 200, 80, False, True, screen)
@@ -90,8 +99,9 @@ hangman = Hangman(hangmanImages, 300, 370, screen)
 
 
 # TextButton object arrays.
-menuObjectArray = [hangmanMenuText, playMenuText, helpMenuText]  # Stores all the TextButton objects for the menu screen.
+menuObjectArray = [hangmanMenuText, playMenuText, helpMenuText, quitMenuText]  # Stores all the TextButton objects for the menu screen.
 helpObjectArray = [infoText1, infoText2, infoText3, backHelpText]  # Stores all the TextButton objects for the help screen.
+gamemodeChooseObjectArray = [chooseGamemodeText, userGuessesText, computerGuessesText, backGamemodeText]  # Stores all the TextButton objects for the gamemode choosing screen.
 stagingObjectArray = [lengthQuestion1, lengthQuestion2, lengthQuestion3, lengthInputText, confirmStagingText, backStagingText]  # Stores all the TextButton objects for the staging screen.
 gameObjectArray = [yesText, noText, backGameText, blanksText, outOfAttemptsText, positionText, positionInputText, confirmGameText, guessText1, guessText2, guessLetter, winText, outOfAttemptsText]  # Stores all the TextButton objects for the game screen.
 
@@ -115,15 +125,19 @@ while True:  # Runs the main game loop.
         screen.blit(graveyardImage, graveyardImageRect)  # Sets the menu background.
         renderScreenTextObjects(menuObjectArray)  # Calls all the common methods for menu screen TextButton objects.
 
-
     # Help screen.
-    if helpActive:  # Runs only if the help screen is being displayed.
+    elif helpActive:  # Runs only if the help screen is being displayed.
 
         screen.fill(graveyardGreen)  # Fills the background with the specified shade of green.
         renderScreenTextObjects(helpObjectArray)  # Calls all the common methods for help screen TextButton objects.
 
+    elif gamemodeChooseActive:  # Runs only if the gamemode choosing screen is being displayed.
+
+        screen.fill(graveyardGreen)
+        renderScreenTextObjects(gamemodeChooseObjectArray)
+
     # Staging screen.
-    if stagingActive:  # Runs only if the staging screen is being displayed.
+    elif stagingActive:  # Runs only if the staging screen is being displayed.
 
         screen.fill(graveyardGreen)  # Fills the background with the specified shade of green.
         renderScreenTextObjects(stagingObjectArray)  # Calls all the common methods for staging screen TextButton objects.
@@ -132,7 +146,7 @@ while True:  # Runs the main game loop.
             confirmStagingText.setColour(buttonGrey)  # Changes the colour of confirmStagingText to grey if there is no input or if the input is 0.
 
     # Game screen.
-    if gameActive:  # Runs only if the game screen is being displayed.
+    elif gameActive:  # Runs only if the game screen is being displayed.
 
         screen.fill(graveyardGreen)  # Fills the background with the specified shade of green.
         renderScreenTextObjects(gameObjectArray)  # Calls all the common methods for game screen TextButton objects.
@@ -261,20 +275,38 @@ while True:  # Runs the main game loop.
 
                 if menuActive:  # Mouse input for the menu screen.
                     if playMenuText.detectMouse():  # Checks if the play button is pressed by the user.
-                        stagingActive = True  # Changes screen to the staging screen.
+                        gamemodeChooseActive = True  # Changes screen to the staging screen.
                         menuActive = False
                     elif helpMenuText.detectMouse():  # Checks if the help button is pressed by the user.
                         helpActive = True  # Changes screen to the help screen.
                         menuActive = False
+                    elif quitMenuText.detectMouse():
+                        pygame.quit()
+                        sys.exit()
 
                 elif helpActive:  # Mouse input for the help screen.
                     if backHelpText.detectMouse():  # Checks if the back button on the help screen is pressed by the user.
                         menuActive = True  # Changes screen to the menu screen.
                         helpActive = False
 
+                elif gamemodeChooseActive:
+                    if backGamemodeText.detectMouse():
+                        menuActive = True
+                        gamemodeChooseActive = False
+                    elif userGuessesText.detectMouse():
+                        userGuesses = True
+                        computerGuesses = False
+                        gameActive = True
+                        gamemodeChooseActive = False
+                    elif computerGuessesText.detectMouse():
+                        computerGuesses = True
+                        userGuesses = False
+                        stagingActive = True
+                        gamemodeChooseActive = False
+
                 elif stagingActive:  # Mouse input for the staging screen.
                     if backStagingText.detectMouse():  # Checks if the back button on the staging screen is pressed by the user.
-                        menuActive = True  # Changes screen to the menu screen.
+                        gamemodeChooseActive = True  # Changes screen to the menu screen.
                         stagingActive = False
                     if confirmStagingText.detectMouse():  # Checks if the confirm button on the staging screen is pressed by the user.
                         if confirmStagingText.returnColour() == buttonGrey:  # Checks if the confirm button is greyed out.
@@ -313,9 +345,14 @@ while True:  # Runs the main game loop.
                     if question.checkIfComplete():  # If the AI has guessed the word fully.
                         gameComplete = True  # Initiates the win screen.
                     if backGameText.detectMouse():  # Checks if the back button on the game screen is pressed by the user.
-                        stagingActive = True  # Changes screen to the staging screen.
-                        gameActive = False
-                        blanksGridDoneOnce = False  # Allows the blanks to be updated.
+                        if computerGuesses:
+                            stagingActive = True  # Changes screen to the staging screen.
+                            gameActive = False
+                            blanksGridDoneOnce = False  # Allows the blanks to be updated.
+                        elif userGuesses:
+                            gamemodeChooseActive = True
+                            gameActive = False
+                            blanksGridDoneOnce = False
 
     pygame.display.update()  # Updates the display.
     clock.tick(60)  # Sets the framerate; 60FPS has been set as the target FPS.
