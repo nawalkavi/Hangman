@@ -9,7 +9,7 @@ colourArray = ["Black", "Blue", "Cyan", "Gold", "Gray", "Green", "Orange", "Purp
 # TextButton.
 class TextButton:
 
-    def __init__(self, text, pColour, sColour, xPos, yPos, size, hoverEffect, enabled, screen):  # Constructor for the class; takes all the necessary parameters.
+    def __init__(self, text, pColour, sColour, xPos, yPos, size, hover, enabled, screen):  # Constructor for the class; takes all the necessary parameters.
         self.__text = text
         if type(self.__text) != str:  # Validates that the value entered for self.__text is a string data type.
             self.__text = ""  # Assigns it a default value of an empty string if it isn't.
@@ -32,7 +32,7 @@ class TextButton:
             self.__size = 60  # Assigns it a default font size of 60 if it does.
         self.__screen = screen
         self.__menuFont = pygame.font.Font("Assets//Fonts//Mighty Souly.ttf", self.__size)  # Loads the font for the text.
-        self.__hover = hoverEffect
+        self.__hover = hover
         self.__enabled = enabled
 
     def renderText(self):
@@ -48,17 +48,17 @@ class TextButton:
         return self.__menuTextRect  # Returns the rendered text complete with its hitbox.
 
     def detectMouse(self):
-        if self.__enabled:
+        if self.__enabled:  # Checks if the object is currently enabled.
             self.__mousePos = pygame.mouse.get_pos()  # Returns the current position of the mouse cursor.
             if self.__menuTextRect.collidepoint(self.__mousePos):  # Detects a collision between the mouse cursor and the text hitbox.
-                return True  # True if there is a collision.
+                return True  # Returns True if there is a collision.
             else:
-                return False  # False if there is no collision.
+                return False  # Returns False if there is no collision.
         else:
-            return False
+            return False  # Returns False if it's not enabled.
 
-    def hoverEffect(self):  #  Changes text colour based on mouse position.
-        if self.__hover:
+    def hoverEffect(self):  # Changes text colour based on mouse position.
+        if self.__hover:  # Checks if the text should have the hover effect.
             if self.detectMouse():  # If self.detectMouse() returns True, meaning there is a collision.
                 self.__currentColour = self.__sColour  # Changes the text colour to the secondary colour if the mouse cursor is hovering over it.
             if not self.detectMouse():  # If self.detectMouse() returns False, meaning there is no collision.
@@ -76,15 +76,15 @@ class TextButton:
     def returnColour(self):
         return self.__currentColour  # Returns the currently specified text colour.
 
-    def setEnabled(self, newEnabledState):
-        self.__enabled = newEnabledState
+    def setEnabled(self, newEnabledState):  # Allows an object's state to be enabled or disabled.
+        self.__enabled = newEnabledState  # Sets the new state.
 
     def returnEnabled(self):
-        return self.__enabled
+        return self.__enabled  # Returns the current state.
 
-    def setPos(self, newX, newY):
-        self.__xPos = newX
-        self.__yPos = newY
+    def setPos(self, newX, newY):  # Allows new x-axis and y-axis positions to be provided for the object.
+        self.__xPos = newX  # The new x-axis position.
+        self.__yPos = newY  # The new y-axis position.
 
     def blitText(self):
-        self.__screen.blit(self.returnRender(), self.__menuTextRect)  # Blits to the screen.
+        self.__screen.blit(self.returnRender(), self.__menuTextRect)  # Displays the text to the screen.

@@ -56,31 +56,25 @@ buttonGrey = "#757575"
 alphabetString = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"  # String storing all the possible letters for guesses
 
 
-# Menu screen text objects.
-hangmanMenuText = TextButton("Hangman", "White", "Yellow", 600, 100, 100, False, True, screen)
+# TextButton Objects
+hangmanMenuText = TextButton("Hangman", "White", "Yellow", 600, 100, 100, False, True, screen)  # Menu screen.
 playMenuText = TextButton("Play", "White", "Yellow", 600, 350, 70, True, True, screen)
 helpMenuText = TextButton("Help", "White", "Yellow", 600, 450, 70, True, True, screen)
 
-
-# Help screen text objects.
-infoText1 = TextButton("Choose a word", "White", "Yellow", 600, 100, 80, False, True, screen)
+infoText1 = TextButton("Choose a word", "White", "Yellow", 600, 100, 80, False, True, screen)  # Help screen.
 infoText2 = TextButton("and the AI will", "White", "Yellow", 600, 200, 80, False, True, screen)
 infoText3 = TextButton("attempt to guess it!", "White", "Yellow", 600, 300, 80, False, True, screen)
 backHelpText = TextButton("Back", "White", "Yellow", 600, 720, 60, True, True, screen)
 
-
-# Staging screen text objects.
-lengthQuestion1 = TextButton("How many letters", "White", "Yellow", 600, 100, 80, False, True, screen)
+lengthQuestion1 = TextButton("How many letters", "White", "Yellow", 600, 100, 80, False, True, screen)  # Staging screen.
 lengthQuestion2 = TextButton("are in", "White", "Yellow", 600, 200, 80, False, True, screen)
 lengthQuestion3 = TextButton("your word?", "White", "Yellow", 600, 300, 80, False, True, screen)
 lengthInputText = TextButton("", "Yellow", "White", 600, 550, 80, False, True, screen)
-question = Question(wordList, alphabetString, screen)
 confirmStagingText = TextButton("Confirm", "White", "Yellow", 1050, 720, 60, True, True, screen)
 backStagingText = TextButton("Back", "White", "Yellow", 110, 720, 60, True, True, screen)
+question = Question(wordList, alphabetString)
 
-
-# Game screen text objects.
-yesText = TextButton("Yes", "White", "Yellow", 810, 600, 70, True, True, screen)
+yesText = TextButton("Yes", "White", "Yellow", 810, 600, 70, True, True, screen)  # Game screen.
 noText = TextButton("No", "White", "Yellow", 990, 600, 70, True, True, screen)
 positionText = TextButton("What position?", "White", "Yellow", 900, 550,60, False, False, screen)
 positionInputText = TextButton("", "Yellow", "White", 900, 630, 60, False, False, screen)
@@ -103,13 +97,13 @@ gameObjectArray = [yesText, noText, backGameText, blanksText, outOfAttemptsText,
 
 
 # Function used to call all the methods inside the primary game loop common to every TextButton object.
-def renderScreen(objectArray):
-    for object in objectArray:
-        if object.returnEnabled():
-            object.renderText()
-            object.createRect()
-            object.hoverEffect()
-            object.blitText()
+def renderScreenTextObjects(objectArray):  # Takes an array of all TextButton objects on each screen.
+    for object in objectArray:  # Loops through each object in the array passed in.
+        if object.returnEnabled():  # Checks if the object is currently enabled.
+            object.renderText()  # Calls the renderText() function.
+            object.createRect()  # Calls the createRect() function.
+            object.hoverEffect()  # Calls the hoverEffect() function.
+            object.blitText()  # Calls the blitText() function.
 
 
 # Main game loop.
@@ -119,20 +113,20 @@ while True:  # Runs the main game loop.
     if menuActive:  # Runs only if the menu screen is being displayed.
 
         screen.blit(graveyardImage, graveyardImageRect)  # Sets the menu background.
-        renderScreen(menuObjectArray)  # Calls all the common methods for menu screen TextButton objects.
+        renderScreenTextObjects(menuObjectArray)  # Calls all the common methods for menu screen TextButton objects.
 
 
     # Help screen.
     if helpActive:  # Runs only if the help screen is being displayed.
 
         screen.fill(graveyardGreen)  # Fills the background with the specified shade of green.
-        renderScreen(helpObjectArray)  # Calls all the common methods for help screen TextButton objects.
+        renderScreenTextObjects(helpObjectArray)  # Calls all the common methods for help screen TextButton objects.
 
     # Staging screen.
     if stagingActive:  # Runs only if the staging screen is being displayed.
 
         screen.fill(graveyardGreen)  # Fills the background with the specified shade of green.
-        renderScreen(stagingObjectArray)  # Calls all the common methods for staging screen TextButton objects.
+        renderScreenTextObjects(stagingObjectArray)  # Calls all the common methods for staging screen TextButton objects.
 
         if question.returnWordLength() is None:  # Checks if the user has entered an input for the length of their chosen word.
             confirmStagingText.setColour(buttonGrey)  # Changes the colour of confirmStagingText to grey if there is no input or if the input is 0.
@@ -141,7 +135,7 @@ while True:  # Runs the main game loop.
     if gameActive:  # Runs only if the game screen is being displayed.
 
         screen.fill(graveyardGreen)  # Fills the background with the specified shade of green.
-        renderScreen(gameObjectArray)  # Calls all the common methods for game screen TextButton objects.
+        renderScreenTextObjects(gameObjectArray)  # Calls all the common methods for game screen TextButton objects.
 
         if not blanksGridDoneOnce:  # Checks if the blanks grid have been generated.
             question.generateBlanks()  # If not, the grid is generated.
@@ -164,8 +158,8 @@ while True:  # Runs the main game loop.
             elif question.returnAttemptsMade() != 10:  # Checks if the AI still has attempts left.
                 guessLetter.setText(question.returnCurrentGuess())  # Displays a new guess.
                 displayingAnswerOptions = True  # Allows the detection of mouse collisions with answer TextButton objects.
-                if question.returnGreyState() or positionInputText.returnText() == "":
-                    confirmGameText.setColour(buttonGrey)
+                if question.returnGreyState() or positionInputText.returnText() == "":  # Checks if the user has made a position input or if the input is out of range.
+                    confirmGameText.setColour(buttonGrey)  # Changes the colour of confirmGameText to grey.
             hangman.renderHangman(question.returnAttemptsMade())  # Renders the appropriate hangman image and creates a hitbox for it.
             hangman.displayHangman()  # Displays the hangman image.
 
@@ -192,138 +186,136 @@ while True:  # Runs the main game loop.
 
         elif event.type == pygame.KEYDOWN:  # Detects a keyboard input.
 
-            if stagingActive:  # Input for the staging screen.
+            if stagingActive:  # Keyboard input for the staging screen.
 
                 # Detects which key was pressed and assigns it to self.__wordLength accordingly.
                 if event.key == pygame.K_0:  # If the input key is a 0.
                     question.resetWordLength()  # Resets the word length, which prevents the user from entering the game without a valid input.
                     lengthInputText.setText("")  # Makes the input text blank.
-                elif event.key == pygame.K_1:  # If the input key is a 1.
+                elif event.key == pygame.K_1:  # If the input key is 1.
                     question.setWordLength(1)
                     lengthInputText.setText("1")
-                elif event.key == pygame.K_2:  # If th input key is a 2.
+                elif event.key == pygame.K_2:  # If the input key is 2.
                     question.setWordLength(2)
                     lengthInputText.setText("2")
-                elif event.key == pygame.K_3:  # If the input key is a 3.
+                elif event.key == pygame.K_3:  # If the input key is 3.
                     question.setWordLength(3)
                     lengthInputText.setText("3")
-                elif event.key == pygame.K_4:  # If the input key is a 4.
+                elif event.key == pygame.K_4:  # If the input key is 4.
                     question.setWordLength(4)
                     lengthInputText.setText("4")
-                elif event.key == pygame.K_5:  # If the input key is a 5.
+                elif event.key == pygame.K_5:  # If the input key is 5.
                     question.setWordLength(5)
                     lengthInputText.setText("5")
-                elif event.key == pygame.K_6:  # If the input key is a 6
+                elif event.key == pygame.K_6:  # If the input key is 6
                     question.setWordLength(6)
                     lengthInputText.setText("6")
-                elif event.key == pygame.K_7:  # If the input key is a 7.
+                elif event.key == pygame.K_7:  # If the input key is 7.
                     question.setWordLength(7)
                     lengthInputText.setText("7")
-                elif event.key == pygame.K_8:  # If the input key is an 8.
+                elif event.key == pygame.K_8:  # If the input key is 8.
                     question.setWordLength(8)
                     lengthInputText.setText("8")
-                elif event.key == pygame.K_9:  # If the input key is a 9.
+                elif event.key == pygame.K_9:  # If the input key is 9.
                     question.setWordLength(9)
                     lengthInputText.setText("9")
 
-            elif gameActive:  # Input for the game screen.
+            elif gameActive:  # Keyboard input for the game screen.
 
-                if event.key == pygame.K_0:
-                    positionInputText.setText("")
-                    question.greyState(True)
-                elif event.key == pygame.K_1:
+                if event.key == pygame.K_0:  # If the input key is a 0.
+                    positionInputText.setText("15")
+                    question.setGreyState(True)
+                elif event.key == pygame.K_1:  # If the input key is 1.
                     positionInputText.setText("1")
-                    question.greyState(False)
-                elif event.key == pygame.K_2:
+                    question.setGreyState(False)
+                elif event.key == pygame.K_2:  # If the input key is 2.
                     positionInputText.setText("2")
-                    question.greyState(False)
-                elif event.key == pygame.K_3:
+                    question.setGreyState(False)
+                elif event.key == pygame.K_3:  # If the input key is 3.
                     positionInputText.setText("3")
-                    question.greyState(False)
-                elif event.key == pygame.K_4:
+                    question.setGreyState(False)
+                elif event.key == pygame.K_4:  # If the input key is 4.
                     positionInputText.setText("4")
-                    question.greyState(False)
-                elif event.key == pygame.K_5:
+                    question.setGreyState(False)
+                elif event.key == pygame.K_5:  # If the input key is 5.
                     positionInputText.setText("5")
-                    question.greyState(False)
-                elif event.key == pygame.K_6:
+                    question.setGreyState(False)
+                elif event.key == pygame.K_6:  # If the input key is 6
                     positionInputText.setText("6")
-                    question.greyState(False)
-                elif event.key == pygame.K_7:
+                    question.setGreyState(False)
+                elif event.key == pygame.K_7:  # If the input key is 7.
                     positionInputText.setText("7")
-                    question.greyState(False)
-                elif event.key == pygame.K_8:
+                    question.setGreyState(False)
+                elif event.key == pygame.K_8:  # If the input key is 8.
                     positionInputText.setText("8")
-                    question.greyState(False)
-                elif event.key == pygame.K_9:
+                    question.setGreyState(False)
+                elif event.key == pygame.K_9:  # If the input key is 9.
                     positionInputText.setText("9")
-                    question.greyState(False)
-                print(question.returnGreyState())
-                if int(positionInputText.returnText()) > len(blanksText.returnText()):
-                    print(int(positionInputText.returnText()))
-                    positionInputText.setText("")
-                    question.greyState(True)
+                    question.setGreyState(False)
+                if int(positionInputText.returnText()) > len(blanksText.returnText()):  # Checks if the position input is greater than the total length of the word.
+                    positionInputText.setText("")  # If so, doesn't show the input on screen.
+                    question.setGreyState(True)  # Sets the confirm button to be greyed out.
 
-        elif event.type == pygame.MOUSEBUTTONDOWN:
-            if event.button == 1:
+        elif event.type == pygame.MOUSEBUTTONDOWN:  # Checks if there is a mouse input.
+            if event.button == 1:  # Checks if the mouse input was the left mouse button.
 
-                if menuActive:
+                if menuActive:  # Mouse input for the menu screen.
                     if playMenuText.detectMouse():  # Checks if the play button is pressed by the user.
-                        stagingActive = True
+                        stagingActive = True  # Changes screen to the staging screen.
                         menuActive = False
                     elif helpMenuText.detectMouse():  # Checks if the help button is pressed by the user.
-                        helpActive = True
+                        helpActive = True  # Changes screen to the help screen.
                         menuActive = False
 
-                elif helpActive:
-                    if backHelpText.detectMouse():
+                elif helpActive:  # Mouse input for the help screen.
+                    if backHelpText.detectMouse():  # Checks if the back button on the help screen is pressed by the user.
+                        menuActive = True  # Changes screen to the menu screen.
                         helpActive = False
-                        menuActive = True
 
-                elif stagingActive:
-                    if backStagingText.detectMouse():
-                        menuActive = True
+                elif stagingActive:  # Mouse input for the staging screen.
+                    if backStagingText.detectMouse():  # Checks if the back button on the staging screen is pressed by the user.
+                        menuActive = True  # Changes screen to the menu screen.
                         stagingActive = False
-                    if confirmStagingText.detectMouse():
-                        if confirmStagingText.returnColour() == buttonGrey:
-                            stagingActive = True
+                    if confirmStagingText.detectMouse():  # Checks if the confirm button on the staging screen is pressed by the user.
+                        if confirmStagingText.returnColour() == buttonGrey:  # Checks if the confirm button is greyed out.
+                            stagingActive = True  # If so, keeps the user on the staging screen.
                         else:
+                            gameActive = True  # If not, changes screen to the game screen.
                             stagingActive = False
-                            gameActive = True
 
-                elif gameActive:
-                    if guessShown:
-                        if displayingAnswerOptions:
-                            if yesText.detectMouse():
-                                yesText.setEnabled(False)
-                                noText.setEnabled(False)
-                                positionText.setEnabled(True)
-                                positionInputText.setEnabled(True)
-                                confirmGameText.setEnabled(True)
-                                guessShown = True
-                            elif confirmGameText.detectMouse():
-                                if confirmStagingText.returnColour() == buttonGrey:
-                                    userDecisionMade = False
-                                else:
-                                    question.setAnswerPosition(int(positionInputText.returnText()))
-                                    blanksText.setText(question.returnBlanks())
-                                    confirmGameText.setEnabled(False)
-                                    positionText.setEnabled(False)
-                                    positionInputText.setEnabled(False)
-                                    yesText.setEnabled(True)
-                                    noText.setEnabled(True)
-                                    guessShown = False
-                                    userDecisionMade = True
-                            elif noText.detectMouse():
-                                question.attemptMade()
-                                guessShown = False
-                                userDecisionMade = True
-                    if question.checkIfComplete():
-                        gameComplete = True
-                    if backGameText.detectMouse():
+                elif gameActive:  # Mouse input for the game screen.
+                    if guessShown:  # Checks if the AI's guess is currently being shown.
+                        if displayingAnswerOptions:  # Checks if the answer options for the user are being displayed.
+                            if yesText.detectMouse():  # Checks if the yes button is pressed by the user.
+                                yesText.setEnabled(False)  # Disables the yes button.
+                                noText.setEnabled(False)  # Disables the no button.
+                                positionText.setEnabled(True)  # Enables the position question text.
+                                positionInputText.setEnabled(True)  # Enables the user to make an input about the position of the AI's guess.
+                                confirmGameText.setEnabled(True)  # Enables the confirm button.
+                                guessShown = True  # Keeps the AI's guess on the screen.
+                            elif confirmGameText.detectMouse():  # Checks if the confirm button is pressed by the user.
+                                if confirmGameText.returnColour() == buttonGrey:  # Checks if the confirm button is greyed out.
+                                    userDecisionMade = False  # If so, user is not allowed to confirm their position input.
+                                else:  # If the confirm button is not greyed out.
+                                    question.setAnswerPosition(int(positionInputText.returnText()))  # User input sent to Question so that blanks can be updated.
+                                    blanksText.setText(question.returnBlanks())  # Blanks are updated.
+                                    confirmGameText.setEnabled(False)  # Disables the confirm button.
+                                    positionText.setEnabled(False)  # Disables the position question text.
+                                    positionInputText.setEnabled(False)  # Disables the position input text.
+                                    yesText.setEnabled(True)  # Enables the yes button.
+                                    noText.setEnabled(True)  # Enables the no button.
+                                    guessShown = False  # Removes the AI's guess so that a new one can be generated.
+                                    userDecisionMade = True  # Set to True because the user has made their decision.
+                            elif noText.detectMouse():  # Checks if the no button is pressed by the user.
+                                question.attemptMade()  # Removes an attempt from the AI.
+                                guessShown = False  # Removes the AI's guess so that a new one can be generated.
+                                userDecisionMade = True  # Set to True because the user has made their decision.
+                    if question.checkIfComplete():  # If the AI has guessed the word fully.
+                        gameComplete = True  # Initiates the win screen.
+                    if backGameText.detectMouse():  # Checks if the back button on the game screen is pressed by the user.
+                        stagingActive = True  # Changes screen to the staging screen.
                         gameActive = False
-                        stagingActive = True
-                        blanksGridDoneOnce = False
+                        blanksGridDoneOnce = False  # Allows the blanks to be updated.
 
     pygame.display.update()  # Updates the display.
     clock.tick(60)  # Sets the framerate; 60FPS has been set as the target FPS.
