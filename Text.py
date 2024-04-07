@@ -22,10 +22,10 @@ class TextButton:
             self.__sColour = "Yellow"  # Assigns it a default colour of yellow if it isn't.
         self.__currentColour = pColour
         self.__xPos = xPos
-        if not 0 <= self.__xPos <= 1200:  # Validates that the value entered for self.__xPos is within the screen dimensions.
+        if not (0 <= self.__xPos <= 1200):  # Validates that the value entered for self.__xPos is within the screen dimensions.
             self.__xPos = 600  # Assigns it a default position of 600 if it isn't.
         self.__yPos = yPos
-        if not 0 <= self.__yPos <= 800:  # Validates that the value entered for self.__yPos is within the screen dimensions.
+        if not (0 <= self.__yPos <= 800):  # Validates that the value entered for self.__yPos is within the screen dimensions.
             self.__xPos = 200  # Assigns it a default position of 200 if it isn't.
         self.__size = size
         if self.__size > 300:  # Validates that the value entered for self.__size isn't large enough to exceed screen borders.
