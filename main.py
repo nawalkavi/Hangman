@@ -209,8 +209,10 @@ while True:  # Runs the main game loop.
         userGuessMade = False
         if not blanksGridDoneOnce:  # Checks if the blanks grid have been generated.
             user.chooseWord()
+            print(user.returnChosenWord())
             while not user.checkLetterDuplicates():
                 user.chooseWord()
+            print(user.returnChosenWord())
             user.generateBlanks()  # If not, the grid is generated.
             blanksText.setText(user.returnBlanks())  # The grid is set as the text to be displayed for blanksText.
             blanksGridDoneOnce = True  # Prevents the grid from being continuously generated.
