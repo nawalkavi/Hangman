@@ -6,6 +6,8 @@ class User:
 
     def __init__(self, wordList):
         self.__wordList = wordList
+        if type(self.__wordList) == list:
+            self.__wordList = []
         self.__chosenWord = None
         self.__blanks = ""
         self.__attemptsMade = 0
@@ -40,6 +42,13 @@ class User:
     def returnBlanks(self):
         return self.__blanks
 
+    def updateBlanks(self):
+        tempArray = []
+        for letter in self.__blanks:
+            tempArray.append(letter)
+        tempArray[self.__letterPosition] = self.__letterGuessed
+        self.__blanks = "".join(tempArray)
+
     def letterGuess(self, letterGuessed):
         self.__letterGuessed = letterGuessed
 
@@ -54,19 +63,17 @@ class User:
             self.__letterPosition += 1
         return False
 
-    def updateBlanks(self):
-        tempArray = []
-        for letter in self.__blanks:
-            tempArray.append(letter)
-        tempArray[self.__letterPosition] = self.__letterGuessed
-        self.__blanks = "".join(tempArray)
-
     def attemptMade(self):
         self.__attemptsMade += 1
 
     def returnAttemptsMade(self):
         return self.__attemptsMade
 
+    def checkIfComplete(self):
+        for letter in self.__blanks:
+            if letter == "_":
+                return False
+        return True
 
 
 # Question.

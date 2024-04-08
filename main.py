@@ -1,6 +1,7 @@
 # Importing the necessary libraries and classes.
 import pygame  # Imports the Pygame library.
 import sys  # Imports the sys module.
+import time
 from Text import TextButton  # Imports the TextButton object from Text.py
 from GameScreen import Question, Hangman, User  # Imports the Question, Hangman and User objects from GameScreen.py
 
@@ -101,8 +102,10 @@ blanksText = TextButton("", "White", "Yellow", 900, 140, 80, False, True, screen
 winText = TextButton("Your word is", "White", "Yellow", 900, 300, 70, False, False, screen)
 outOfAttemptsText = TextButton("Out of attempts!", "White", "Yellow", 900, 400, 70, False, False, screen)
 
-userGuessText = TextButton("Make a guess!", "White", "Yellow", 900, 300, 70, False, True, screen)  # User game screen.
+userGuessPromptText = TextButton("Make a guess!", "White", "Yellow", 900, 300, 70, False, True, screen)  # User game screen.
 userLetterGuessInputText = TextButton("", "Yellow", "White", 900, 380, 70, False, True, screen)
+correctGameText = TextButton("Correct", buttonGrey, "Yellow", 750, 600, 60, False, True, screen)
+incorrectGameText = TextButton("Incorrect", buttonGrey, "Yellow", 1050, 600, 60, False, True, screen)
 
 # Other objects.
 question = Question(alphabetString)
@@ -115,7 +118,7 @@ helpObjectArray = [infoText1, infoText2, infoText3, backHelpText]  # Stores all 
 gamemodeChooseObjectArray = [chooseGamemodeText, userGuessesText, computerGuessesText, backGamemodeText]  # Stores all the TextButton objects for the gamemode choosing screen.
 stagingObjectArray = [lengthQuestion1, lengthQuestion2, lengthQuestion3, lengthInputText, confirmStagingText, backStagingText]  # Stores all the TextButton objects for the staging screen.
 computerGameObjectArray = [yesText, noText, backGameText, blanksText, outOfAttemptsText, computerPositionText, computerPositionInputText, confirmGameText, computerGuessText1, computerGuessText2, computerGuessText3, winText, outOfAttemptsText]  # Stores all the TextButton objects for the game screen.
-userGameObjectArray = [userGuessText, userLetterGuessInputText, blanksText, backGameText, confirmGameText]
+userGameObjectArray = [userGuessPromptText, userLetterGuessInputText, blanksText, backGameText, confirmGameText, correctGameText, incorrectGameText, outOfAttemptsText, winText]
 
 # Function used to call all the methods inside the primary game loop common to every TextButton object.
 def renderScreenTextObjects(objectArray):  # Takes an array of all TextButton objects on each screen.
@@ -203,6 +206,7 @@ while True:  # Runs the main game loop.
         renderScreenTextObjects(userGameObjectArray)
         confirmGameText.setEnabled(True)
         userGuessPositionSpecified = False
+        userGuessMade = False
         if not blanksGridDoneOnce:  # Checks if the blanks grid have been generated.
             user.chooseWord()
             while not user.checkLetterDuplicates():
@@ -210,9 +214,36 @@ while True:  # Runs the main game loop.
             user.generateBlanks()  # If not, the grid is generated.
             blanksText.setText(user.returnBlanks())  # The grid is set as the text to be displayed for blanksText.
             blanksGridDoneOnce = True  # Prevents the grid from being continuously generated.
-
+        if userLetterGuessInputText.returnText() == "":
+            confirmGameText.setColour(buttonGrey)
+        if user.returnAttemptsMade() == 10:
+            userGuessPromptText.setEnabled(False)
+            userLetterGuessInputText.setEnabled(False)
+            blanksText.setEnabled(False)
+            backGameText.setEnabled(False)
+            confirmGameText.setEnabled(False)
+            correctGameText.setEnabled(False)
+            incorrectGameText.setEnabled(False)
+            outOfAttemptsText.setEnabled(True)
         hangman.renderHangman(user.returnAttemptsMade())  # Renders the appropriate hangman image and creates a hitbox for it.
         hangman.displayHangman()
+        if user.returnAttemptsMade() != 10:
+            if user.checkIfComplete():
+                hangman.renderHangman(11)  # Renders the final "win" image of the hangman and creates a hitbox for it.
+                hangman.displayHangman()  # Displays the final "win" hangman.
+                userGuessPromptText.setEnabled(False)
+                userLetterGuessInputText.setEnabled(False)
+                backGameText.setEnabled(False)
+                confirmGameText.setEnabled(False)
+                correctGameText.setEnabled(False)
+                incorrectGameText.setEnabled(False)
+                winText.setEnabled(True)
+                winText.setText("The word was")
+                if not endgameTextDisplayed:  # Checks if the endgame text has been displayed.
+                    blanksText.setPos(900, 400)  # Moves the blanks grid downwards.
+                    blanksText.setText(f"{blanksText.returnText()}!")  # Adds an exclamation point to the end of the word.
+                    blanksText.setColour("Yellow")  # Changes the colour of blanksText to yellow.
+                    endgameTextDisplayed = True  # Prevents the exclamation point from continuously being added to the end of blanksText.
 
     # Event loop.
     for event in pygame.event.get():  # Retrieves all events running.
@@ -458,17 +489,22 @@ while True:  # Runs the main game loop.
                         gamemodeChooseActive = True
                         userGameActive = False
                     if confirmGameText.detectMouse():
+                        correctGameText.setColour(buttonGrey)
+                        incorrectGameText.setColour(buttonGrey)
                         if not userGuessMade:
-                            userGuessMade = True
-                        elif userGuessMade:
-                            userGuessMade = False
-                            userLetterGuessInputText.setText("")
-                        if not user.checkLetter():
-                            user.attemptMade()
-                        elif user.checkLetter():
-                            print(f"Letter: {user.returnLetterGuessed()}")
-                            user.updateBlanks()
-                            blanksText.setText(user.returnBlanks())
+                            if confirmGameText.returnColour() == buttonGrey:
+                                break
+                            else:
+                                userGuessMade = True
+                                userLetterGuessInputText.setText("")
+                            if not user.checkLetter():
+                                user.attemptMade()
+                                incorrectGameText.setColour("Yellow")
+                            if user.checkLetter():
+                                print(f"Letter: {user.returnLetterGuessed()}")
+                                user.updateBlanks()
+                                blanksText.setText(user.returnBlanks())
+                                correctGameText.setColour("Yellow")
                     print(user.returnChosenWord())
 
 

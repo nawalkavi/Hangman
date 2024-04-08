@@ -3,7 +3,8 @@ import pygame
 
 
 # Array storing all the predefined string constants for colours inside Pygame.
-colourArray = ["Black", "Blue", "Cyan", "Gold", "Gray", "Green", "Orange", "Purple", "Red", "Violet", "Yellow", "White"]
+buttonGrey = "#757575"
+colourArray = ["Black", "Blue", "Cyan", "Gold", "Gray", "Green", "Orange", "Purple", "Red", "Violet", "Yellow", "White", buttonGrey]
 
 
 # TextButton.
