@@ -20,7 +20,6 @@ blanksGridDoneOnce = False  # Prevents the blanks grid from being appended to an
 guessShown = False  # Whether the AI's guess is currently being displayed on screen.
 userDecisionMade = False  # Whether the user has clicked on either the yesText or noText objects.
 userGuessMade = False
-userGuessPositionSpecified = False
 displayingAnswerOptions = False  # Controls displaying the yesText and noText objects on the game screen.
 pressedYes = False  # Whether the user has answered yes to the AI's guess.
 gameComplete = False  # Game was won by the AI.
@@ -104,8 +103,6 @@ outOfAttemptsText = TextButton("Out of attempts!", "White", "Yellow", 900, 400, 
 
 userGuessText = TextButton("Make a guess!", "White", "Yellow", 900, 300, 70, False, True, screen)  # User game screen.
 userLetterGuessInputText = TextButton("", "Yellow", "White", 900, 380, 70, False, True, screen)
-userPositionText = TextButton("What position?", "White", "Yellow", 900, 530, 70, False, False, screen)
-userPositionInputText = TextButton("", "Yellow", "White", 900, 610, 70, False, False, screen)
 
 # Other objects.
 question = Question(alphabetString)
@@ -118,7 +115,7 @@ helpObjectArray = [infoText1, infoText2, infoText3, backHelpText]  # Stores all 
 gamemodeChooseObjectArray = [chooseGamemodeText, userGuessesText, computerGuessesText, backGamemodeText]  # Stores all the TextButton objects for the gamemode choosing screen.
 stagingObjectArray = [lengthQuestion1, lengthQuestion2, lengthQuestion3, lengthInputText, confirmStagingText, backStagingText]  # Stores all the TextButton objects for the staging screen.
 computerGameObjectArray = [yesText, noText, backGameText, blanksText, outOfAttemptsText, computerPositionText, computerPositionInputText, confirmGameText, computerGuessText1, computerGuessText2, computerGuessText3, winText, outOfAttemptsText]  # Stores all the TextButton objects for the game screen.
-userGameObjectArray = [userGuessText, userLetterGuessInputText, blanksText, userPositionText, userPositionInputText, backGameText, confirmGameText]
+userGameObjectArray = [userGuessText, userLetterGuessInputText, blanksText, backGameText, confirmGameText]
 
 # Function used to call all the methods inside the primary game loop common to every TextButton object.
 def renderScreenTextObjects(objectArray):  # Takes an array of all TextButton objects on each screen.
@@ -208,6 +205,8 @@ while True:  # Runs the main game loop.
         userGuessPositionSpecified = False
         if not blanksGridDoneOnce:  # Checks if the blanks grid have been generated.
             user.chooseWord()
+            while not user.checkLetterDuplicates():
+                user.chooseWord()
             user.generateBlanks()  # If not, the grid is generated.
             blanksText.setText(user.returnBlanks())  # The grid is set as the text to be displayed for blanksText.
             blanksGridDoneOnce = True  # Prevents the grid from being continuously generated.
@@ -375,38 +374,6 @@ while True:  # Runs the main game loop.
                         user.letterGuess("Z")
                         userLetterGuessInputText.setText("Z")
 
-                elif not userGuessPositionSpecified:
-                    if event.key == pygame.K_0:
-                        userPositionInputText.setText("15")
-                        user.positionGuess(None)
-                    elif event.key == pygame.K_1:
-                        userPositionInputText.setText("1")
-                        user.positionGuess(1)
-                    elif event.key == pygame.K_2:
-                        userPositionInputText.setText("2")
-                        user.positionGuess(2)
-                    elif event.key == pygame.K_3:
-                        userPositionInputText.setText("3")
-                        user.positionGuess(3)
-                    elif event.key == pygame.K_4:
-                        userPositionInputText.setText("4")
-                        user.positionGuess(4)
-                    elif event.key == pygame.K_5:
-                        userPositionInputText.setText("5")
-                        user.positionGuess(5)
-                    elif event.key == pygame.K_6:
-                        userPositionInputText.setText("6")
-                        user.positionGuess(6)
-                    elif event.key == pygame.K_7:
-                        userPositionInputText.setText("7")
-                        user.positionGuess(7)
-                    elif event.key == pygame.K_8:
-                        userPositionInputText.setText("8")
-                        user.positionGuess(8)
-                    elif event.key == pygame.K_9:
-                        userPositionInputText.setText("9")
-                        user.positionGuess(9)
-
         elif event.type == pygame.MOUSEBUTTONDOWN:  # Checks if there is a mouse input.
             if event.button == 1:  # Checks if the mouse input was the left mouse button.
 
@@ -491,27 +458,18 @@ while True:  # Runs the main game loop.
                         gamemodeChooseActive = True
                         userGameActive = False
                     if confirmGameText.detectMouse():
-                        if not userGuessMade and not userGuessPositionSpecified:
+                        if not userGuessMade:
                             userGuessMade = True
-                            userPositionText.setEnabled(True)
-                            userPositionInputText.setEnabled(True)
-                        elif userGuessMade and not userGuessPositionSpecified:
+                        elif userGuessMade:
                             userGuessMade = False
-                            userGuessPositionSpecified = True
-                            userPositionText.setEnabled(False)
-                            userPositionInputText.setEnabled(False)
                             userLetterGuessInputText.setText("")
-                            userPositionInputText.setText("")
-                            if not user.checkLetter():
-                                user.attemptMade()
-                            elif not user.checkPosition():
-                                user.attemptMade()
-                            if user.checkLetter() and user.checkPosition():
-                                print(f"Letter: {user.returnLetterGuessed()}")
-                                print(f"Position: {user.returnPositionGuessed()}")
-                                user.updateBlanks()
-                                blanksText.setText(user.returnBlanks())
-                        print(user.returnChosenWord())
+                        if not user.checkLetter():
+                            user.attemptMade()
+                        elif user.checkLetter():
+                            print(f"Letter: {user.returnLetterGuessed()}")
+                            user.updateBlanks()
+                            blanksText.setText(user.returnBlanks())
+                    print(user.returnChosenWord())
 
 
     pygame.display.update()  # Updates the display.

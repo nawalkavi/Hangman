@@ -11,9 +11,19 @@ class User:
         self.__attemptsMade = 0
 
     def chooseWord(self):
+        self.__seenLetters = None
         self.__chosenWord = random.choice(self.__wordList)
         while len(self.__chosenWord) > 10:
             self.__chosenWord = random.choice(self.__wordList)
+
+    def checkLetterDuplicates(self):
+        self.__letter = None
+        self.__seenLetters = set()
+        for self.__letter in self.__chosenWord:
+            if self.__letter in self.__seenLetters:
+                return False
+            self.__seenLetters.add(self.__letter)
+        return True
 
     def returnChosenWord(self):
         return self.__chosenWord
@@ -36,29 +46,19 @@ class User:
     def returnLetterGuessed(self):
         return self.__letterGuessed
 
-    def positionGuess(self, positionedGuessed):
-        self.__positionGuessed = positionedGuessed - 1
-
-    def returnPositionGuessed(self):
-        return self.__positionGuessed
-
     def checkLetter(self):
+        self.__letterPosition = 0
         for letter in self.__chosenWord:
             if letter == self.__letterGuessed:
                 return True
+            self.__letterPosition += 1
         return False
-
-    def checkPosition(self):
-        if self.__chosenWord[self.__positionGuessed] == self.__letterGuessed:
-            return True
-        else:
-            return False
 
     def updateBlanks(self):
         tempArray = []
         for letter in self.__blanks:
             tempArray.append(letter)
-        tempArray[self.__positionGuessed] = self.__letterGuessed
+        tempArray[self.__letterPosition] = self.__letterGuessed
         self.__blanks = "".join(tempArray)
 
     def attemptMade(self):
