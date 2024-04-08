@@ -17,6 +17,7 @@ class Question:
         self.__attemptsMade = 0  # Starts at 0 and ends at 10.
         self.__blanks = ""
         self.__greyedOut = False  # Controls whether confirmGameText is greyed out or not.
+        self.__currentGeneratedGuess = None
 
     def chooseWord(self):
         self.__currentWord = random.choice(self.__wordList)
@@ -25,6 +26,13 @@ class Question:
 
     def returnChosenWord(self):
         return self.__currentWord
+
+    def checkUserGuess(self):
+        for letter in self.__currentWord:
+            if letter == self.__userLetterGuess:
+                return True
+            else:
+                return False
 
     def generateBlanks(self):
         count = 0  # Temporary variable to hold a value.
@@ -51,19 +59,20 @@ class Question:
     def returnUserLetterGuess(self):
         return self.__userLetterGuess
 
-    def userPositionGuess(self, positionGuessed):
-        self.__userPositionGuess = positionGuessed
-
-    def returnUserPositionGuess(self):
-        return self.__userPositionGuess
-
     def setAnswerPosition(self, letterPosition):
         self.__letterPosition = letterPosition - 1  # Value is subtracted by 1 to account for the index value difference.
         tempArray = []  # Temporary array to hold the updated blanks.
-        for letter in self.__blanks:  # Loops through every letter space in self.__blanks.
-            tempArray.append(letter)  # The positions are appended to tempArray.
-        tempArray[self.__letterPosition] = self.__currentGuess  # The user's specified position is used to replace that position in the array with the current guess.
-        self.__blanks = "".join(tempArray)  # The array is converted back into a string.
+        if self.checkUserGuess():
+            if self.__currentGeneratedGuess is not None:
+                for letter in self.__blanks:  # Loops through every letter space in self.__blanks.
+                    tempArray.append(letter)  # The positions are appended to tempArray.
+                tempArray[self.__letterPosition] = self.__currentGeneratedGuess  # The user's specified position is used to replace that position in the array with the current guess.
+                self.__blanks = "".join(tempArray)  # The array is converted back into a string.
+            else:
+                for letter in self.__blanks:  # Loops through every letter space in self.__blanks.
+                    tempArray.append(letter)  # The positions are appended to tempArray.
+                tempArray[self.__letterPosition] = self.__userLetterGuess  # The user's specified position is used to replace that position in the array with the current guess.
+                self.__blanks = "".join(tempArray)  # The array is converted back into a string.
 
     def returnLetterPosition(self):
         return self.__letterPosition  # Returns the user's specified letter position.
@@ -99,13 +108,13 @@ class Question:
         return True  # If not, returns True, meaning the AI has won.
 
     def generateGuess(self):
-        self.__currentGuess = None  # Clears the previous guess.
+        self.__currentGeneratedGuess = None  # Clears the previous guess.
         if self.__attemptsMade != 10:  # Prevents a guess from being generated if there are no more attempts left.
-            self.__currentGuess = random.choice(self.__alphabet)  # Chooses a random letter.
-            self.__alphabet = self.__alphabet.replace(self.__currentGuess, "")  # Removes the chosen letter so that it cannot be chosen again.
+            self.__currentGeneratedGuess = random.choice(self.__alphabet)  # Chooses a random letter.
+            self.__alphabet = self.__alphabet.replace(self.__currentGeneratedGuess, "")  # Removes the chosen letter so that it cannot be chosen again.
 
     def returnCurrentGuess(self):
-        return self.__currentGuess  # Returns the current guess.
+        return self.__currentGeneratedGuess  # Returns the current guess.
 
     def setGreyState(self, newState):  # Allows the boolean in self.__greyedOut to be changed.
         self.__greyedOut = newState  # Sets self.__greyedOut to the new boolean state.

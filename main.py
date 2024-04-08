@@ -211,6 +211,8 @@ while True:  # Runs the main game loop.
             blanksText.setText(question.returnBlanks())  # The grid is set as the text to be displayed for blanksText.
             blanksGridDoneOnce = True  # Prevents the grid from being continuously generated.
 
+        hangman.renderHangman(question.returnAttemptsMade())  # Renders the appropriate hangman image and creates a hitbox for it.
+        hangman.displayHangman()
 
     # Event loop.
     for event in pygame.event.get():  # Retrieves all events running.
@@ -375,34 +377,35 @@ while True:  # Runs the main game loop.
                 elif not userGuessPositionSpecified:
                     if event.key == pygame.K_0:
                         userPositionInputText.setText("15")
-                        question.userPositionGuess(None)
+                        question.setAnswerPosition(None)
                     elif event.key == pygame.K_1:
                         userPositionInputText.setText("1")
-                        question.userPositionGuess(1)
+                        question.setAnswerPosition(1)
                     elif event.key == pygame.K_2:
                         userPositionInputText.setText("2")
-                        question.userPositionGuess(2)
+                        question.setAnswerPosition(2)
                     elif event.key == pygame.K_3:
                         userPositionInputText.setText("3")
-                        question.userPositionGuess(3)
+                        question.setAnswerPosition(3)
                     elif event.key == pygame.K_4:
                         userPositionInputText.setText("4")
-                        question.userPositionGuess(4)
+                        question.setAnswerPosition(4)
                     elif event.key == pygame.K_5:
                         userPositionInputText.setText("5")
-                        question.userPositionGuess(5)
+                        question.setAnswerPosition(5)
                     elif event.key == pygame.K_6:
                         userPositionInputText.setText("6")
-                        question.userPositionGuess(6)
+                        question.setAnswerPosition(6)
                     elif event.key == pygame.K_7:
                         userPositionInputText.setText("7")
-                        question.userPositionGuess(7)
+                        question.setAnswerPosition(7)
                     elif event.key == pygame.K_8:
                         userPositionInputText.setText("8")
-                        question.userPositionGuess(8)
+                        question.setAnswerPosition(8)
                     elif event.key == pygame.K_9:
                         userPositionInputText.setText("9")
-                        question.userPositionGuess(9)
+                        question.setAnswerPosition(9)
+                    print(question.returnBlanks())
 
         elif event.type == pygame.MOUSEBUTTONDOWN:  # Checks if there is a mouse input.
             if event.button == 1:  # Checks if the mouse input was the left mouse button.
@@ -497,6 +500,17 @@ while True:  # Runs the main game loop.
                             userGuessPositionSpecified = True
                             userPositionText.setEnabled(False)
                             userPositionInputText.setEnabled(False)
+                            userLetterGuessInputText.setText("")
+                            userPositionInputText.setText("")
+                            if not question.checkUserGuess():
+                                question.attemptMade()
+                            elif question.checkUserGuess():
+                                blanksText.setText(question.returnBlanks())
+
+                        print(question.returnUserLetterGuess())
+                        print(question.returnChosenWord())
+                        print(question.checkUserGuess())
+
 
     pygame.display.update()  # Updates the display.
     clock.tick(60)  # Sets the framerate; 60FPS has been set as the target FPS.
