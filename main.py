@@ -20,13 +20,11 @@ userGameActive = False  # Controls displaying the game screen when the user is g
 blanksGridDoneOnce = False  # Prevents the blanks grid from being appended to and blitted more than once.
 guessShown = False  # Whether the AI's guess is currently being displayed on screen.
 userDecisionMade = False  # Whether the user has clicked on either the yesText or noText objects.
-userGuessMade = False
+userGuessMade = False  # Whether the user has guessed a letter and confirmed their guess.
 displayingAnswerOptions = False  # Controls displaying the yesText and noText objects on the game screen.
 pressedYes = False  # Whether the user has answered yes to the AI's guess.
 gameComplete = False  # Game was won by the AI.
 endgameTextDisplayed = False  # Whether the endgame text is displayed.
-userGuesses = False
-computerGuesses = False
 
 
 # Reading the .txt file.
@@ -54,7 +52,7 @@ hangmanImages = {  # Hangman image dictionary, using convert_alpha() slightly op
 # Graveyard menu background.
 graveyardImage = pygame.transform.scale(pygame.image.load("Assets//Images//Graveyard.png"), (1230, 800)).convert_alpha()
 graveyardImageRect = graveyardImage.get_rect(center = (615, 400))
-# Gamemode choosing screen images.
+# Game mode choosing screen images.
 userImage = pygame.transform.scale(pygame.image.load("Assets//Images//User Image.png"), (200, 200)).convert_alpha()
 userImageRect = userImage.get_rect(center = (300, 310))
 computerImage = pygame.transform.scale(pygame.image.load("Assets//Images//Computer Image.png"), (200, 200)).convert_alpha()
@@ -127,7 +125,7 @@ def renderScreenTextObjects(objectArray):  # Takes an array of all TextButton ob
             object.renderText()  # Calls the renderText() function.
             object.createRect()  # Calls the createRect() function.
             object.hoverEffect()  # Calls the hoverEffect() function.
-            object.blitText()  # Calls the blitText() function.
+            object.blitText()  # Calls the blitText() function.D
 
 
 # Main game loop.
@@ -143,7 +141,8 @@ while True:  # Runs the main game loop.
         screen.fill(graveyardGreen)  # Fills the background with the specified shade of green.
         renderScreenTextObjects(helpObjectArray)  # Calls all the common methods for help screen TextButton objects.
 
-    elif gamemodeChooseActive:  # Runs only if the gamemode choosing screen is being displayed.
+    # Game mode choosing screen.
+    elif gamemodeChooseActive:  # Runs only if the game mode choosing screen is being displayed.
         screen.fill(graveyardGreen)
         renderScreenTextObjects(gamemodeChooseObjectArray)
         screen.blit(userImage, userImageRect)
@@ -156,7 +155,7 @@ while True:  # Runs the main game loop.
         if question.returnWordLength() is None:  # Checks if the user has entered an input for the length of their chosen word.
             confirmStagingText.setColour(buttonGrey)  # Changes the colour of confirmStagingText to grey if there is no input or if the input is 0.
 
-    # Game screen.
+    # Computer game screen.
     elif computerGameActive:  # Runs only if the game screen is being displayed.
         screen.fill(graveyardGreen)  # Fills the background with the specified shade of green.
         renderScreenTextObjects(computerGameObjectArray)  # Calls all the common methods for game screen TextButton objects.
@@ -201,46 +200,42 @@ while True:  # Runs the main game loop.
                 blanksText.setColour("Yellow")  # Changes the colour of blanksText to yellow.
                 endgameTextDisplayed =  True  # Prevents the exclamation point from continuously being added to the end of blanksText.
 
+    # User game screen.
     elif userGameActive:
         screen.fill(graveyardGreen)  # Fills the background with the specified shade of green.
-        renderScreenTextObjects(userGameObjectArray)
-        confirmGameText.setEnabled(True)
-        userGuessPositionSpecified = False
-        userGuessMade = False
+        renderScreenTextObjects(userGameObjectArray)  # Calls all the common methods for TextButton objects on the user game screen.
+        confirmGameText.setEnabled(True)  # Enables the confirm button on the user game screen.
+        userGuessMade = False  # Prevents the user from confirming a guess.
         if not blanksGridDoneOnce:  # Checks if the blanks grid have been generated.
-            user.chooseWord()
-            print(user.returnChosenWord())
-            while not user.checkLetterDuplicates():
-                user.chooseWord()
-            print(user.returnChosenWord())
-            user.generateBlanks()  # If not, the grid is generated.
+            user.chooseWord()  # Chooses a random word.
+            while not user.checkLetterDuplicates():  # Checks if the word has duplicate letters.
+                user.chooseWord()  # If so, a new word is generated until it doesn't.
+            user.generateBlanks()  # Generates the blanks.
             blanksText.setText(user.returnBlanks())  # The grid is set as the text to be displayed for blanksText.
-            blanksGridDoneOnce = True  # Prevents the grid from being continuously generated.
-        if userLetterGuessInputText.returnText() == "":
-            confirmGameText.setColour(buttonGrey)
-        if user.returnAttemptsMade() == 10:
-            userGuessPromptText.setEnabled(False)
-            userLetterGuessInputText.setEnabled(False)
-            blanksText.setEnabled(False)
-            backGameText.setEnabled(False)
-            confirmGameText.setEnabled(False)
-            correctGameText.setEnabled(False)
-            incorrectGameText.setEnabled(False)
-            outOfAttemptsText.setEnabled(True)
+            blanksGridDoneOnce = True  # Prevents the blanks from being continuously generated.
+        if userLetterGuessInputText.returnText() == "":  # Checks if the user has made an input.
+            confirmGameText.setColour(buttonGrey)  # If not, greys out the confirm button.
+        if user.returnAttemptsMade() == 10:  # Checks if the user has reached their limit on attempts.
+            userGuessPromptText.setEnabled(False)  # Disables the guess prompt text.
+            userLetterGuessInputText.setEnabled(False)  # Disables the text of the user's guess input.
+            blanksText.setEnabled(False)  # Disables the blanks.
+            confirmGameText.setEnabled(False)  # Disables the confirm button.
+            correctGameText.setEnabled(False)  # Disables the correct answer indicator text.
+            incorrectGameText.setEnabled(False)  # Disables the incorrect answer indicator text.
+            outOfAttemptsText.setEnabled(True)  # Enables the text that states the user is out of attempts.
         hangman.renderHangman(user.returnAttemptsMade())  # Renders the appropriate hangman image and creates a hitbox for it.
-        hangman.displayHangman()
-        if user.returnAttemptsMade() != 10:
-            if user.checkIfComplete():
+        hangman.displayHangman()  # Displays the hangman image to the screen.
+        if user.returnAttemptsMade() != 10:  # Checks if the user still has attempts left.
+            if user.checkIfComplete():  # Checks if the user has correctly guessed all the letters.
                 hangman.renderHangman(11)  # Renders the final "win" image of the hangman and creates a hitbox for it.
                 hangman.displayHangman()  # Displays the final "win" hangman.
-                userGuessPromptText.setEnabled(False)
-                userLetterGuessInputText.setEnabled(False)
-                backGameText.setEnabled(False)
-                confirmGameText.setEnabled(False)
-                correctGameText.setEnabled(False)
-                incorrectGameText.setEnabled(False)
-                winText.setEnabled(True)
-                winText.setText("The word was")
+                userGuessPromptText.setEnabled(False)  # Disables the guess prompt text.
+                userLetterGuessInputText.setEnabled(False)  # Disables the text of the user's guess input.
+                confirmGameText.setEnabled(False)  # Disables the confirm button.
+                correctGameText.setEnabled(False)  # Disables the correct answer indicator text.
+                incorrectGameText.setEnabled(False)  # Disables the incorrect answer indicator text.
+                winText.setEnabled(True)  # Enables the text that states the user has won.
+                winText.setText("The word was")  # Sets the text for winText.
                 if not endgameTextDisplayed:  # Checks if the endgame text has been displayed.
                     blanksText.setPos(900, 400)  # Moves the blanks grid downwards.
                     blanksText.setText(f"{blanksText.returnText()}!")  # Adds an exclamation point to the end of the word.
@@ -427,16 +422,16 @@ while True:  # Runs the main game loop.
                         helpActive = False
 
                 elif gamemodeChooseActive:
-                    if backGamemodeText.detectMouse():
-                        menuActive = True
+                    if backGamemodeText.detectMouse():  # Checks if the back button on the game mode choosing screen is pressed by the user.
+                        menuActive = True  # Changes screen to the menu screen.
                         gamemodeChooseActive = False
-                    elif userGuessesText.detectMouse():
-                        userGuesses = True
+                    elif userGuessesText.detectMouse():  # Checks if the option to guess the word themselves was pressed.
+                        userGuesses = True  # Changes screen to the game screen where the user guesses.
                         computerGuesses = False
                         userGameActive = True
                         gamemodeChooseActive = False
-                    elif computerGuessesText.detectMouse():
-                        computerGuesses = True
+                    elif computerGuessesText.detectMouse():  # Checks if the option to have the AI guess the word was pressed.
+                        computerGuesses = True  # Changes screen to the game screen where the AI guesses.
                         userGuesses = False
                         stagingActive = True
                         gamemodeChooseActive = False
@@ -487,28 +482,25 @@ while True:  # Runs the main game loop.
                         blanksGridDoneOnce = False  # Allows the blanks to be updated.
 
                 elif userGameActive:
-                    if backGameText.detectMouse():
-                        gamemodeChooseActive = True
+                    if backGameText.detectMouse():  # Checks if the back button on the user game screen is pressed.
+                        gamemodeChooseActive = True  # Changes screen to the game mode choosing screen.
                         userGameActive = False
-                    if confirmGameText.detectMouse():
-                        correctGameText.setColour(buttonGrey)
-                        incorrectGameText.setColour(buttonGrey)
-                        if not userGuessMade:
-                            if confirmGameText.returnColour() == buttonGrey:
-                                break
-                            else:
+                    if confirmGameText.detectMouse():  # Checks if the confirm button on the user game screen is pressed.
+                        correctGameText.setColour(buttonGrey)  # Greys out the correct answer indicator text.
+                        incorrectGameText.setColour(buttonGrey)  # Greys out the incorrect answer indicator text.
+                        if not userGuessMade:  # Checks if the user has confirmed a guess.
+                            if confirmGameText.returnColour() == buttonGrey:  # Checks if the confirm button is greyed out.
+                                break  # If so, breaks from the rest of the loop.
+                            else:  # If not, runs the rest of the loop.
                                 userGuessMade = True
-                                userLetterGuessInputText.setText("")
-                            if not user.checkLetter():
-                                user.attemptMade()
-                                incorrectGameText.setColour("Yellow")
-                            if user.checkLetter():
-                                print(f"Letter: {user.returnLetterGuessed()}")
-                                user.updateBlanks()
-                                blanksText.setText(user.returnBlanks())
-                                correctGameText.setColour("Yellow")
-                    print(user.returnChosenWord())
-
+                                userLetterGuessInputText.setText("")  # Clears the text that displays the user's chosen guess.
+                            if not user.checkLetter():  # Checks if the guess was incorrect.
+                                user.attemptMade()  # If so, adds 1 to the total number of guesses made.
+                                incorrectGameText.setColour("Yellow")  # Highlights the incorrect answer indicator.
+                            if user.checkLetter():  # Checks if the guess was correct.
+                                user.updateBlanks()  # If so, updates the blanks with the new letter.
+                                blanksText.setText(user.returnBlanks())  # Passes the updated blanks to blanksText to be displayed.
+                                correctGameText.setColour("Yellow")  # Highlights the correct answer indicator.
 
     pygame.display.update()  # Updates the display.
     clock.tick(60)  # Sets the framerate; 60FPS has been set as the target FPS.

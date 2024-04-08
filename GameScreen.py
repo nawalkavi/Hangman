@@ -30,6 +30,14 @@ class User:
     def returnChosenWord(self):
         return self.__chosenWord  # Returns the word chosen.
 
+    def checkLetter(self):
+        self.__letterPosition = 0
+        for letter in self.__chosenWord:  # Traverses through every letter in the chosen word.
+            if letter == self.__letterGuessed:  # Checks if the current letter is equal to the user's guess.
+                return True  # If so, returns True.
+            self.__letterPosition += 1  # If not, increments self.__letterPosition by 1.
+        return False  # Returns False since the guess was not in the word.
+
     def generateBlanks(self):
         count = 0  # Temporary variable to hold a value.
         tempArray = []  # Temporary array to hold the blanks.
@@ -39,23 +47,21 @@ class User:
             count -= 1  # 1 is subtracted from count to eventually have it match the user's word length.
         self.__blanks = "".join(tempArray)  # Converts tempArray into a string, which creates the blanks string.
 
-    def returnBlanks(self):
-        return self.__blanks  # Returns the blanks.
-
-    def checkLetter(self):
-        self.__letterPosition = 0
-        for letter in self.__chosenWord:  # Traverses through every letter in the chosen word.
-            if letter == self.__letterGuessed:  # Checks if the current letter is equal to the user's guess.
-                return True  # If so, returns True.
-            self.__letterPosition += 1  # If not, increments self.__letterPosition by 1.
-        return False  # Returns False since the guess was not in the word.
-
     def updateBlanks(self):
         tempArray = []  # Temporary variable to hold each position of the blanks as a position in an array.
         for letter in self.__blanks:  # Traverses through every position in self.__blanks.
             tempArray.append(letter)  # Appends each position to tempArray.
         tempArray[self.__letterPosition] = self.__letterGuessed  # Uses self.__letterPosition from self.checkLetter() as an index and replaces it with the user's guess.
         self.__blanks = "".join(tempArray)  # Converts the array back into a string to be used for blanksText.
+
+    def checkIfComplete(self):
+        for letter in self.__blanks:  # Traverses through every position in self.__blanks.
+            if letter == "_":  # Checks if the current position is an underscore - a blank.
+                return False  # If so, returns False, meaning the word is not completed.
+        return True  # If not, returns True, meaning the word is complete.
+
+    def returnBlanks(self):
+        return self.__blanks  # Returns the blanks.
 
     def letterGuess(self, letterGuessed):
         self.__letterGuessed = letterGuessed  # Allows the user to guess.
@@ -68,12 +74,6 @@ class User:
 
     def returnAttemptsMade(self):
         return self.__attemptsMade  # Returns the number of attempts made by the user.
-
-    def checkIfComplete(self):
-        for letter in self.__blanks:  # Traverses through every position in self.__blanks.
-            if letter == "_":  # Checks if the current position is an underscore - a blank.
-                return False  # If so, returns False, meaning the word is not completed.
-        return True  # If not, returns True, meaning the word is complete.
 
 
 # Question.
