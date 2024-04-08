@@ -2,13 +2,77 @@
 import random
 
 
+class User:
+
+    def __init__(self, wordList):
+        self.__wordList = wordList
+        self.__chosenWord = None
+        self.__blanks = ""
+        self.__attemptsMade = 0
+
+    def chooseWord(self):
+        self.__chosenWord = random.choice(self.__wordList)
+        while len(self.__chosenWord) > 10:
+            self.__chosenWord = random.choice(self.__wordList)
+
+    def returnChosenWord(self):
+        return self.__chosenWord
+
+    def generateBlanks(self):
+        count = 0  # Temporary variable to hold a value.
+        tempArray = []  # Temporary array to hold the blanks.
+        count += len(self.__chosenWord)
+        while count != 0:  # While count does not match the user's word length.
+            tempArray.append("_")  # An underscore is appended to tempArray for every time the loop is run to create the blanks array.
+            count -= 1  # 1 is subtracted from count to eventually have it match the user's word length.
+        self.__blanks = "".join(tempArray)  # Converts tempArray into a string, which creates the blanks string.
+
+    def returnBlanks(self):
+        return self.__blanks
+
+    def letterGuess(self, letterGuessed):
+        self.__letterGuessed = letterGuessed
+
+    def returnLetterGuessed(self):
+        return self.__letterGuessed
+
+    def positionGuess(self, positionedGuessed):
+        self.__positionGuessed = positionedGuessed - 1
+
+    def returnPositionGuessed(self):
+        return self.__positionGuessed
+
+    def checkLetter(self):
+        for letter in self.__chosenWord:
+            if letter == self.__letterGuessed:
+                return True
+        return False
+
+    def checkPosition(self):
+        if self.__chosenWord[self.__positionGuessed] == self.__letterGuessed:
+            return True
+        else:
+            return False
+
+    def updateBlanks(self):
+        tempArray = []
+        for letter in self.__blanks:
+            tempArray.append(letter)
+        tempArray[self.__positionGuessed] = self.__letterGuessed
+        self.__blanks = "".join(tempArray)
+
+    def attemptMade(self):
+        self.__attemptsMade += 1
+
+    def returnAttemptsMade(self):
+        return self.__attemptsMade
+
+
+
 # Question.
 class Question:
 
-    def __init__(self, wordList, alphabet):
-        self.__wordList = wordList
-        if type(self.__wordList) != list:  # Validates that the value entered for wordList is a list data type.
-            self.__wordList = []  # If not, assigns it a default value of an empty list.
+    def __init__(self, alphabet):
         self.__alphabet = alphabet
         if type(self.__alphabet) != str:  # Validates that the value entered for self.__alphabet is a string data type.
             self.__alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"  # If not, assigns it a default value of a string containing the alphabet.
@@ -19,61 +83,26 @@ class Question:
         self.__greyedOut = False  # Controls whether confirmGameText is greyed out or not.
         self.__currentGeneratedGuess = None
 
-    def chooseWord(self):
-        self.__currentWord = random.choice(self.__wordList)
-        while len(self.__currentWord) >= 10:
-            self.__currentWord = random.choice(self.__wordList)
-
-    def returnChosenWord(self):
-        return self.__currentWord
-
-    def checkUserGuess(self):
-        count = 0
-        for letter in self.__currentWord:
-            count += 1
-            if letter == self.__userLetterGuess:
-                return True
-        return False
-
     def generateBlanks(self):
         count = 0  # Temporary variable to hold a value.
         tempArray = []  # Temporary array to hold the blanks.
-        if self.__wordLength is not None:
-            count += self.__wordLength  # Holds the value of the user's word length.
-            while count != 0:  # While count does not match the user's word length.
-                tempArray.append("_")  # An underscore is appended to tempArray for every time the loop is run to create the blanks array.
-                count -= 1  # 1 is subtracted from count to eventually have it match the user's word length.
-            self.__blanks = "".join(tempArray)  # Converts tempArray into a string, which creates the blanks string.
-        else:
-            count += len(self.__currentWord)
-            while count != 0:
-                tempArray.append("_")
-                count -= 1
-            self.__blanks = "".join(tempArray)
+        count += self.__wordLength  # Holds the value of the user's word length.
+        while count != 0:  # While count does not match the user's word length.
+            tempArray.append("_")  # An underscore is appended to tempArray for every time the loop is run to create the blanks array.
+            count -= 1  # 1 is subtracted from count to eventually have it match the user's word length.
+        self.__blanks = "".join(tempArray)  # Converts tempArray into a string, which creates the blanks string.
 
     def returnBlanks(self):
         return self.__blanks  # Returns the blanks.
 
-    def userLetterGuess(self, letterGuessed):
-        self.__userLetterGuess = letterGuessed
-
-    def returnUserLetterGuess(self):
-        return self.__userLetterGuess
-
     def setAnswerPosition(self, letterPosition):
         self.__letterPosition = letterPosition - 1  # Value is subtracted by 1 to account for the index value difference.
         tempArray = []  # Temporary array to hold the updated blanks.
-        if self.checkUserGuess():
-            if self.__currentGeneratedGuess is not None:
-                for letter in self.__blanks:  # Loops through every letter space in self.__blanks.
-                    tempArray.append(letter)  # The positions are appended to tempArray.
-                tempArray[self.__letterPosition] = self.__currentGeneratedGuess  # The user's specified position is used to replace that position in the array with the current guess.
-                self.__blanks = "".join(tempArray)  # The array is converted back into a string.
-            else:
-                for letter in self.__blanks:  # Loops through every letter space in self.__blanks.
-                    tempArray.append(letter)  # The positions are appended to tempArray.
-                tempArray[self.__letterPosition] = self.__userLetterGuess  # The user's specified position is used to replace that position in the array with the current guess.
-                self.__blanks = "".join(tempArray)  # The array is converted back into a string.
+        if self.__currentGeneratedGuess is not None:
+            for letter in self.__blanks:  # Loops through every letter space in self.__blanks.
+                tempArray.append(letter)  # The positions are appended to tempArray.
+            tempArray[self.__letterPosition] = self.__currentGeneratedGuess  # The user's specified position is used to replace that position in the array with the current guess.
+            self.__blanks = "".join(tempArray)  # The array is converted back into a string.
 
     def returnLetterPosition(self):
         return self.__letterPosition  # Returns the user's specified letter position.
@@ -86,14 +115,6 @@ class Question:
 
     def returnWordLength(self):
         return self.__wordLength  # Returns the word length.
-
-    def matchWords(self):
-        for i in range(0, len(self.__wordList)):  # Traverses through the list storing every word.
-            if len(self.__wordList[i]) == self.__wordLength:  # Checks if a word is the same length as that of the user's input.
-                self.__matchedWords.append(self.__wordList[i])  # Appends it to the matchedWords list if it is the same length.
-
-    def returnMatchedWords(self):
-        return self.__matchedWords  # Returns the list of matched words.
 
     def attemptMade(self):
         if self.__attemptsMade < 10:  # Checks if the AI has already reached the 10 attempt limit.
