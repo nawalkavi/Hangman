@@ -28,11 +28,12 @@ class Question:
         return self.__currentWord
 
     def checkUserGuess(self):
+        count = 0
         for letter in self.__currentWord:
+            count += 1
             if letter == self.__userLetterGuess:
                 return True
-            else:
-                return False
+        return False
 
     def generateBlanks(self):
         count = 0  # Temporary variable to hold a value.
