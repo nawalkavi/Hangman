@@ -1,7 +1,6 @@
 # Importing the necessary libraries and classes.
 import pygame  # Imports the Pygame library.
 import sys  # Imports the sys module.
-import time
 from Text import TextButton  # Imports the TextButton object from Text.py
 from GameScreen import Question, Hangman, User  # Imports the Question, Hangman and User objects from GameScreen.py
 
@@ -96,9 +95,9 @@ backGameText = TextButton("Back", "White", "Yellow", 110, 720, 60, True, True, s
 computerGuessText1 = TextButton("Is", "White", "Yellow", 875, 300, 70, False, True, screen)
 computerGuessText2 = TextButton("in your word?", "White", "Yellow", 900, 400, 70, False, True, screen)
 computerGuessText3 = TextButton("", "Yellow", "White", 950, 300, 70, False, True, screen)
-blanksText = TextButton("", "White", "Yellow", 900, 140, 80, False, True, screen)
-winText = TextButton("Your word is", "White", "Yellow", 900, 300, 70, False, False, screen)
-outOfAttemptsText = TextButton("Out of attempts!", "White", "Yellow", 900, 400, 70, False, False, screen)
+blanksText = TextButton("", "Yellow", "White", 900, 140, 80, False, True, screen)
+winText = TextButton("Your word is", "White", "Yellow", 900, 500, 70, False, False, screen)
+outOfAttemptsText = TextButton("Out of attempts!", "White", "Yellow", 900, 300, 70, False, False, screen)
 
 userGuessPromptText = TextButton("Make a guess!", "White", "Yellow", 900, 300, 70, False, True, screen)  # User game screen.
 userLetterGuessInputText = TextButton("", "Yellow", "White", 900, 380, 70, False, True, screen)
@@ -197,7 +196,6 @@ while True:  # Runs the main game loop.
             if not endgameTextDisplayed:  # Checks if the endgame text has been displayed.
                 blanksText.setPos(900, 400)  # Moves the blanks grid downwards.
                 blanksText.setText(f"{blanksText.returnText()}!")  # Adds an exclamation point to the end of the word.
-                blanksText.setColour("Yellow")  # Changes the colour of blanksText to yellow.
                 endgameTextDisplayed =  True  # Prevents the exclamation point from continuously being added to the end of blanksText.
 
     # User game screen.
@@ -218,11 +216,16 @@ while True:  # Runs the main game loop.
         if user.returnAttemptsMade() == 10:  # Checks if the user has reached their limit on attempts.
             userGuessPromptText.setEnabled(False)  # Disables the guess prompt text.
             userLetterGuessInputText.setEnabled(False)  # Disables the text of the user's guess input.
-            blanksText.setEnabled(False)  # Disables the blanks.
             confirmGameText.setEnabled(False)  # Disables the confirm button.
             correctGameText.setEnabled(False)  # Disables the correct answer indicator text.
             incorrectGameText.setEnabled(False)  # Disables the incorrect answer indicator text.
             outOfAttemptsText.setEnabled(True)  # Enables the text that states the user is out of attempts.
+            winText.setSize(60)
+            winText.setEnabled(True)
+            winText.setText("The word was")
+            blanksText.setSize(60)
+            blanksText.setPos(900, 600)
+            blanksText.setText(f"{user.returnChosenWord()}!")
         hangman.renderHangman(user.returnAttemptsMade())  # Renders the appropriate hangman image and creates a hitbox for it.
         hangman.displayHangman()  # Displays the hangman image to the screen.
         if user.returnAttemptsMade() != 10:  # Checks if the user still has attempts left.
@@ -239,7 +242,6 @@ while True:  # Runs the main game loop.
                 if not endgameTextDisplayed:  # Checks if the endgame text has been displayed.
                     blanksText.setPos(900, 400)  # Moves the blanks grid downwards.
                     blanksText.setText(f"{blanksText.returnText()}!")  # Adds an exclamation point to the end of the word.
-                    blanksText.setColour("Yellow")  # Changes the colour of blanksText to yellow.
                     endgameTextDisplayed = True  # Prevents the exclamation point from continuously being added to the end of blanksText.
 
     # Event loop.
@@ -503,4 +505,4 @@ while True:  # Runs the main game loop.
                                 correctGameText.setColour("Yellow")  # Highlights the correct answer indicator.
 
     pygame.display.update()  # Updates the display.
-    clock.tick(60)  # Sets the framerate; 60FPS has been set as the target FPS.
+    clock.tick(120)  # Sets the framerate; 60FPS has been set as the target FPS.

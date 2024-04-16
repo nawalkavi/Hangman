@@ -71,6 +71,9 @@ class TextButton:
     def returnText(self):
         return self.__text  # Returns the currently specified text to be displayed.
 
+    def setSize(self, newSize):
+        self.__size = newSize
+
     def setColour(self, newColour):
         self.__currentColour = newColour  # Allows the current text colour to be changed when necessary.
 
