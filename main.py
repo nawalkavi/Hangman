@@ -60,7 +60,8 @@ computerImageRect = computerImage.get_rect(center = (900, 330))
 # Misc.
 graveyardGreen = "#1b2421"  # Colour hex codes.
 buttonGrey = "#757575"
-alphabetString = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"  # String storing all the possible letters for guesses
+vowelsString = "AEIOU"
+consonantsString = "BCDFGHJKLMNPQRSTVWXYZ"  # String storing all the possible letters for guesses
 
 
 # TextButton objects.
@@ -96,7 +97,7 @@ computerGuessText1 = TextButton("Is", "White", "Yellow", 875, 300, 70, False, Tr
 computerGuessText2 = TextButton("in your word?", "White", "Yellow", 900, 400, 70, False, True, screen)
 computerGuessText3 = TextButton("", "Yellow", "White", 950, 300, 70, False, True, screen)
 blanksText = TextButton("", "Yellow", "White", 900, 140, 80, False, True, screen)
-winText = TextButton("Your word is", "White", "Yellow", 900, 500, 70, False, False, screen)
+winText = TextButton("Your word was", "White", "Yellow", 900, 400, 70, False, False, screen)
 outOfAttemptsText = TextButton("Out of attempts!", "White", "Yellow", 900, 300, 70, False, False, screen)
 
 userGuessPromptText = TextButton("Make a guess!", "White", "Yellow", 900, 300, 70, False, True, screen)  # User game screen.
@@ -105,7 +106,7 @@ correctGameText = TextButton("Correct", buttonGrey, "Yellow", 750, 600, 60, Fals
 incorrectGameText = TextButton("Incorrect", buttonGrey, "Yellow", 1050, 600, 60, False, True, screen)
 
 # Other objects.
-question = Question(alphabetString)
+question = Question(vowelsString, consonantsString)
 hangman = Hangman(hangmanImages, 300, 370, screen)
 user = User(wordList)
 
@@ -194,7 +195,7 @@ while True:  # Runs the main game loop.
             hangman.renderHangman(11)  # Renders the final "win" image of the hangman and creates a hitbox for it.
             hangman.displayHangman()  # Displays the final "win" hangman.
             if not endgameTextDisplayed:  # Checks if the endgame text has been displayed.
-                blanksText.setPos(900, 400)  # Moves the blanks grid downwards.
+                blanksText.setPos(900, 500)  # Moves the blanks grid downwards.
                 blanksText.setText(f"{blanksText.returnText()}!")  # Adds an exclamation point to the end of the word.
                 endgameTextDisplayed =  True  # Prevents the exclamation point from continuously being added to the end of blanksText.
 
@@ -220,15 +221,11 @@ while True:  # Runs the main game loop.
             correctGameText.setEnabled(False)  # Disables the correct answer indicator text.
             incorrectGameText.setEnabled(False)  # Disables the incorrect answer indicator text.
             outOfAttemptsText.setEnabled(True)  # Enables the text that states the user is out of attempts.
-            winText.setSize(60)
             winText.setEnabled(True)
             winText.setText("The word was")
-            blanksText.setSize(60)
-            blanksText.setPos(900, 600)
+            blanksText.setPos(900, 500)
             blanksText.setText(f"{user.returnChosenWord()}!")
-        hangman.renderHangman(user.returnAttemptsMade())  # Renders the appropriate hangman image and creates a hitbox for it.
-        hangman.displayHangman()  # Displays the hangman image to the screen.
-        if user.returnAttemptsMade() != 10:  # Checks if the user still has attempts left.
+        elif user.returnAttemptsMade() != 10:  # Checks if the user still has attempts left.
             if user.checkIfComplete():  # Checks if the user has correctly guessed all the letters.
                 hangman.renderHangman(11)  # Renders the final "win" image of the hangman and creates a hitbox for it.
                 hangman.displayHangman()  # Displays the final "win" hangman.
@@ -240,9 +237,11 @@ while True:  # Runs the main game loop.
                 winText.setEnabled(True)  # Enables the text that states the user has won.
                 winText.setText("The word was")  # Sets the text for winText.
                 if not endgameTextDisplayed:  # Checks if the endgame text has been displayed.
-                    blanksText.setPos(900, 400)  # Moves the blanks grid downwards.
+                    blanksText.setPos(900, 500)  # Moves the blanks grid downwards.
                     blanksText.setText(f"{blanksText.returnText()}!")  # Adds an exclamation point to the end of the word.
                     endgameTextDisplayed = True  # Prevents the exclamation point from continuously being added to the end of blanksText.
+        hangman.renderHangman(user.returnAttemptsMade())  # Renders the appropriate hangman image and creates a hitbox for it.
+        hangman.displayHangman()  # Displays the hangman image to the screen.
 
     # Event loop.
     for event in pygame.event.get():  # Retrieves all events running.
@@ -424,6 +423,7 @@ while True:  # Runs the main game loop.
                         helpActive = False
 
                 elif gamemodeChooseActive:
+                    blanksGridDoneOnce = False
                     if backGamemodeText.detectMouse():  # Checks if the back button on the game mode choosing screen is pressed by the user.
                         menuActive = True  # Changes screen to the menu screen.
                         gamemodeChooseActive = False
@@ -433,6 +433,7 @@ while True:  # Runs the main game loop.
                         userGameActive = True
                         gamemodeChooseActive = False
                     elif computerGuessesText.detectMouse():  # Checks if the option to have the AI guess the word was pressed.
+                        confirmGameText.setEnabled(False)
                         computerGuesses = True  # Changes screen to the game screen where the AI guesses.
                         userGuesses = False
                         stagingActive = True
@@ -505,4 +506,4 @@ while True:  # Runs the main game loop.
                                 correctGameText.setColour("Yellow")  # Highlights the correct answer indicator.
 
     pygame.display.update()  # Updates the display.
-    clock.tick(120)  # Sets the framerate; 60FPS has been set as the target FPS.
+    clock.tick(60)  # Sets the framerate; 60FPS has been set as the target FPS.
