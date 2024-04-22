@@ -27,7 +27,7 @@ endgameTextDisplayed = False  # Whether the endgame text is displayed.
 
 
 # Reading the .txt file.
-with open("Assets//Word Dictionary//words_alpha.txt", "r") as f:  # Opens the .txt file and automatically closes it afterward.
+with open("Assets//Word Dictionary//words.txt", "r") as f:  # Opens the .txt file and automatically closes it afterward.
     words = f.read()  # File is read.
 wordList = words.split("\n")  # The data is split at every next line break and converted into a list with each individual word as a list item.
 wordList = [word.upper() for word in wordList]  # Converts all the data in the list into all capital letters.
@@ -104,6 +104,7 @@ userGuessPromptText = TextButton("Make a guess!", "White", "Yellow", 900, 300, 7
 userLetterGuessInputText = TextButton("", "Yellow", "White", 900, 380, 70, False, True, screen)
 correctGameText = TextButton("Correct", buttonGrey, "Yellow", 750, 600, 60, False, True, screen)
 incorrectGameText = TextButton("Incorrect", buttonGrey, "Yellow", 1050, 600, 60, False, True, screen)
+displayResultTicker = 0
 
 # Other objects.
 question = Question(vowelsString, consonantsString)
@@ -243,6 +244,13 @@ while True:  # Runs the main game loop.
         hangman.renderHangman(user.returnAttemptsMade())  # Renders the appropriate hangman image and creates a hitbox for it.
         hangman.displayHangman()  # Displays the hangman image to the screen.
 
+        if displayResultTicker > 0:
+            displayResultTicker -= 1
+        else:
+            incorrectGameText.setColour(buttonGrey)
+            correctGameText.setColour(buttonGrey)
+
+
     # Event loop.
     for event in pygame.event.get():  # Retrieves all events running.
         if event.type == pygame.QUIT:  # Checks if the current event is the same as the quit button of the game window.
@@ -317,6 +325,8 @@ while True:  # Runs the main game loop.
                 elif event.key == pygame.K_9:  # If the input key is 9.
                     computerPositionInputText.setText("9")
                     question.setGreyState(False)
+                else:
+                    break
                 if int(computerPositionInputText.returnText()) > len(blanksText.returnText()):  # Checks if the position input is greater than the total length of the word.
                     computerPositionInputText.setText("")  # If so, doesn't show the input on screen.
                     question.setGreyState(True)  # Sets the confirm button to be greyed out.
@@ -424,6 +434,8 @@ while True:  # Runs the main game loop.
 
                 elif gamemodeChooseActive:
                     blanksGridDoneOnce = False
+                    question.resetAttempts()
+                    user.resetAttempts()
                     if backGamemodeText.detectMouse():  # Checks if the back button on the game mode choosing screen is pressed by the user.
                         menuActive = True  # Changes screen to the menu screen.
                         gamemodeChooseActive = False
@@ -500,10 +512,12 @@ while True:  # Runs the main game loop.
                             if not user.checkLetter():  # Checks if the guess was incorrect.
                                 user.attemptMade()  # If so, adds 1 to the total number of guesses made.
                                 incorrectGameText.setColour("Yellow")  # Highlights the incorrect answer indicator.
+                                displayResultTicker = 60
                             if user.checkLetter():  # Checks if the guess was correct.
                                 user.updateBlanks()  # If so, updates the blanks with the new letter.
                                 blanksText.setText(user.returnBlanks())  # Passes the updated blanks to blanksText to be displayed.
                                 correctGameText.setColour("Yellow")  # Highlights the correct answer indicator.
+                                displayResultTicker = 60
 
     pygame.display.update()  # Updates the display.
     clock.tick(60)  # Sets the framerate; 60FPS has been set as the target FPS.

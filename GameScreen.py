@@ -73,6 +73,9 @@ class User:
     def attemptMade(self):
         self.__attemptsMade += 1  # Increments the number of attempts by 1; a maximum of 10 is allowed before a loss.
 
+    def resetAttempts(self):
+        self.__attemptsMade = 0
+
     def returnAttemptsMade(self):
         return self.__attemptsMade  # Returns the number of attempts made by the user.
 
@@ -130,6 +133,9 @@ class Question:
     def attemptMade(self):
         if self.__attemptsMade < 10:  # Checks if the AI has already reached the 10 attempt limit.
             self.__attemptsMade += 1  # If not, increments the number of attempts made by 1.
+
+    def resetAttempts(self):
+        self.__attemptsMade = 0
 
     def returnAttemptsMade(self):
         return self.__attemptsMade  # Returns the number of attempts made by the AI.
