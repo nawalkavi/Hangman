@@ -229,8 +229,9 @@ while True:  # Runs the main game loop.
             winText.setText("The word was")
             blanksText.setPos(900, 500)
             blanksText.setText(f"{user.returnChosenWord()}!")
-        elif user.returnAttemptsMade() != 10:  # Checks if the user still has attempts left.
+        if user.returnAttemptsMade() != 10:  # Checks if the user still has attempts left.
             if user.checkIfComplete():  # Checks if the user has correctly guessed all the letters.
+                user.resetAttempts()
                 hangman.renderHangman(11)  # Renders the final "win" image of the hangman and creates a hitbox for it.
                 hangman.displayHangman()  # Displays the final "win" hangman.
                 userGuessPromptText.setEnabled(False)  # Disables the guess prompt text.
