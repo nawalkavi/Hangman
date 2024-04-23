@@ -24,6 +24,7 @@ displayingAnswerOptions = False  # Controls displaying the yesText and noText ob
 pressedYes = False  # Whether the user has answered yes to the AI's guess.
 gameComplete = False  # Game was won by the AI.
 endgameTextDisplayed = False  # Whether the endgame text is displayed.
+displayResultTicker = 0
 
 
 # Reading the .txt file.
@@ -56,6 +57,7 @@ userImage = pygame.transform.scale(pygame.image.load("Assets//Images//User Image
 userImageRect = userImage.get_rect(center = (300, 310))
 computerImage = pygame.transform.scale(pygame.image.load("Assets//Images//Computer Image.png"), (200, 200)).convert_alpha()
 computerImageRect = computerImage.get_rect(center = (900, 330))
+
 
 # Misc.
 graveyardGreen = "#1b2421"  # Colour hex codes.
@@ -96,7 +98,7 @@ backGameText = TextButton("Back", "White", "Yellow", 110, 720, 60, True, True, s
 computerGuessText1 = TextButton("Is", "White", "Yellow", 875, 300, 70, False, True, screen)
 computerGuessText2 = TextButton("in your word?", "White", "Yellow", 900, 400, 70, False, True, screen)
 computerGuessText3 = TextButton("", "Yellow", "White", 950, 300, 70, False, True, screen)
-blanksText = TextButton("", "Yellow", "White", 900, 140, 80, False, True, screen)
+blanksText = TextButton("", "Yellow", "White", 910, 140, 80, False, True, screen)
 winText = TextButton("Your word was", "White", "Yellow", 900, 400, 70, False, False, screen)
 outOfAttemptsText = TextButton("Out of attempts!", "White", "Yellow", 900, 300, 70, False, False, screen)
 
@@ -104,7 +106,6 @@ userGuessPromptText = TextButton("Make a guess!", "White", "Yellow", 900, 300, 7
 userLetterGuessInputText = TextButton("", "Yellow", "White", 900, 380, 70, False, True, screen)
 correctGameText = TextButton("Correct", buttonGrey, "Yellow", 750, 600, 60, False, True, screen)
 incorrectGameText = TextButton("Incorrect", buttonGrey, "Yellow", 1050, 600, 60, False, True, screen)
-displayResultTicker = 0
 
 # Other objects.
 question = Question(vowelsString, consonantsString)
@@ -215,6 +216,8 @@ while True:  # Runs the main game loop.
             blanksGridDoneOnce = True  # Prevents the blanks from being continuously generated.
         if userLetterGuessInputText.returnText() == "":  # Checks if the user has made an input.
             confirmGameText.setColour(buttonGrey)  # If not, greys out the confirm button.
+        if user.checkIfGuessed():
+            confirmGameText.setColour(buttonGrey)
         if user.returnAttemptsMade() == 10:  # Checks if the user has reached their limit on attempts.
             userGuessPromptText.setEnabled(False)  # Disables the guess prompt text.
             userLetterGuessInputText.setEnabled(False)  # Disables the text of the user's guess input.
@@ -495,12 +498,14 @@ while True:  # Runs the main game loop.
                         stagingActive = True  # Changes screen to the staging screen.
                         computerGameActive = False
                         blanksGridDoneOnce = False  # Allows the blanks to be updated.
+                        question.resetAttempts()
 
                 elif userGameActive:
                     if backGameText.detectMouse():  # Checks if the back button on the user game screen is pressed.
                         gamemodeChooseActive = True  # Changes screen to the game mode choosing screen.
                         userGameActive = False
                     if confirmGameText.detectMouse():  # Checks if the confirm button on the user game screen is pressed.
+                        user.storeGuess()
                         correctGameText.setColour(buttonGrey)  # Greys out the correct answer indicator text.
                         incorrectGameText.setColour(buttonGrey)  # Greys out the incorrect answer indicator text.
                         if not userGuessMade:  # Checks if the user has confirmed a guess.
@@ -512,12 +517,12 @@ while True:  # Runs the main game loop.
                             if not user.checkLetter():  # Checks if the guess was incorrect.
                                 user.attemptMade()  # If so, adds 1 to the total number of guesses made.
                                 incorrectGameText.setColour("Yellow")  # Highlights the incorrect answer indicator.
-                                displayResultTicker = 60
+                                displayResultTicker = 30
                             if user.checkLetter():  # Checks if the guess was correct.
                                 user.updateBlanks()  # If so, updates the blanks with the new letter.
                                 blanksText.setText(user.returnBlanks())  # Passes the updated blanks to blanksText to be displayed.
                                 correctGameText.setColour("Yellow")  # Highlights the correct answer indicator.
-                                displayResultTicker = 60
+                                displayResultTicker = 30
 
     pygame.display.update()  # Updates the display.
     clock.tick(60)  # Sets the framerate; 60FPS has been set as the target FPS.

@@ -10,6 +10,7 @@ class User:
         if type(self.__wordList) != list:  # Validates that the value entered for self.__wordList is a list data type.
             self.__wordList = []  # If not, assigns it a default value of an empty list.
         self.__blanks = ""
+        self.__guessedLetters = []
         self.__attemptsMade = 0  # Starts at 0 and ends at 10.
 
     def chooseWord(self):
@@ -66,6 +67,21 @@ class User:
 
     def letterGuess(self, letterGuessed):
         self.__letterGuessed = letterGuessed  # Allows the user to guess.
+
+    def storeGuess(self):
+        for letter in self.__guessedLetters:
+            if letter == self.__letterGuessed:
+                return None
+        self.__guessedLetters.append(self.__letterGuessed)
+
+    def checkIfGuessed(self):
+        for letter in self.__guessedLetters:
+            if self.__letterGuessed == letter:
+                return True
+        return False
+
+    def returnGuessedLetters(self):
+        return self.__guessedLetters
 
     def returnLetterGuessed(self):
         return self.__letterGuessed  # Returns the user's guessed letter.
