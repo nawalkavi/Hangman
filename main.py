@@ -275,30 +275,39 @@ while True:  # Runs the main game loop.
                     question.resetWordLength()  # Resets the word length, which prevents the user from entering the game without a valid input.
                     lengthInputText.setText("")  # Makes the input text blank.
                 elif event.key == pygame.K_1:  # If the input key is 1.
+                    buttonClick.play()
                     question.setWordLength(1)
                     lengthInputText.setText("1")
                 elif event.key == pygame.K_2:  # If the input key is 2.
+                    buttonClick.play()
                     question.setWordLength(2)
                     lengthInputText.setText("2")
                 elif event.key == pygame.K_3:  # If the input key is 3.
+                    buttonClick.play()
                     question.setWordLength(3)
                     lengthInputText.setText("3")
                 elif event.key == pygame.K_4:  # If the input key is 4.
+                    buttonClick.play()
                     question.setWordLength(4)
                     lengthInputText.setText("4")
                 elif event.key == pygame.K_5:  # If the input key is 5.
+                    buttonClick.play()
                     question.setWordLength(5)
                     lengthInputText.setText("5")
                 elif event.key == pygame.K_6:  # If the input key is 6
+                    buttonClick.play()
                     question.setWordLength(6)
                     lengthInputText.setText("6")
                 elif event.key == pygame.K_7:  # If the input key is 7.
+                    buttonClick.play()
                     question.setWordLength(7)
                     lengthInputText.setText("7")
                 elif event.key == pygame.K_8:  # If the input key is 8.
+                    buttonClick.play()
                     question.setWordLength(8)
                     lengthInputText.setText("8")
                 elif event.key == pygame.K_9:  # If the input key is 9.
+                    buttonClick.play()
                     question.setWordLength(9)
                     lengthInputText.setText("9")
 
@@ -308,30 +317,39 @@ while True:  # Runs the main game loop.
                     computerPositionInputText.setText("15")
                     question.setGreyState(True)
                 elif event.key == pygame.K_1:  # If the input key is 1.
+                    buttonClick.play()
                     computerPositionInputText.setText("1")
                     question.setGreyState(False)
                 elif event.key == pygame.K_2:  # If the input key is 2.
+                    buttonClick.play()
                     computerPositionInputText.setText("2")
                     question.setGreyState(False)
                 elif event.key == pygame.K_3:  # If the input key is 3.
+                    buttonClick.play()
                     computerPositionInputText.setText("3")
                     question.setGreyState(False)
                 elif event.key == pygame.K_4:  # If the input key is 4.
+                    buttonClick.play()
                     computerPositionInputText.setText("4")
                     question.setGreyState(False)
                 elif event.key == pygame.K_5:  # If the input key is 5.
+                    buttonClick.play()
                     computerPositionInputText.setText("5")
                     question.setGreyState(False)
                 elif event.key == pygame.K_6:  # If the input key is 6
+                    buttonClick.play()
                     computerPositionInputText.setText("6")
                     question.setGreyState(False)
                 elif event.key == pygame.K_7:  # If the input key is 7.
+                    buttonClick.play()
                     computerPositionInputText.setText("7")
                     question.setGreyState(False)
                 elif event.key == pygame.K_8:  # If the input key is 8.
+                    buttonClick.play()
                     computerPositionInputText.setText("8")
                     question.setGreyState(False)
                 elif event.key == pygame.K_9:  # If the input key is 9.
+                    buttonClick.play()
                     computerPositionInputText.setText("9")
                     question.setGreyState(False)
                 else:
@@ -344,81 +362,108 @@ while True:  # Runs the main game loop.
                 if not userGuessMade:
 
                     if event.key == pygame.K_a:
+                        buttonClick.play()
                         user.letterGuess("A")
                         userLetterGuessInputText.setText("A")
                     elif event.key == pygame.K_b:
+                        buttonClick.play()
                         user.letterGuess("B")
                         userLetterGuessInputText.setText("B")
                     elif event.key == pygame.K_c:
+                        buttonClick.play()
                         user.letterGuess("C")
                         userLetterGuessInputText.setText("C")
                     elif event.key == pygame.K_d:
+                        buttonClick.play()
                         user.letterGuess("D")
                         userLetterGuessInputText.setText("D")
+                        buttonClick.play()
                     elif event.key == pygame.K_e:
+                        buttonClick.play()
                         user.letterGuess("E")
                         userLetterGuessInputText.setText("E")
                     elif event.key == pygame.K_f:
+                        buttonClick.play()
                         user.letterGuess("F")
                         userLetterGuessInputText.setText("F")
                     elif event.key == pygame.K_g:
+                        buttonClick.play()
                         user.letterGuess("G")
                         userLetterGuessInputText.setText("G")
                     elif event.key == pygame.K_h:
+                        buttonClick.play()
                         user.letterGuess("H")
                         userLetterGuessInputText.setText("H")
                     elif event.key == pygame.K_i:
+                        buttonClick.play()
                         user.letterGuess("I")
                         userLetterGuessInputText.setText("I")
                     elif event.key == pygame.K_j:
+                        buttonClick.play()
                         user.letterGuess("J")
                         userLetterGuessInputText.setText("J")
                     elif event.key == pygame.K_k:
+                        buttonClick.play()
                         user.letterGuess("K")
                         userLetterGuessInputText.setText("K")
                     elif event.key == pygame.K_l:
+                        buttonClick.play()
                         user.letterGuess("L")
                         userLetterGuessInputText.setText("L")
                     elif event.key == pygame.K_m:
+                        buttonClick.play()
                         user.letterGuess("M")
                         userLetterGuessInputText.setText("M")
                     elif event.key == pygame.K_n:
+                        buttonClick.play()
                         user.letterGuess("N")
                         userLetterGuessInputText.setText("N")
                     elif event.key == pygame.K_o:
+                        buttonClick.play()
                         user.letterGuess("O")
                         userLetterGuessInputText.setText("O")
                     elif event.key == pygame.K_p:
+                        buttonClick.play()
                         user.letterGuess("P")
                         userLetterGuessInputText.setText("P")
                     elif event.key == pygame.K_q:
+                        buttonClick.play()
                         user.letterGuess("Q")
                         userLetterGuessInputText.setText("Q")
                     elif event.key == pygame.K_r:
+                        buttonClick.play()
                         user.letterGuess("R")
                         userLetterGuessInputText.setText("R")
                     elif event.key == pygame.K_s:
+                        buttonClick.play()
                         user.letterGuess("S")
                         userLetterGuessInputText.setText("S")
                     elif event.key == pygame.K_t:
+                        buttonClick.play()
                         user.letterGuess("T")
                         userLetterGuessInputText.setText("T")
                     elif event.key == pygame.K_u:
+                        buttonClick.play()
                         user.letterGuess("U")
                         userLetterGuessInputText.setText("U")
                     elif event.key == pygame.K_v:
+                        buttonClick.play()
                         user.letterGuess("V")
                         userLetterGuessInputText.setText("V")
                     elif event.key == pygame.K_w:
+                        buttonClick.play()
                         user.letterGuess("W")
                         userLetterGuessInputText.setText("W")
                     elif event.key == pygame.K_x:
+                        buttonClick.play()
                         user.letterGuess("X")
                         userLetterGuessInputText.setText("X")
                     elif event.key == pygame.K_y:
+                        buttonClick.play()
                         user.letterGuess("Y")
                         userLetterGuessInputText.setText("Y")
                     elif event.key == pygame.K_z:
+                        buttonClick.play()
                         user.letterGuess("Z")
                         userLetterGuessInputText.setText("Z")
 
