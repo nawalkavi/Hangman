@@ -64,9 +64,6 @@ graveyardGreen = "#1b2421"  # Colour hex codes.
 buttonGrey = "#757575"
 vowelsString = "AEIOU"
 consonantsString = "BCDFGHJKLMNPQRSTVWXYZ"  # String storing all the possible letters for guesses
-backgroundMusic = pygame.mixer.Sound("Assets//Music//Background Music.wav")
-backgroundMusic.play()
-buttonClick = pygame.mixer.Sound("Assets//Music//Button Click.wav")
 
 
 # TextButton objects.
@@ -96,8 +93,6 @@ yesText = TextButton("Yes", "White", "Yellow", 810, 600, 70, True, True, screen)
 noText = TextButton("No", "White", "Yellow", 990, 600, 70, True, True, screen)
 computerPositionText = TextButton("What position?", "White", "Yellow", 900, 550, 70, False, False, screen)
 computerPositionInputText = TextButton("", "Yellow", "White", 900, 630, 70, False, False, screen)
-letterDuplicatesText1 = TextButton("How many times", "White", "Yellow", 900, 550, 70, False, False, screen)
-letterDuplicatesText2 = TextButton("does it appear?", "White", "Yellow", 900, 650, 70, False, False, screen)
 confirmGameText = TextButton("Confirm", "White", "Yellow", 900, 720, 60, True, False, screen)
 backGameText = TextButton("Back", "White", "Yellow", 110, 720, 60, True, True, screen)
 computerGuessText1 = TextButton("Is", "White", "Yellow", 875, 300, 70, False, True, screen)
@@ -304,7 +299,7 @@ while True:  # Runs the main game loop.
 
             elif computerGameActive:  # Keyboard input for the game screen.
 
-                if event.key == pygame.K_0:  # If the input key is 0.
+                if event.key == pygame.K_0:  # If the input key is a 0.
                     computerPositionInputText.setText("15")
                     question.setGreyState(True)
                 elif event.key == pygame.K_1:  # If the input key is 1.
@@ -427,21 +422,17 @@ while True:  # Runs the main game loop.
 
                 if menuActive:  # Mouse input for the menu screen.
                     if playMenuText.detectMouse():  # Checks if the play button is pressed by the user.
-                        buttonClick.play()
                         gamemodeChooseActive = True  # Changes screen to the staging screen.
                         menuActive = False
                     elif helpMenuText.detectMouse():  # Checks if the help button is pressed by the user.
-                        buttonClick.play()
                         helpActive = True  # Changes screen to the help screen.
                         menuActive = False
                     elif quitMenuText.detectMouse():
-                        buttonClick.play()
                         pygame.quit()
                         sys.exit()
 
                 elif helpActive:  # Mouse input for the help screen.
                     if backHelpText.detectMouse():  # Checks if the back button on the help screen is pressed by the user.
-                        buttonClick.play()
                         menuActive = True  # Changes screen to the menu screen.
                         helpActive = False
 
@@ -450,17 +441,14 @@ while True:  # Runs the main game loop.
                     question.resetAttempts()
                     user.resetAttempts()
                     if backGamemodeText.detectMouse():  # Checks if the back button on the game mode choosing screen is pressed by the user.
-                        buttonClick.play()
                         menuActive = True  # Changes screen to the menu screen.
                         gamemodeChooseActive = False
                     elif userGuessesText.detectMouse():  # Checks if the option to guess the word themselves was pressed.
-                        buttonClick.play()
                         userGuesses = True  # Changes screen to the game screen where the user guesses.
                         computerGuesses = False
                         userGameActive = True
                         gamemodeChooseActive = False
                     elif computerGuessesText.detectMouse():  # Checks if the option to have the AI guess the word was pressed.
-                        buttonClick.play()
                         confirmGameText.setEnabled(False)
                         computerGuesses = True  # Changes screen to the game screen where the AI guesses.
                         userGuesses = False
@@ -469,14 +457,12 @@ while True:  # Runs the main game loop.
 
                 elif stagingActive:  # Mouse input for the staging screen.
                     if backStagingText.detectMouse():  # Checks if the back button on the staging screen is pressed by the user.
-                        buttonClick.play()
                         gamemodeChooseActive = True  # Changes screen to the menu screen.
                         stagingActive = False
                     if confirmStagingText.detectMouse():  # Checks if the confirm button on the staging screen is pressed by the user.
                         if confirmStagingText.returnColour() == buttonGrey:  # Checks if the confirm button is greyed out.
                             stagingActive = True  # If so, keeps the user on the staging screen.
                         else:
-                            buttonClick.play()
                             computerGameActive = True  # If not, changes screen to the game screen.
                             stagingActive = False
 
@@ -484,7 +470,6 @@ while True:  # Runs the main game loop.
                     if guessShown:  # Checks if the AI's guess is currently being shown.
                         if displayingAnswerOptions:  # Checks if the answer options for the user are being displayed.
                             if yesText.detectMouse():  # Checks if the yes button is pressed by the user.
-                                buttonClick.play()
                                 yesText.setEnabled(False)  # Disables the yes button.
                                 noText.setEnabled(False)  # Disables the no button.
                                 computerPositionText.setEnabled(True)  # Enables the position question text.
@@ -495,7 +480,6 @@ while True:  # Runs the main game loop.
                                 if confirmGameText.returnColour() == buttonGrey:  # Checks if the confirm button is greyed out.
                                     userDecisionMade = False  # If so, user is not allowed to confirm their position input.
                                 else:  # If the confirm button is not greyed out.
-                                    buttonClick.play()
                                     question.setAnswerPosition(int(computerPositionInputText.returnText()))  # User input sent to Question so that blanks can be updated.
                                     blanksText.setText(question.returnBlanks())  # Blanks are updated.
                                     confirmGameText.setEnabled(False)  # Disables the confirm button.
@@ -506,14 +490,12 @@ while True:  # Runs the main game loop.
                                     guessShown = False  # Removes the AI's guess so that a new one can be generated.
                                     userDecisionMade = True  # Set to True because the user has made their decision.
                             elif noText.detectMouse():  # Checks if the no button is pressed by the user.
-                                buttonClick.play()
                                 question.attemptMade()  # Removes an attempt from the AI.
                                 guessShown = False  # Removes the AI's guess so that a new one can be generated.
                                 userDecisionMade = True  # Set to True because the user has made their decision.
                     if question.checkIfComplete():  # If the AI has guessed the word fully.
                         gameComplete = True  # Initiates the win screen.
                     if backGameText.detectMouse():  # Checks if the back button on the game screen is pressed by the user.
-                        buttonClick.play()
                         stagingActive = True  # Changes screen to the staging screen.
                         computerGameActive = False
                         blanksGridDoneOnce = False  # Allows the blanks to be updated.
@@ -521,7 +503,6 @@ while True:  # Runs the main game loop.
 
                 elif userGameActive:
                     if backGameText.detectMouse():  # Checks if the back button on the user game screen is pressed.
-                        buttonClick.play()
                         gamemodeChooseActive = True  # Changes screen to the game mode choosing screen.
                         userGameActive = False
                     if confirmGameText.detectMouse():  # Checks if the confirm button on the user game screen is pressed.
@@ -532,7 +513,6 @@ while True:  # Runs the main game loop.
                             if confirmGameText.returnColour() == buttonGrey:  # Checks if the confirm button is greyed out.
                                 break  # If so, breaks from the rest of the loop.
                             else:  # If not, runs the rest of the loop.
-                                buttonClick.play()
                                 userGuessMade = True
                                 userLetterGuessInputText.setText("")  # Clears the text that displays the user's chosen guess.
                             if not user.checkLetter():  # Checks if the guess was incorrect.
