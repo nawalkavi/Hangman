@@ -1,10 +1,9 @@
-# Importing the necessary libraries.
-import pygame
-
-
-# Array storing all the predefined string constants for colours inside Pygame.
+# Setting up.
+import pygame  # Imports the Pygame library.
+pygame.mixer.init()
 buttonGrey = "#757575"
 colourArray = ["Black", "Blue", "Cyan", "Gold", "Gray", "Green", "Orange", "Purple", "Red", "Violet", "Yellow", "White", buttonGrey]
+buttonHover = pygame.mixer.Sound("Assets//Music//Button Hover.wav")
 
 
 # TextButton.
@@ -35,6 +34,7 @@ class TextButton:
         self.__menuFont = pygame.font.Font("Assets//Fonts//Mighty Souly.ttf", self.__size)  # Loads the font for the text.
         self.__hover = hover
         self.__enabled = enabled
+        self.__playedSound = False
 
     def renderText(self):
         self.__renderedText = self.__menuFont.render(self.__text, True, self.__currentColour)  # Renders the text.
@@ -62,7 +62,11 @@ class TextButton:
         if self.__hover:  # Checks if the text should have the hover effect.
             if self.detectMouse():  # If self.detectMouse() returns True, meaning there is a collision.
                 self.__currentColour = self.__sColour  # Changes the text colour to the secondary colour if the mouse cursor is hovering over it.
+                if not self.__playedSound:
+                    buttonHover.play()
+                    self.__playedSound = True
             if not self.detectMouse():  # If self.detectMouse() returns False, meaning there is no collision.
+                self.__playedSound = False
                 self.__currentColour = self.__pColour  # Defaults text colour back to the primary colour.
 
     def setText(self, newText):

@@ -166,11 +166,9 @@ class Question:
         self.__currentGeneratedGuess = None  # Clears the previous guess.
         if self.__attemptsMade != 10:  # Prevents a guess from being generated if there are no more attempts left.
             if self.__vowels != "":
-                print(self.__vowels)
                 self.__currentGeneratedGuess = random.choice(self.__vowels)
                 self.__vowels = self.__vowels.replace(self.__currentGeneratedGuess, "")
             elif self.__vowels == "":
-                print("c")
                 self.__currentGeneratedGuess = random.choice(self.__consonants)  # Chooses a random letter.
                 self.__consonants = self.__consonants.replace(self.__currentGeneratedGuess, "")  # Removes the chosen letter so that it cannot be chosen again.
 
@@ -182,6 +180,7 @@ class Question:
 
     def returnGreyState(self):
         return self.__greyedOut  # Returns the boolean held in self.__greyedOut.
+
 
 # Hangman.
 class Hangman:
