@@ -1,9 +1,12 @@
 # Setting up.
 import pygame  # Imports the Pygame library.
-pygame.mixer.init()
-buttonGrey = "#757575"
-colourArray = ["Black", "Blue", "Cyan", "Gold", "Gray", "Green", "Orange", "Purple", "Red", "Violet", "Yellow", "White", buttonGrey]
-buttonHover = pygame.mixer.Sound("Assets//Music//Button Hover.wav")
+pygame.mixer.init()  # Initialises the mixer module of the Pygame library.
+
+
+# Misc.
+buttonGrey = "#757575"  # Hex code storing the specific shade of grey used to represent inactive text.
+colourArray = ["Black", "Blue", "Cyan", "Gold", "Gray", "Green", "Orange", "Purple", "Red", "Violet", "Yellow", "White", buttonGrey]  # Array storing all the possible colours.
+buttonHover = pygame.mixer.Sound("Assets//Music//Button Hover.wav")  # Sound effect used when the user hovers over interactable text.
 
 
 # TextButton.
@@ -34,7 +37,7 @@ class TextButton:
         self.__menuFont = pygame.font.Font("Assets//Fonts//Mighty Souly.ttf", self.__size)  # Loads the font for the text.
         self.__hover = hover
         self.__enabled = enabled
-        self.__playedSound = False
+        self.__playedSound = False  # Used to play sound effect once instead of continuously.
 
     def renderText(self):
         self.__renderedText = self.__menuFont.render(self.__text, True, self.__currentColour)  # Renders the text.
@@ -76,7 +79,7 @@ class TextButton:
         return self.__text  # Returns the currently specified text to be displayed.
 
     def setSize(self, newSize):
-        self.__size = newSize
+        self.__size = newSize  # Allows the current text size to be changed when necessary.
 
     def setColour(self, newColour):
         self.__currentColour = newColour  # Allows the current text colour to be changed when necessary.

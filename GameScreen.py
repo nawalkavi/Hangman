@@ -26,7 +26,6 @@ class User:
             if self.__letter in self.__seenLetters:  # Checks if the current letter is inside self.__seenLetters.
                 return False  # If so, returns False, meaning there is a duplicate.
             self.__seenLetters.add(self.__letter)  # Adds the current letter to the self.__seenLetters set.
-        print(self.__chosenWord)
         return True  # If there are no duplicates, returns True.
 
     def returnChosenWord(self):
@@ -69,19 +68,16 @@ class User:
         self.__letterGuessed = letterGuessed  # Allows the user to guess.
 
     def storeGuess(self):
-        for letter in self.__guessedLetters:
-            if letter == self.__letterGuessed:
-                return None
-        self.__guessedLetters.append(self.__letterGuessed)
+        for letter in self.__guessedLetters:  # Traverses through every letter that has been used as a guess so far.
+            if letter == self.__letterGuessed:  # Checks if the current letter input matches the current already guessed letter.
+                return None  # If so, returns None to end the function.
+        self.__guessedLetters.append(self.__letterGuessed)  # If no match is found, the new letter input is added to the list.
 
     def checkIfGuessed(self):
-        for letter in self.__guessedLetters:
-            if self.__letterGuessed == letter:
-                return True
-        return False
-
-    def returnGuessedLetters(self):
-        return self.__guessedLetters
+        for letter in self.__guessedLetters:  # Traverses through every letter that has been used as a guess so far.
+            if self.__letterGuessed == letter:  # Checks if the current letter input matches the current already guessed letter.
+                return True  # If so, returns True, meaning it has already been used as a guess previously inside the round.
+        return False  # If not, returns False, meaning it is a new guess.
 
     def returnLetterGuessed(self):
         return self.__letterGuessed  # Returns the user's guessed letter.
@@ -90,7 +86,7 @@ class User:
         self.__attemptsMade += 1  # Increments the number of attempts by 1; a maximum of 10 is allowed before a loss.
 
     def resetAttempts(self):
-        self.__attemptsMade = 0
+        self.__attemptsMade = 0  # Resets the number of attempts made back to 0.
 
     def returnAttemptsMade(self):
         return self.__attemptsMade  # Returns the number of attempts made by the user.
@@ -101,15 +97,15 @@ class Question:
 
     def __init__(self, vowels, consonants):
         self.__vowels = vowels
-        if type(self.__vowels) != str:
-            self.__vowels = "AEIOU"
+        if type(self.__vowels) != str:  # Validates that the value entered for self.__vowels is a string data type.
+            self.__vowels = "AEIOU"  # If not, assigns it a default value of a string containing the vowels.
         self.__consonants = consonants
-        if type(self.__consonants) != str:  # Validates that the value entered for self.__alphabet is a string data type.
-            self.__consonants = "BCDFGHJKLMNPQRSTVWXYZ"  # If not, assigns it a default value of a string containing the alphabet.
+        if type(self.__consonants) != str:  # Validates that the value entered for self.__consonants. is a string data type.
+            self.__consonants = "BCDFGHJKLMNPQRSTVWXYZ"  # If not, assigns it a default value of a string containing the consonants.
         self.__wordLength = None  # Will be assigned a value depending on the user's input.
         self.__matchedWords = []  # Will store all the words with the same length as that of the user.
         self.__attemptsMade = 0  # Starts at 0 and ends at 10.
-        self.__blanks = ""
+        self.__blanks = ""  # Will be assigned the appropriate number of underscores in a string as per the word length.
         self.__greyedOut = False  # Controls whether confirmGameText is greyed out or not when computerGameActive is True.
         self.__currentGeneratedGuess = None
 
@@ -128,7 +124,7 @@ class Question:
     def setAnswerPosition(self, letterPosition):
         self.__letterPosition = letterPosition - 1  # Value is subtracted by 1 to account for the index value difference.
         tempArray = []  # Temporary array to hold the updated blanks.
-        if self.__currentGeneratedGuess is not None:
+        if self.__currentGeneratedGuess is not None:  # Checks if there is currently a valid guessed letter.
             for letter in self.__blanks:  # Loops through every letter space in self.__blanks.
                 tempArray.append(letter)  # The positions are appended to tempArray.
             tempArray[self.__letterPosition] = self.__currentGeneratedGuess  # The user's specified position is used to replace that position in the array with the current guess.
@@ -151,7 +147,7 @@ class Question:
             self.__attemptsMade += 1  # If not, increments the number of attempts made by 1.
 
     def resetAttempts(self):
-        self.__attemptsMade = 0
+        self.__attemptsMade = 0  # Resets the number of attempts used back to 0.
 
     def returnAttemptsMade(self):
         return self.__attemptsMade  # Returns the number of attempts made by the AI.
@@ -165,12 +161,12 @@ class Question:
     def generateGuess(self):
         self.__currentGeneratedGuess = None  # Clears the previous guess.
         if self.__attemptsMade != 10:  # Prevents a guess from being generated if there are no more attempts left.
-            if self.__vowels != "":
-                self.__currentGeneratedGuess = random.choice(self.__vowels)
-                self.__vowels = self.__vowels.replace(self.__currentGeneratedGuess, "")
-            elif self.__vowels == "":
-                self.__currentGeneratedGuess = random.choice(self.__consonants)  # Chooses a random letter.
-                self.__consonants = self.__consonants.replace(self.__currentGeneratedGuess, "")  # Removes the chosen letter so that it cannot be chosen again.
+            if self.__vowels != "":  # Checks if there are still vowels left to guess.
+                self.__currentGeneratedGuess = random.choice(self.__vowels)  # Chooses a random vowel.
+                self.__vowels = self.__vowels.replace(self.__currentGeneratedGuess, "")  # Removes the chosen vowel from the string to prevent double guessing.
+            elif self.__vowels == "":  # Checks if all the vowels have been used as guesses.
+                self.__currentGeneratedGuess = random.choice(self.__consonants)  # Chooses a random consonant.
+                self.__consonants = self.__consonants.replace(self.__currentGeneratedGuess, "")  # Removes the chosen consonant so that it cannot be chosen again.
 
     def returnCurrentGuess(self):
         return self.__currentGeneratedGuess  # Returns the current guess.

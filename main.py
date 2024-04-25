@@ -134,7 +134,7 @@ def renderScreenTextObjects(objectArray):  # Takes an array of all TextButton ob
             object.renderText()  # Calls the renderText() function.
             object.createRect()  # Calls the createRect() function.
             object.hoverEffect()  # Calls the hoverEffect() function.
-            object.blitText()  # Calls the blitText() function.D
+            object.blitText()  # Calls the blitText() function.d
 
 def handleStagingInput(num):
     buttonHover.play()
