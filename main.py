@@ -2,7 +2,9 @@
 import pygame  # Imports the Pygame library.
 import sys  # Imports the sys module.
 from Text import TextButton  # Imports the TextButton object from Text.py
-from GameScreen import Question, Hangman, User  # Imports the Question, Hangman and User objects from GameScreen.py
+from Hangman import Hangman  # Imports the Hangman object from Hangman.py
+from Question import Question  # Imports the Question object from Question.py
+from User import User  # Imports the User object from User.py
 
 
 # Initialising and setting up.
