@@ -163,14 +163,14 @@ def handleGameLetterInput(letter):
 while True:  # Runs the main game loop.
 
     if not gameplayMusicPlaying and not musicPlayedOnce:
-        gameplayMusic.fadeout(3000)
-        backgroundMusic.play(-1)
-        musicPlayedOnce = True
+        gameplayMusic.fadeout(3000)  # Fades out the gameplay music over 3000ms.
+        backgroundMusic.play(-1)  # Plays the background music on loop.
+        musicPlayedOnce = True  # Prevents the music from continuously being started over.
 
     if gameplayMusicPlaying and not musicPlayedOnce:
-        backgroundMusic.fadeout(3000)
-        gameplayMusic.play(-1)
-        musicPlayedOnce = True
+        backgroundMusic.fadeout(3000)  # Fades out the background music over 3000ms.
+        gameplayMusic.play(-1)  # Plays the gameplay music on loop.
+        musicPlayedOnce = True  # Prevents the music from continuously being started over.
 
     # Menu screen.
     if menuActive:  # Runs only if the menu screen is being displayed.
@@ -564,12 +564,12 @@ while True:  # Runs the main game loop.
                             if not user.checkLetter():  # Checks if the guess was incorrect.
                                 user.attemptMade()  # If so, adds 1 to the total number of guesses made.
                                 incorrectGameText.setColour("Yellow")  # Highlights the incorrect answer indicator.
-                                displayResultTicker = 30
+                                displayResultTicker = 30  # Allows the incorrect answer indicator to be highlighted for half a second.
                             if user.checkLetter():  # Checks if the guess was correct.
                                 user.updateBlanks()  # If so, updates the blanks with the new letter.
                                 blanksText.setText(user.returnBlanks())  # Passes the updated blanks to blanksText to be displayed.
                                 correctGameText.setColour("Yellow")  # Highlights the correct answer indicator.
-                                displayResultTicker = 30
+                                displayResultTicker = 30  # Allows the correct answer indicator to be highlighted for half a second.
 
     pygame.display.update()  # Updates the display.
     clock.tick(60)  # Sets the framerate; 60FPS has been set as the target FPS.
