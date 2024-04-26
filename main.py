@@ -62,12 +62,12 @@ computerImageRect = computerImage.get_rect(center = (900, 330))
 
 
 # Misc.
-graveyardGreen = "#1b2421"  # Colour hex codes.
-buttonGrey = "#757575"
-vowelsString = "AEIOU"
-consonantsString = "BCDFGHJKLMNPQRSTVWXYZ"  # String storing all the possible letters for guesses
-backgroundMusic = pygame.mixer.Sound("Assets//Music//Background Music.wav")
-backgroundMusic.play()
+graveyardGreen = "#1b2421"  # Background colour hex code.
+buttonGrey = "#757575"  # Greyed out text colour hex code.
+vowelsString = "AEIOU"  # String storing all the vowels for guesses.
+consonantsString = "BCDFGHJKLMNPQRSTVWXYZ"  # String storing all the consonants for guesses.
+backgroundMusic = pygame.mixer.Sound("Assets//Music//Background Music.wav")  # Opens the .wav file used for the menu music.
+backgroundMusic.play()  # Plays the background music.
 buttonHover = pygame.mixer.Sound("Assets//Music//Button Hover.wav")
 buttonClick = pygame.mixer.Sound("Assets//Music//Button Click.wav")
 
@@ -95,7 +95,7 @@ lengthInputText = TextButton("", "Yellow", "White", 600, 550, 80, False, True, s
 confirmStagingText = TextButton("Confirm", "White", "Yellow", 1050, 720, 60, True, True, screen)
 backStagingText = TextButton("Back", "White", "Yellow", 110, 720, 60, True, True, screen)
 
-yesText = TextButton("Yes", "White", "Yellow", 810, 600, 70, True, True, screen)  # AI game screen.
+yesText = TextButton("Yes", "White", "Yellow", 810, 600, 70, True, True, screen)  # Computer game screen.
 noText = TextButton("No", "White", "Yellow", 990, 600, 70, True, True, screen)
 computerPositionText = TextButton("What position?", "White", "Yellow", 900, 550, 70, False, False, screen)
 computerPositionInputText = TextButton("", "Yellow", "White", 900, 630, 70, False, False, screen)
@@ -125,12 +125,12 @@ menuObjectArray = [hangmanMenuText, playMenuText, helpMenuText, quitText]  # Sto
 helpObjectArray = [infoText1, infoText2, infoText3, backHelpText]  # Stores all the TextButton objects for the help screen.
 gamemodeChooseObjectArray = [chooseGamemodeText, userGuessesText, computerGuessesText, backGamemodeText]  # Stores all the TextButton objects for the gamemode choosing screen.
 stagingObjectArray = [lengthQuestion1, lengthQuestion2, lengthQuestion3, lengthInputText, confirmStagingText, backStagingText]  # Stores all the TextButton objects for the staging screen.
-computerGameObjectArray = [yesText, noText, backGameText, blanksText, outOfAttemptsText, computerPositionText, computerPositionInputText, confirmGameText, computerGuessText1, computerGuessText2, computerGuessText3, winText, outOfAttemptsText, quitText]  # Stores all the TextButton objects for the game screen.
-userGameObjectArray = [userGuessPromptText, userLetterGuessInputText, blanksText, backGameText, confirmGameText, correctGameText, incorrectGameText, outOfAttemptsText, winText, quitText]
+computerGameObjectArray = [yesText, noText, backGameText, blanksText, outOfAttemptsText, computerPositionText, computerPositionInputText, confirmGameText, computerGuessText1, computerGuessText2, computerGuessText3, winText, outOfAttemptsText, quitText]  # Stores all the TextButton objects for the AI game screen.
+userGameObjectArray = [userGuessPromptText, userLetterGuessInputText, blanksText, backGameText, confirmGameText, correctGameText, incorrectGameText, outOfAttemptsText, winText, quitText]  # Stores all the Text
 
 
-# Function used to call all the methods inside the primary game loop common to every TextButton object.
-def renderScreenTextObjects(objectArray):  # Takes an array of all TextButton objects on each screen.
+# Used to call all the common methods inside the primary game loop common to every TextButton object.
+def renderScreenTextObjects(objectArray):  # Takes an array of all TextButton objects on the specific screen as a parameter.
     for object in objectArray:  # Loops through each object in the array passed in.
         if object.returnEnabled():  # Checks if the object is currently enabled.
             object.renderText()  # Calls the renderText() function.
@@ -138,20 +138,23 @@ def renderScreenTextObjects(objectArray):  # Takes an array of all TextButton ob
             object.hoverEffect()  # Calls the hoverEffect() function.
             object.blitText()  # Calls the blitText() function.d
 
-def handleStagingInput(num):
-    buttonHover.play()
-    question.setWordLength(num)
-    lengthInputText.setText(str(num))
+# Used to call the necessary methods when the user makes an input inside the staging screen.
+def handleStagingInput(num):  # Takes the user input number.
+    buttonHover.play()  # Plays the approrpriate sound effect once.
+    question.setWordLength(num)  # Sets the word length for the object with the user's input.
+    lengthInputText.setText(str(num))  # Sets the text input for the appropriate TextButton object to display it on screen.
 
+# Used to call all the necessary methods when the user makes a numerical input inside the computer game screen.
 def handleGamePositionInput(num):
-    buttonHover.play()
-    computerPositionInputText.setText(str(num))
-    question.setGreyState(False)
+    buttonHover.play()  # Plays the approrpriate sound effect once.
+    computerPositionInputText.setText(str(num))  # Sets the text input for the appropriate TextButton object to display it on screen.
+    question.setGreyState(False)  # Used to make the confirmGameText TextButton interactable again.
 
+# Used to call all the necessary methods when the user makes an alphabetical input inside the computer game screen.
 def handleGameLetterInput(letter):
-    buttonHover.play()
-    user.letterGuess(letter)
-    userLetterGuessInputText.setText(letter)
+    buttonHover.play()  # Plays the approrpriate sound effect once.
+    user.letterGuess(letter)  # Sends the user's guess input to be checked.
+    userLetterGuessInputText.setText(letter)  # Sets the text input for the appropriate TextButton object to display it on screen.
 
 
 # Main game loop.
