@@ -27,6 +27,8 @@ pressedYes = False  # Whether the user has answered yes to the AI's guess.
 gameComplete = False  # Game was won by the AI.
 endgameTextDisplayed = False  # Whether the endgame text is displayed.
 displayResultTicker = 0
+gameplayMusicPlaying = False
+musicPlayedOnce = False
 
 
 # Reading the .txt file.
@@ -66,10 +68,10 @@ graveyardGreen = "#1b2421"  # Background colour hex code.
 buttonGrey = "#757575"  # Greyed out text colour hex code.
 vowelsString = "AEIOU"  # String storing all the vowels for guesses.
 consonantsString = "BCDFGHJKLMNPQRSTVWXYZ"  # String storing all the consonants for guesses.
-backgroundMusic = pygame.mixer.Sound("Assets//Music//Background Music.wav")  # Opens the .wav file used for the menu music.
-backgroundMusic.play()  # Plays the background music.
-buttonHover = pygame.mixer.Sound("Assets//Music//Button Hover.wav")
-buttonClick = pygame.mixer.Sound("Assets//Music//Button Click.wav")
+backgroundMusic = pygame.mixer.Sound("Assets//Music//Background Music.wav")  # Opens and assigns the .wav file for background music.
+gameplayMusic = pygame.mixer.Sound("Assets//Music//Gameplay Music.wav")  # Opens and assigns the .wav file for gameplay music.
+buttonHover = pygame.mixer.Sound("Assets//Music//Button Hover.wav")  # Opens and assigns the .wav file for the text hovering sound effect.
+buttonClick = pygame.mixer.Sound("Assets//Music//Button Click.wav")  # Opens and assigns the .wav file for the text clicking sound effect.
 
 
 # TextButton objects.
@@ -140,25 +142,35 @@ def renderScreenTextObjects(objectArray):  # Takes an array of all TextButton ob
 
 # Used to call the necessary methods when the user makes an input inside the staging screen.
 def handleStagingInput(num):  # Takes the user input number.
-    buttonHover.play()  # Plays the approrpriate sound effect once.
+    buttonHover.play()  # Plays the appropriate sound effect once.
     question.setWordLength(num)  # Sets the word length for the object with the user's input.
     lengthInputText.setText(str(num))  # Sets the text input for the appropriate TextButton object to display it on screen.
 
 # Used to call all the necessary methods when the user makes a numerical input inside the computer game screen.
 def handleGamePositionInput(num):
-    buttonHover.play()  # Plays the approrpriate sound effect once.
+    buttonHover.play()  # Plays the appropriate sound effect once.
     computerPositionInputText.setText(str(num))  # Sets the text input for the appropriate TextButton object to display it on screen.
     question.setGreyState(False)  # Used to make the confirmGameText TextButton interactable again.
 
 # Used to call all the necessary methods when the user makes an alphabetical input inside the computer game screen.
 def handleGameLetterInput(letter):
-    buttonHover.play()  # Plays the approrpriate sound effect once.
+    buttonHover.play()  # Plays the appropriate sound effect once.
     user.letterGuess(letter)  # Sends the user's guess input to be checked.
     userLetterGuessInputText.setText(letter)  # Sets the text input for the appropriate TextButton object to display it on screen.
 
 
 # Main game loop.
 while True:  # Runs the main game loop.
+
+    if not gameplayMusicPlaying and not musicPlayedOnce:
+        gameplayMusic.fadeout(3000)
+        backgroundMusic.play(-1)
+        musicPlayedOnce = True
+
+    if gameplayMusicPlaying and not musicPlayedOnce:
+        backgroundMusic.fadeout(3000)
+        gameplayMusic.play(-1)
+        musicPlayedOnce = True
 
     # Menu screen.
     if menuActive:  # Runs only if the menu screen is being displayed.
@@ -452,6 +464,8 @@ while True:  # Runs the main game loop.
                         menuActive = True  # Changes screen to the menu screen.
                         gamemodeChooseActive = False
                     elif userGuessesText.detectMouse():  # Checks if the option to guess the word themselves was pressed.
+                        gameplayMusicPlaying = True
+                        musicPlayedOnce = False
                         buttonClick.play()
                         userGuesses = True  # Changes screen to the game screen where the user guesses.
                         computerGuesses = False
@@ -474,6 +488,8 @@ while True:  # Runs the main game loop.
                         if confirmStagingText.returnColour() == buttonGrey:  # Checks if the confirm button is greyed out.
                             stagingActive = True  # If so, keeps the user on the staging screen.
                         else:
+                            gameplayMusicPlaying = True
+                            musicPlayedOnce = False
                             buttonClick.play()
                             computerGameActive = True  # If not, changes screen to the game screen.
                             stagingActive = False
@@ -511,6 +527,8 @@ while True:  # Runs the main game loop.
                     if question.checkIfComplete():  # If the AI has guessed the word fully.
                         gameComplete = True  # Initiates the win screen.
                     if backGameText.detectMouse():  # Checks if the back button on the game screen is pressed by the user.
+                        gameplayMusicPlaying = False
+                        musicPlayedOnce = False
                         buttonClick.play()
                         stagingActive = True  # Changes screen to the staging screen.
                         computerGameActive = False
@@ -523,6 +541,8 @@ while True:  # Runs the main game loop.
 
                 elif userGameActive:
                     if backGameText.detectMouse():  # Checks if the back button on the user game screen is pressed.
+                        gameplayMusicPlaying = False
+                        musicPlayedOnce = False
                         buttonClick.play()
                         gamemodeChooseActive = True  # Changes screen to the game mode choosing screen.
                         userGameActive = False

@@ -65,11 +65,11 @@ class TextButton:
         if self.__hover:  # Checks if the text should have the hover effect.
             if self.detectMouse():  # If self.detectMouse() returns True, meaning there is a collision.
                 self.__currentColour = self.__sColour  # Changes the text colour to the secondary colour if the mouse cursor is hovering over it.
-                if not self.__playedSound:
-                    buttonHover.play()
-                    self.__playedSound = True
+                if not self.__playedSound:  # Checks if the sound effect has been played once already.
+                    buttonHover.play()  # If not, plays the sound effect.
+                    self.__playedSound = True  # Prevents the sound effect from being played again.
             if not self.detectMouse():  # If self.detectMouse() returns False, meaning there is no collision.
-                self.__playedSound = False
+                self.__playedSound = False  # Allows the sound effect to be played again.
                 self.__currentColour = self.__pColour  # Defaults text colour back to the primary colour.
 
     def setText(self, newText):
