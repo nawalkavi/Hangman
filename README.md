@@ -7,6 +7,5 @@ Extract the .zip file downloaded from GitHub in the folder of your choice. <br /
 Run the main.py file inside the installation folder to play. The game will open in a new program window. <br />
 
 /// Credits /// <br /> 
-Game director and executive producer: Nawal Kavi <br />
-Music co-producer: Caitlin Campbell <br />
-Art director: Luíza Mayrink Orgado <br />
+Game director & executive producer: Nawal Kavi <br />
+Lead artist & designer: Luíza Mayrink Orgado <br />
