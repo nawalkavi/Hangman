@@ -1,5 +1,5 @@
 /// Background /// <br />
-A fun Hangman game made using the Pygame library inside of Python! Includes two game modes, consisting of either the player guessing or the AI guessing the chosen word.
+A fun Hangman game made using the Pygame library inside of Python! Includes two game modes, consisting of either the player guessing or the AI guessing the chosen word. <br />
 Made as part of my A-Level Computer Science NEA. <br />
 
 /// Installation /// <br />
